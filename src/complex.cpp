@@ -10,19 +10,13 @@
 
 void MemoryManager::expandPoolSize ()
   {
-    //std::cout << "EXPANDING POOL\n";
   size_t size = (sizeof(Complex) > sizeof(FreeStore*)) ?
     sizeof(Complex) : sizeof(FreeStore*);
 
-  std::cout << "size = " << size << '\n';
-  // Allocate the first node
     freeStoreHead = reinterpret_cast<FreeStore*>(new char[size]);
     FreeStore* current = freeStoreHead;
 
-    //std::cout << "First Node Allocated";
-    //std::cout << "freeStoreHead = " << freeStoreHead << " & current = " << current;
-
-    for (int i = 1; i < POOLSIZE; ++i) {
+    for (int i = 0; i < POOLSIZE; ++i) {
         current->next = reinterpret_cast<FreeStore*>(new char[size]);
         current = current->next;
     }
