@@ -64,6 +64,17 @@
       "name": "build-relwithdebinfo",
       "configurePreset": "windows-msvc",
       "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "build-debug-clang",
+      "configurePreset": "windows-clang",
+      "configuration": "Debug"
+    },
+    {
+      "name": "build-release-clang",
+      "configurePreset": "windows-clang",
+      "configuration": "Release"
     }
+
   ]
 }

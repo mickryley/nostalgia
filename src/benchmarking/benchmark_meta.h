@@ -1,21 +1,20 @@
 #pragma once
 
+#include "allocators/allocator_meta.h"
+
 #include "log.h"
 
-namespace nostalgia {
-    enum class allocatorTestFlags : uint32_t {
-        NONE = 0,
-        FIXED_SIZE = 1 << 0,
-        THREAD_SAFE = 1 << 1,
-    };
-    ENABLE_BITMASK_OPERATORS(allocatorTestFlags);
+#include <functional>
 
-    struct AllocatorMetadata {
+namespace nostalgia {
+
+    struct BenchmarkMetadata {
 
         // ID or merely label?
         const std::string label;
         const std::string description;
         const allocatorTestFlags testFlags;
+        const std::function<void()> run; // Pointer to the benchmark function
 
         // Flags for eligible benchmarks
         bool has(allocatorTestFlags flag) const {
