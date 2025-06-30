@@ -1,0 +1,69 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "CMAKE_CXX_STANDARD": "23",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF"
+      }
+    },
+
+    {
+      "name": "macos-clang",
+      "inherits": "base",
+      "description": "macOS build using Homebrew LLVM",
+      "environment": {
+        "CC": "/opt/homebrew/opt/llvm/bin/clang",
+        "CXX": "/opt/homebrew/opt/llvm/bin/clang++"
+      }
+    },
+
+    {
+      "name": "windows-msvc",
+      "inherits": "base",
+      "description": "Windows build using MSVC (default)",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64"
+    },
+
+    {
+      "name": "windows-clang",
+      "inherits": "base",
+      "description": "Windows build using Clang (from LLVM for Windows)",
+      "generator": "Ninja",
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    }
+  ],
+
+  "buildPresets": [
+    {
+      "name": "build-debug",
+      "configurePreset": "windows-msvc",
+      "configuration": "Debug"
+    },
+    {
+      "name": "build-release",
+      "configurePreset": "windows-msvc",
+      "configuration": "Release"
+    },
+    {
+      "name": "build-relwithdebinfo",
+      "configurePreset": "windows-msvc",
+      "configuration": "RelWithDebInfo"
+    }
+  ]
+}
