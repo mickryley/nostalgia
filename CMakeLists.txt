@@ -18,6 +18,7 @@ message (STATUS "CMake version: ${CMAKE_VERSION}")
 set(APP_NAME Nostalgia)
 set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(ImGui_Dir "${CMAKE_SOURCE_DIR}/libs/imgui") 
+set(JSON_Dir "${CMAKE_SOURCE_DIR}/libs/json")
 
 # === Platform-Specific Paths ===
 if(WIN32)
@@ -38,6 +39,11 @@ set(ImGui_Source_Files
     "${ImGui_Dir}/imgui_widgets.cpp"
     "${ImGui_Dir}/imgui_tables.cpp"
     "${ImGui_Dir}/imgui_demo.cpp"
+
+    "${ImGui_Dir}/implot.cpp"
+    "${ImGui_Dir}/implot_items.cpp"
+    "${ImGui_Dir}/implot_demo.cpp"
+
     "${ImGui_Dir}/backends/imgui_impl_sdl3.cpp"
     "${ImGui_Dir}/backends/imgui_impl_vulkan.cpp"
 )
@@ -68,6 +74,7 @@ target_include_directories(${APP_NAME} PRIVATE
     "${ImGui_Dir}"
     "${ImGui_Dir}/backends"
     "${SDL3_DIR}/include"
+    "${JSON_Dir}"
 )
 
 # === Platform Specific Libraries ===

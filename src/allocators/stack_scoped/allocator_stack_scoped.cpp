@@ -1,4 +1,4 @@
-#include "allocator_stack.h"
+#include "allocator_stack_scoped.h"
 
 #include <cstddef> // For size_t, std::max_align_t
 #include <cstdlib> // For posix_memalign
@@ -12,7 +12,7 @@
 
 #include "log.h"
 
-namespace nostalgia::stack {
+namespace nostalgia::stack::scoped {
     
     
     StackAllocator::StackAllocator(char* buf, size_t cap)
@@ -61,7 +61,7 @@ namespace nostalgia::stack {
         return _ptr;
     }
 
-    // This method only accepts the top LIFO request
+    // Scoped ignored LIFO, and will free anything from a valid pointer
     bool StackAllocator::free(void* ptr) noexcept {
 
 #ifdef _DEBUG
@@ -76,21 +76,11 @@ namespace nostalgia::stack {
             log::print(logFlags::ERROR, "StackAllocator: Attempted to free a pointer outside the allocated buffer range.");
             return false;
 		}
+        
+		//m_offset = static_cast<std::byte*>(_ptr) - m_buffer;
 
-        StackBlockHeader* header = reinterpret_cast<StackBlockHeader*>(_ptr);
-        size_t blockSize = header->size;
-
-        // Check if the block is at the top of the stack
-        // Change from char to byte
-        if (static_cast<char*>(_ptr) + blockSize != m_buffer + m_offset) {
-            log::print(logFlags::ERROR, "StackAllocator: Attempted to free a pointer that is not at the top of the stack, m_offset is [{}]", m_offset);
-			log::print(logFlags::ERROR, "Comparison Left half is [{} + {}] and Right half is [{} + {}]", (void*)_ptr, blockSize, (void*)m_buffer, m_offset);
-            
-            return false;
-        }
-        m_offset -= blockSize;
 #ifdef _DEBUG
-        log::print("StackAllocator: Freed [{}] bytes at [{}] (new offset: [{}])", header->size, _ptr, m_offset);
+		log::print("StackAllocator: Freed memory at [{}], new offset: [{}]", (void*)_ptr, m_offset);
 #endif
 		return true;
     }    
