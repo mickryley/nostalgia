@@ -4,6 +4,7 @@
 
 #include "allocators/linear_bump/allocator_linear.h"
 #include "allocators/stack_lifo/allocator_stack.h"
+#include "allocators/pool_slab/allocator_pool.h"
 
 #include "objects/objects_linear.h"
 #include "objects/objects.h"
@@ -70,6 +71,7 @@ namespace nostalgia::benchmarking {
 	void init_benchmarking_manager() {
 		//IBMBursts::benchmark_IBMBursts_linearAllocators();
 		IBMBursts::benchmark_IBMBursts_stackAllocators();
+		IBMBursts::benchmark_IBMBursts_poolAllocators();
 
 		//benchmark_linearAllocators_None();
 	}
