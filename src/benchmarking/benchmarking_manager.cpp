@@ -568,7 +568,11 @@ namespace nostalgia::benchmarking {
 			auto memResource = std::make_unique<std::pmr::monotonic_buffer_resource>(buffer.get(), byteCount);
 
 			std::pmr::polymorphic_allocator<V2D> alloc(memResource.get());
-			std::pmr::vector<V2D> vec(iterations, alloc);
+			//std::pmr::vector<V2D> vec(iterations, alloc);
+			//std::pmr::vector<V2D> vec(iterations, V2D{}, alloc);
+			std::vector<V2D, std::pmr::polymorphic_allocator<V2D>> vec(iterations, V2D{}, alloc);
+			
+			//std::pmr::vector<V2D> vec(std::pmr::polymorphic_allocator<V2D>{&resource});
 
 			//std::pmr::monotonic_buffer_resource pmrResource(buffer, sizeof(buffer));
 			//std::pmr::vector<V2D> vec(&pmrResource);
@@ -611,7 +615,10 @@ namespace nostalgia::benchmarking {
 		{
 			// Allocation Iterations
 			_allocateTimer.start();
-			std::pmr::vector<V2D> vec(&resource);
+			//std::pmr::vector<V2D> vec(&resource); //MSVC Only
+			//std::pmr::vector<V2D> vec(std::pmr::polymorphic_allocator<V2D>{&resource});
+			std::vector<V2D, std::pmr::polymorphic_allocator<V2D>> vec(std::pmr::polymorphic_allocator<V2D>{&resource});
+			
 
 			for (size_t j = 0; j < iterations; j++) {
 				// Allocate a Vector2D object
@@ -656,7 +663,12 @@ namespace nostalgia::benchmarking {
 			//std::unique_ptr<std::byte[]> buffer = std::make_unique<std::byte[]>(byteCount);
 
 			std::pmr::unsynchronized_pool_resource pool;
-			std::pmr::vector<V2D> vec(iterations, &pool);
+			//std::pmr::vector<V2D> vec(iterations, &pool);
+			auto alloc = std::pmr::polymorphic_allocator<V2D>{&pool};
+			//std::pmr::vector<V2D> vec(iterations, V2D{}, alloc);
+			std::vector<V2D, std::pmr::polymorphic_allocator<V2D>> vec(iterations, V2D{}, alloc);
+			//std::pmr::vector<V2D> vec(iterations, V2D{}, std::pmr::polymorphic_allocator<V2D>{&pool});
+			//std::pmr::vector<V2D> vec(std::pmr::polymorphic_allocator<V2D>{&resource});
 
 			//auto memResource = std::make_unique<std::pmr::monotonic_buffer_resource>(buffer.get(), byteCount);
 

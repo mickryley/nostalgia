@@ -4,6 +4,7 @@
 #include <new>     // For std::bad_alloc
 #include <memory>  // For alignof
 #include <cassert>
+#include <memory_resource> // For pmr
 
 namespace nostalgia::linear {
 
@@ -12,28 +13,36 @@ namespace nostalgia::linear {
         char* buffer = new char[bufferSize]; // Mallocate a buffer of 1 MB
     }
 
-    // No (Default) Implementation
-    void linearAllocator();
-
-    // Object Override Implementation (Static & Singleton Access)
-    //void linearAllocatorObjectOverrideStatic();
-    //void linearAllocatorObjectOverrideSingleton();
-
     class LinearAllocator {
     public: 
         LinearAllocator(char* buf, size_t cap);
-        //virtual void* allocate(size_t) = 0;
         void* allocate(size_t bytes, size_t alignment = alignof(std::max_align_t));
+        // No deallocate, rewind only.
         void rewind();
     private:
-        char* m_buffer;      // Pointer to the start of the memory chunk
-        size_t m_capacity;   // Total size of the memory chunk
-        size_t m_offset;     // Current position for the next allocation
+        char* m_buffer;            // Pointer to the start of the memory chunk
+        size_t m_capacity;         // Total size of the memory chunk
+        size_t m_offset = 0;           // Current position for the next allocation
 
-        size_t m_peakCapacity = 0; // Peak capacity used during allocations
+        // Logging tools - remove on minimal / benchmarked version
+        size_t m_peakCapacity = 0; // Peak capacity used during allocations 
     };
-
-
+/*
+    class LinearMemoryResource : public std::pmr::memory_resource {
+    private:
+        char* m_buffer;
+        size_t m_offset = 0;
+        size_t m_capacity;
+    public:
+        LinearMemoryResource(void* buf, std::size_t cap);
+    protected:
+        void* do_allocate(std::size_t bytes, std::size_t alignment) override;
+        // No-op in linear
+        void do_deallocate(void*, std::size_t, std::size_t) override;
+        
+        bool do_is_equal(const memory_resource& other) const noexcept override;
+    };
+*/
 	// Static / Global Instance of LinearAllocator
     static LinearAllocator s_linearAllocator(buffer, bufferSize); // Global instance of LinearAllocator
 
@@ -46,6 +55,7 @@ namespace nostalgia::linear {
 	};
 
     // Template Allocator Implementation (Pointer Container Variant)
+    // Uses global static allocator internally
     template <typename T>
     class LinearAllocatorTemplate {
     public:
@@ -64,7 +74,6 @@ namespace nostalgia::linear {
             return new (mem) T(std::forward<Args>(args)...);
         }
 
-
         void deallocate(T* p, std::size_t n) noexcept {
             // No deallocation in linear allocator
         }
@@ -79,8 +88,8 @@ namespace nostalgia::linear {
     public:
         using value_type = T;
         using pointer = T*;
-        using const_pointer = const T*;
-        using reference = T&;
+        using const_pointer = const T*;         // Old standard, now optional 
+        using reference = T&;                   // Old standard, now optional 
         using const_reference = const T&;
         using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
@@ -90,12 +99,11 @@ namespace nostalgia::linear {
             using other = LinearAllocatorStlTemplate<U>;
         };
 
-
         LinearAllocatorStlTemplate() noexcept = default;
         template <typename U>
         LinearAllocatorStlTemplate(const LinearAllocatorStlTemplate<U>&) noexcept {}
 
-
+        // STL Requried Allocate
         T* allocate(std::size_t n) {
             return static_cast<T*>(s_linearAllocator.allocate(n * sizeof(T), alignof(T)));
         }
@@ -106,7 +114,7 @@ namespace nostalgia::linear {
             return new (mem) T(std::forward<Args>(args)...);
         }
 
-        // Required deallocate (no-op for linear allocators)
+        // STL Requried Deallocate (no-op for linear)
         void deallocate(T* /*p*/, std::size_t /*n*/) noexcept {
             // No-op: handled by allocator reset
         }
@@ -120,6 +128,8 @@ namespace nostalgia::linear {
     };
 
 
+
+
     template<typename T>
     class LinearVector_TemplateAllocator {
     public:
@@ -130,11 +140,9 @@ namespace nostalgia::linear {
             m_size = 0;
         }
 
-        // Not copyable
         LinearVector_TemplateAllocator(const LinearVector_TemplateAllocator&) = delete;
         LinearVector_TemplateAllocator& operator=(const LinearVector_TemplateAllocator&) = delete;
 
-        // Push an object in-place
         template<typename... Args>
         T* emplace_back(Args&&... args) {
             assert(m_size < m_capacity && "Exceeded FastLinearVector capacity!");
@@ -211,7 +219,7 @@ namespace nostalgia::linear {
         }
 
         ~PointerLinearVector_ObjectOverride() {
-            delete[] m_data; // Only deletes the pointer array — not the objects themselves
+            delete[] m_data; // Only deletes the pointer array ï¿½ not the objects themselves
         }
 
         // Not copyable
@@ -235,7 +243,7 @@ namespace nostalgia::linear {
         T** data() { return m_data; }
         const T* const* data() const { return m_data; }
 
-        void clear() { m_size = 0; } // Doesn’t destroy objects (assumes allocator handles rewind)
+        void clear() { m_size = 0; } // Doesnï¿½t destroy objects (assumes allocator handles rewind)
 
     private:
         T** m_data = nullptr;

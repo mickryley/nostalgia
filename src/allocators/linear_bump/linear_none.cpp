@@ -11,13 +11,6 @@ namespace nostalgia::linear {
     namespace none {
         
     }
-
-    // No (Default) Implementation
-    void linearAllocator(){
-        // Allocate
-        // Free
-        // Rewind / Reset
-     }
     /*
     class LinearAllocator {
     public:
