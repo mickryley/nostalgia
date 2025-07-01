@@ -1,5 +1,7 @@
 #include <cstddef> // For size_t, std::max_align_t
 
+#include <iostream>
+
 #ifdef _MSC_VER
 #include <malloc.h> // for _aligned_malloc/_aligned_free
 #else
@@ -26,13 +28,13 @@ namespace nostalgia::stack {
     void* allocate(size_t bytes, size_t alignment = alignof(std::max_align_t)){
 
         size_t _allocStart = (m_offset + alignment - 1) & ~(alignment - 1);
-            if (_allocStart + bytes > m_capacity) {
+        if (_allocStart + bytes > m_capacity) {
 #ifdef _DEBUG
 				//log::print(logFlags::ERROR, "LinearAllocator: Out of memory! Requested [{}] bytes, but only [{}] bytes available.", bytes, m_capacity - m_offset);
                 //log::print(logFlags::ERROR, "LinearAllocator: Out of memory! Falling back to malloc.");
 #endif
                 // Graceful Fallback solution - currently windows only implementation
-                void* fallback = nullptr;
+            void* fallback = nullptr;
 #ifdef _MSC_VER
                 fallback = _aligned_malloc(bytes, alignment);
 #else
@@ -42,9 +44,27 @@ namespace nostalgia::stack {
                 fallback = nullptr;
             }
 #endif
+
+            if (!fallback) {
+                    throw std::bad_alloc();
+            }
+            return fallback;
+        }
+
+        void* _ptr = m_buffer + _allocStart;
+        m_offset = _allocStart + bytes;
+        m_peakCapacity = std::max(m_peakCapacity, m_offset);
+#ifdef _DEBUG
+			//log::print("LinearAllocator: Allocated [{}] bytes at [{}] (offset: [{}], peak: [{}])", bytes, (void*)_ptr, m_offset, m_peakCapacity);
+#endif
+        return _ptr;
     }
 
-    void deallocate()
+    bool free(void* ptr) noexcept {
+        if (ptr == nullptr) return false;
+
+        
+    }
     
 
 
