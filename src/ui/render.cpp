@@ -1,5 +1,7 @@
 #include "render.h"
 
+#include "gui.h"
+
 // Dear ImGui: standalone example application for SDL3 + Vulkan
 
 // Learn about Dear ImGui:
@@ -503,6 +505,8 @@ int init_render()
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
+            nostalgia::gui::draw_gui();
+            /*
             static float f = 0.0f;
             static int counter = 0;
 
@@ -522,6 +526,7 @@ int init_render()
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
+            */
         }
 
         // 3. Show another simple window.

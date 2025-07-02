@@ -16,6 +16,6 @@ int main(int argc, char** argv) {
     if (headless) {
         return nostalgia::init_headless();
     } else {
-        return nostalgia::init_gui();
+        return nostalgia::gui::init_gui();
     }
 }

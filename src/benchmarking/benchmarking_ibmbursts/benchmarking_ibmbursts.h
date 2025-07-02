@@ -7,5 +7,6 @@ namespace nostalgia::benchmarking::IBMBursts {
 	void benchmark_IBMBursts_linearAllocators();
 	void benchmark_IBMBursts_stackAllocators();
 	void benchmark_IBMBursts_poolAllocators();
+	void benchmark_IBMBursts_freelistAllocators();
 
 }

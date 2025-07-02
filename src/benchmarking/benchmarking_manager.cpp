@@ -70,10 +70,30 @@ namespace nostalgia::benchmarking {
 
 	void init_benchmarking_manager() {
 		//IBMBursts::benchmark_IBMBursts_linearAllocators();
-		IBMBursts::benchmark_IBMBursts_stackAllocators();
-		IBMBursts::benchmark_IBMBursts_poolAllocators();
+		//IBMBursts::benchmark_IBMBursts_stackAllocators();
+		//IBMBursts::benchmark_IBMBursts_poolAllocators();
+		IBMBursts::benchmark_IBMBursts_freelistAllocators();
 
 		//benchmark_linearAllocators_None();
+	}
+
+	// Read this in from another data block or file in the future
+	std::vector<BenchmarkType> getAllBenchmarks() {
+		return {
+			{
+				.label = "IMB Bursts",
+				.description = "IBM Bursts",
+				.compatibleFlags = AllocatorFlags::FIXED_SIZE,
+				.run = {[]() {benchmark_linearAllocators_None; }},
+			},
+			{
+				.label = "Extra IMB Bursts",
+				.description = "IBM Bursts",
+				.compatibleFlags = AllocatorFlags::FIXED_SIZE,
+				.disabled = true,
+				.run = {[]() {benchmark_linearAllocators_None; }},
+			}
+		};
 	}
 
 }

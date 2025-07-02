@@ -4,6 +4,7 @@
 #include "allocators/stack_lifo/allocator_stack.h"
 #include "allocators/pool_slab/allocator_pool.h"
 
+#include "objects/objects_freelist.h"
 #include "objects/objects_pool.h"
 #include "objects/objects_stack.h"
 #include "objects/objects_linear.h"
@@ -994,7 +995,6 @@ namespace nostalgia::benchmarking::IBMBursts {
 	};
 #pragma endregion
 
-
 #pragma region Benchmarking Pool Allocators
 
 
@@ -1057,6 +1057,109 @@ namespace nostalgia::benchmarking::IBMBursts {
 	};
 #pragma endregion
 
+#pragma region Benchmarking Free List Allocators
+	void benchmark_IBMBursts_Freelist_Static_V2D_ContPointer(int iterations = 1000, int passes = 5000, int size = 16) {
+
+		// Initialise Main Timers
+		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Freelist Static V2D Cont Pointer");
+		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Freelist Static V2D Cont Pointer");
+		timer::Timer _timer = timer::Timer("Total Timer Freelist Static V2D Cont Pointer");
+
+		_timer.start();
+		// Alloc + Dealloc Passes
+		for (size_t i = 0; i < passes; i++)
+		{
+			// Allocation Iterations
+			_allocateTimer.start();
+			auto** vec = new freelist::objects::Vector2D_LocalOverride_StaticAccess * [iterations];
+
+			for (size_t j = 0; j < iterations; j++) {
+				vec[j] = new freelist::objects::Vector2D_LocalOverride_StaticAccess(1.0f, 2.0f);
+			}
+			_allocateTimer.pause();
+
+			// Deallocation Iterations
+			_deallocateTimer.start();
+			for (int k = static_cast<int>(iterations) - 1; k >= 0; --k) {
+				delete vec[k]; // Deallocate each Vector2D object
+			}
+			delete[] vec;
+			_deallocateTimer.pause();
+		}
+		_timer.stop();
+		//_allocateTimer.print();
+		//_deallocateTimer.print();
+		exporting::BenchmarkResult result = exporting::BenchmarkResult{
+			.totalTime = _timer.print(),
+			.allocateTime = _allocateTimer.print(),
+			.deallocateTime = _deallocateTimer.print(),
+			.iterations = iterations,
+			.label = "IBM Bursts Freelist Allocator Static Object + Cont: Point",
+			.description = "5000x (1000x alloc + 1000x free)"
+		};
+		std::vector<exporting::BenchmarkResult> results = { result };
+		exporting::exportResultsToFile(results, "benchmark_results.txt");
+	}
+
+	void benchmark_IBMBursts_Freelist_Static_V2D_ContPointer_ForwardDealloc(int iterations = 1000, int passes = 5000, int size = 16) {
+
+		// Initialise Main Timers
+		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Freelist Static V2D Cont Pointer");
+		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Freelist Static V2D Cont Pointer");
+		timer::Timer _timer = timer::Timer("Total Timer Freelist Static V2D Cont Pointer");
+
+		_timer.start();
+		// Alloc + Dealloc Passes
+		for (size_t i = 0; i < passes; i++)
+		{
+			// Allocation Iterations
+			_allocateTimer.start();
+			auto** vec = new freelist::objects::Vector2D_LocalOverride_StaticAccess * [iterations];
+
+			for (size_t j = 0; j < iterations; j++) {
+				vec[j] = new freelist::objects::Vector2D_LocalOverride_StaticAccess(1.0f, 2.0f);
+			}
+			_allocateTimer.pause();
+
+			// Deallocation Iterations
+			_deallocateTimer.start();
+			for (size_t k = 0; k < iterations; k++) {
+				delete vec[k]; // Deallocate each Vector2D object
+			}
+			delete[] vec;
+			_deallocateTimer.pause();
+		}
+		_timer.stop();
+		//_allocateTimer.print();
+		//_deallocateTimer.print();
+		exporting::BenchmarkResult result = exporting::BenchmarkResult{
+			.totalTime = _timer.print(),
+			.allocateTime = _allocateTimer.print(),
+			.deallocateTime = _deallocateTimer.print(),
+			.iterations = iterations,
+			.label = "IBM Bursts Freelist Allocator Static Object + Cont: Point",
+			.description = "5000x (1000x alloc + 1000x free)"
+		};
+		std::vector<exporting::BenchmarkResult> results = { result };
+		exporting::exportResultsToFile(results, "benchmark_results.txt");
+	}
+
+	std::vector<BenchmarkMetadata> freelistBenchmarks = {
+		{
+			.label = "IBM Bursts Freelist Allocator Static Object + Cont: Point Vector",
+			.description = "5000x (1000x alloc + 1000x free)",
+			.testFlags = allocatorTestFlags::NONE,
+			.run = []() { benchmark_IBMBursts_Freelist_Static_V2D_ContPointer(); }
+		}/*,
+		{
+			.label = "IBM Bursts Freelist Allocator Static Object + Cont: Point Vector - Forward Dealloc",
+			.description = "5000x (1000x alloc + 1000x free)",
+			.testFlags = allocatorTestFlags::NONE,
+			.run = []() { benchmark_IBMBursts_Freelist_Static_V2D_ContPointer_ForwardDealloc(); }
+		}*/
+	};
+#pragma endregion
+
 	void benchmark_IBMBursts_linearAllocators() {
 
 		// Run all requested benchmarks
@@ -1076,8 +1179,6 @@ namespace nostalgia::benchmarking::IBMBursts {
 			log::print("Running Stack Allocator Benchmark: {}", benchmark.label);
 			log::print("======================");
 			benchmark.run();
-
-
 		}
 	}
 
@@ -1089,8 +1190,17 @@ namespace nostalgia::benchmarking::IBMBursts {
 			log::print("Running Pool Allocator Benchmark: {}", benchmark.label);
 			log::print("======================");
 			benchmark.run();
+		}
+	}
 
+	void benchmark_IBMBursts_freelistAllocators() {
 
+		// Run all requested benchmarks
+		for (const auto& benchmark : freelistBenchmarks) {
+			log::print("======================");
+			log::print("Running Freelist Allocator Benchmark: {}", benchmark.label);
+			log::print("======================");
+			benchmark.run();
 		}
 	}
 
