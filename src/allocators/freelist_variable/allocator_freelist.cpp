@@ -92,18 +92,41 @@ namespace nostalgia::freelist {
 				return ptr;
 			}
 		}
+
 		return nullptr;
 	}
 
 	std::byte* FreeAllocator::findNextFit(size_t size) {
+		if (m_head == nullptr || m_head >= (m_buffer + m_cap)) m_head = m_buffer;
 
-		for (std::byte* ptr = m_head; get_size(header(ptr)) > 0; ptr = next_block(ptr)) {
-			if (!get_alloc(header(ptr)) && (size <= get_size(header(ptr)))) {
-				m_head = ptr;
-				return ptr;
+		std::byte* search = m_head;
+		std::byte* found = nullptr;
+
+		// First pass
+		for (; get_size(header(search)) > 0; search = next_block(search)) {
+			if (!get_alloc(header(search)) && (size <= get_size(header(search)))) {
+				found = search;
+				break;
 			}
 		}
-		return nullptr;
+
+		// Second pass
+		if (found == nullptr && m_head != m_buffer) {
+			search = m_buffer;
+
+			for (; search < m_head && get_size(header(search)) > 0; search = next_block(search)) {
+				if (!get_alloc(header(search)) && (size <= get_size(header(search)))) {
+					found = search;
+					break;
+				}
+			}
+		}
+
+		if (found != nullptr) {
+			m_head = found;
+		}
+
+		return found;
 	}
 
 
