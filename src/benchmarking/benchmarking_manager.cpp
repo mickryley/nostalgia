@@ -2,6 +2,8 @@
 
 #include "benchmarking_ibmbursts/benchmarking_ibmbursts.h"
 
+#include "benchmarking/allocator_dispatch.h"
+
 #include "allocators/linear_bump/allocator_linear.h"
 #include "allocators/stack_lifo/allocator_stack.h"
 #include "allocators/pool_slab/allocator_pool.h"
@@ -76,22 +78,52 @@ namespace nostalgia::benchmarking {
 
 		//benchmark_linearAllocators_None();
 	}
+	// Temp hardcoding, load in DD later
+	std::vector<AllocatorType> getAllAllocators(){
+		return {
+			{
+				.id = AllocatorID::Linear,
+				.label = "Linear Allocator",
+				.description = "Linear Allocator",
+				.requiredFlags = AllocatorFlags::NONE
+			},
+			{
+				.id = AllocatorID::Stack,
+				.label = "Stack Allocator",
+				.description = "Stack Allocator",
+				.requiredFlags = AllocatorFlags::NONE
+			},
+			{
+				.id = AllocatorID::Pool,
+				.label = "Pool Allocator",
+				.description = "Pool Allocator",
+				.requiredFlags = AllocatorFlags::FIXED_SIZE
+			},
+			{
+				.id = AllocatorID::Freelist,
+				.label = "Freelist Allocator",
+				.description = "Freelist Allocator",
+				.requiredFlags = AllocatorFlags::NONE
+			},
+		};
+	}
 
 	// Read this in from another data block or file in the future
+	// Keep naming consistent so only the namespace needs changing
 	std::vector<BenchmarkType> getAllBenchmarks() {
 		return {
 			{
 				.label = "IMB Bursts",
 				.description = "IBM Bursts",
 				.compatibleFlags = AllocatorFlags::FIXED_SIZE,
-				.run = {[]() {benchmark_linearAllocators_None; }},
+				.dispatcher = {[]() { IBMBursts::dispatch; }}
 			},
 			{
 				.label = "Extra IMB Bursts",
 				.description = "IBM Bursts",
 				.compatibleFlags = AllocatorFlags::FIXED_SIZE,
 				.disabled = true,
-				.run = {[]() {benchmark_linearAllocators_None; }},
+				.dispatcher = {[]() { IBMBursts::dispatch; }}
 			}
 		};
 	}

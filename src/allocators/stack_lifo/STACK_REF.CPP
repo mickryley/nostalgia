@@ -1,3 +1,5 @@
+/*
+
 #include <cstddef>   // For size_t
 #include <cstdint>   // For uint32_t, uint8_t
 #include <atomic>    // For std::atomic
@@ -143,3 +145,5 @@ private:
         return (size + alignmentBytes - 1) / alignmentBytes * alignmentBytes;
     }
 };
+
+*/

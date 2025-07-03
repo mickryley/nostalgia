@@ -80,7 +80,7 @@ namespace nostalgia::gui{
 			for (const auto& button : benchmarking::getAllBenchmarks()) {
 				if (button.disabled) ImGui::BeginDisabled();
 
-				style::drawWideButton(button.label.c_str(), 0.9f, sidePanelButtonHeight, button.run);
+				style::drawWideButton(button.label.c_str(), 0.9f, sidePanelButtonHeight, button.dispatcher);
 
 				if (first) {
 					first = false;

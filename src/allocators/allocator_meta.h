@@ -3,23 +3,34 @@
 #include "log.h"
 
 namespace nostalgia {
-    enum class allocatorTestFlags : uint32_t {
+
+    // Vector of all allocators is held for now in the benchmarking_manager
+
+    enum class AllocatorFlags : uint32_t {
         NONE = 0,
-        FIXED_SIZE = 1 << 0,
-        THREAD_SAFE = 1 << 1,
+        FIXED_SIZE              = 1 << 0,
+        VARIABLE_SIZE           = 1 << 1,
+        THREAD_SAFE             = 1 << 2,
+
     };
-    ENABLE_BITMASK_OPERATORS(allocatorTestFlags);
+    ENABLE_BITMASK_OPERATORS(AllocatorFlags);
 
-    struct AllocatorMetadata {
+    enum class AllocatorID {
+        Linear,
+        Stack,
+        Pool,
+        Freelist
+    };
 
-        // ID or merely label?
+    struct AllocatorType {
+
+        const AllocatorID id;
         const std::string label;
         const std::string description;
-        const allocatorTestFlags testFlags;
+        const AllocatorFlags requiredFlags;
 
-        // Flags for eligible benchmarks
-        bool has(allocatorTestFlags flag) const {
-            return hasFlag(testFlags, flag);
+        bool has(AllocatorFlags flag) const {
+            return hasFlag(requiredFlags, flag);
         }
     };
 }

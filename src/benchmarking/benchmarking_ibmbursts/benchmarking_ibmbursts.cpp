@@ -769,125 +769,125 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 	}
 
-	std::vector<BenchmarkMetadata> linearBenchmarks = {
+	std::vector<ImplementationType> linearBenchmarks = {
 	{
 		.label = "IBM Bursts Malloc",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_None_V2D(); }
 	},
 	{
 		.label = "IBM Bursts (Manual Alloc only)",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts(); }
 	},
 	{
 		.label = "IBM Bursts Static Object",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Static_V2D(); }
 	},
 	{
 		.label = "IBM Bursts Singleton Object",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Singleton_V2D(); }
 	},
 	{
 		.label = "IBM Bursts Cached Singleton Object",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_CachedSingleton_V2D(); }
 	},
 	{
 		.label = "IBM Bursts Static Object + Cont: Point Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Static_V2D_ContPointVector(); }
 	},
 	{
 		.label = "IBM Bursts Singleton Object + Cont: Point",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Static_V2D_ContPointer(); }
 	},
 	{
 		.label = "IBM Bursts Singleton Object + Cont: Point Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Singleton_V2D_ContPointVector(); }
 	},
 	{
 		.label = "IBM Bursts Singleton Object + Cont: Point",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Singleton_V2D_ContPointer(); }
 	},
 	{
 		.label = "IBM Bursts Templated Allocator Object + Cont: Point (In Place)",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Template_V2D_ContPoint_Inplace(); }
 	},
 	{
 		.label = "IBM Bursts Templated Allocator Object + Cont: Point",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Template_V2D_ContPoint(); }
 	},
 	{
 		.label = "IBM Bursts Templated Allocator Object + Cont: Point Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Template_V2D_ContPointVector(); }
 	},
 	{
 		.label = "IBM Bursts STL Templated Allocator Object + Cont: Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_STL_Template_V2D_ContVector(); }
 	},
 	{
 		.label = "IBM Bursts STL Templated Allocator Object + Cont: Point Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_STL_Template_V2D_ContPointVector(); }
 	},
 	{
 		.label = "IBM Bursts STL Templated Allocator Object + Cont: Custom Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_STL_Template_V2D_CustomVector(); }
 	},
 	{
 		.label = "IBM Bursts Templated Allocator Object + Cont: Custom Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Template_V2D_CustomVector(); }
 	},
 	{
 		.label = "IBM Bursts Static Allocator Object + Cont: Custom Pointer Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Static_V2D_CustomPointerVector(); }
 	},
 	{
 		.label = "IBM Bursts PMR Default unsync + Cont: PMR Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_PMR_Unsync_PmrVector(); }
 	},
 	{
 		.label = "IBM Bursts PMR Default monotonic_buffer_resource + Cont: PMR Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_PMR_Monotonic_PmrVector(); }
 	},
 	{
 		.label = "IBM Bursts PMR Default hardcoded monotonic_buffer_resource + Cont: PMR Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_PMR_Monotonic_HardCoded_PmrVector(); }
 	}
 
@@ -979,17 +979,17 @@ namespace nostalgia::benchmarking::IBMBursts {
 	}
 
 
-	std::vector<BenchmarkMetadata> stackBenchmarks = {
+	std::vector<ImplementationType> stackBenchmarks = {
 	{
 		.label = "IBM Bursts Stack Allocator Object + Cont: Point Vector",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Stack(); }
 	},
 	{
 		.label = "IBM Bursts Stack Allocator Object + Cont: Point",
 		.description = "5000x (1000x alloc + 1000x free)",
-		.testFlags = allocatorTestFlags::NONE,
+		.compatibleFlags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Stack_Static_V2D_ContPointer(); }
 	}
 	};
@@ -1041,17 +1041,17 @@ namespace nostalgia::benchmarking::IBMBursts {
 		exporting::exportResultsToFile(results, "benchmark_results.txt");
 	}
 
-	std::vector<BenchmarkMetadata> poolBenchmarks = {
+	std::vector<ImplementationType> poolBenchmarks = {
 		{
 			.label = "IBM Bursts Pool Allocator Static Object + Cont: Point Vector",
 			.description = "5000x (1000x alloc + 1000x free)",
-			.testFlags = allocatorTestFlags::NONE,
+			.compatibleFlags = AllocatorFlags::NONE,
 			.run = []() { benchmark_IBMBursts_Pool_Static_V2D_ContPointer(); }
 		}/*,
 		{
 			.label = "IBM Bursts Pool Allocator Object + Cont: Point",
 			.description = "5000x (1000x alloc + 1000x free)",
-			.testFlags = allocatorTestFlags::NONE,
+			.compatibleFlags = AllocatorFlags::NONE,
 			.run = []() { benchmark_IBMBursts_Stack_Static_V2D_ContPointer(); }
 		}*/
 	};
@@ -1144,17 +1144,17 @@ namespace nostalgia::benchmarking::IBMBursts {
 		exporting::exportResultsToFile(results, "benchmark_results.txt");
 	}
 
-	std::vector<BenchmarkMetadata> freelistBenchmarks = {
+	std::vector<ImplementationType> freelistBenchmarks = {
 		{
 			.label = "IBM Bursts Freelist Allocator Static Object + Cont: Point Vector",
 			.description = "5000x (1000x alloc + 1000x free)",
-			.testFlags = allocatorTestFlags::NONE,
+			.compatibleFlags = AllocatorFlags::NONE,
 			.run = []() { benchmark_IBMBursts_Freelist_Static_V2D_ContPointer(); }
 		}/*,
 		{
 			.label = "IBM Bursts Freelist Allocator Static Object + Cont: Point Vector - Forward Dealloc",
 			.description = "5000x (1000x alloc + 1000x free)",
-			.testFlags = allocatorTestFlags::NONE,
+			.compatibleFlags = AllocatorFlags::NONE,
 			.run = []() { benchmark_IBMBursts_Freelist_Static_V2D_ContPointer_ForwardDealloc(); }
 		}*/
 	};

@@ -4,19 +4,11 @@
 
 #include "log.h"
 
+#include <string>
 #include <functional>
 
 namespace nostalgia {
-
-    enum class AllocatorFlags : uint32_t {
-        NONE = 0,
-        FIXED_SIZE              = 1 << 0,
-        VARIABLE_SIZE           = 1 << 1,
-        THREAD_SAFE             = 1 << 2,
-
-    };
-    ENABLE_BITMASK_OPERATORS(AllocatorFlags);
-
+// Vector of all benchmarks is held for now in the benchmarking_manager
     struct BenchmarkType {
 
         const std::string label;
@@ -25,24 +17,21 @@ namespace nostalgia {
 
         bool disabled = false;
 
-        const std::function<void()> run;
+        const std::function<void()> dispatcher;
 
         bool compatible(AllocatorFlags flags) const {
 			return (compatibleFlags & flags) == flags;
         }
     };
 
-    struct BenchmarkMetadata {
-
-        // ID or merely label?
+    struct ImplementationType {
         const std::string label;
-        const std::string description;
-        const allocatorTestFlags testFlags;
-        const std::function<void()> run; // Pointer to the benchmark function
+		const std::string description;
+        const AllocatorFlags compatibleFlags;
 
-        // Flags for eligible benchmarks
-        bool has(allocatorTestFlags flag) const {
-            return hasFlag(testFlags, flag);
+        const std::function<void()> run;
+        bool compatible(AllocatorFlags flags) const {
+			return (compatibleFlags & flags) == flags;
         }
     };
 }

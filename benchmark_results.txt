@@ -1,0 +1,10 @@
+[
+    {
+        "allocateTime": 14.063068000000452,
+        "deallocateTime": 5.149596999999592,
+        "description": "5000x (1000x alloc + 1000x free)",
+        "iterations": 1000,
+        "label": "IBM Bursts Pool Allocator Static Object + Cont: Point",
+        "totalTime": 19.539708
+    }
+]
