@@ -1,14 +1,11 @@
-#include "allocators/allocator_meta"
-
-#include "log.h"
-
 switch (allocator.id) {
-    #define DISPATCH(id, ns) case id: ns::RUN_BENCHMARK; break;
+#define DISPATCH(id, ns) case id: RUN_BENCHMARK(ns); break;
 
-    DISPATCH(AllocatorID::Linear, linear)
-    DISPATCH(AllocatorID::Stack, stack)
-    DISPATCH(AllocatorID::Pool, pool)
+		DISPATCH(AllocatorID::Linear, linear) // Would results in benchmarking::IBMBursts::linear::run_ibmbursts_benchmark();
+        DISPATCH(AllocatorID::Stack, stack)
+        DISPATCH(AllocatorID::Pool, pool)
+        DISPATCH(AllocatorID::Freelist, freelist)
 
-    #undef DISPATCH
-    default: log::print(logflags::ERROR, "Unknown allocator.");
-}
+#undef DISPATCH
+        default: log::print(logFlags::ERROR, "Unknown allocator.");
+        }

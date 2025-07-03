@@ -116,14 +116,14 @@ namespace nostalgia::benchmarking {
 				.label = "IMB Bursts",
 				.description = "IBM Bursts",
 				.compatibleFlags = AllocatorFlags::FIXED_SIZE,
-				.dispatcher = {[]() { IBMBursts::dispatch; }}
+				.dispatcher = {[]() { IBMBursts::dispatch(getAllAllocators()[3]); }}
 			},
 			{
 				.label = "Extra IMB Bursts",
 				.description = "IBM Bursts",
 				.compatibleFlags = AllocatorFlags::FIXED_SIZE,
-				.disabled = true,
-				.dispatcher = {[]() { IBMBursts::dispatch; }}
+				//.disabled = true,
+				.dispatcher = {[]() { IBMBursts::dispatch(getAllAllocators()[2]); }}
 			}
 		};
 	}

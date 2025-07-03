@@ -3,6 +3,7 @@
 #include "log.h"
 
 #include <chrono>
+#include <string>
 
 namespace nostalgia::timer {
 
@@ -10,7 +11,7 @@ namespace nostalgia::timer {
 	class Timer {
 	public:
 		// Constructor
-		Timer(const char* label) : label(label) {
+		Timer(std::string label) : label(label) {
 			log::print("Timer '{}' created.", label);
 		}
 		// Destructor
@@ -38,7 +39,7 @@ namespace nostalgia::timer {
 			return total_time;
 		}
 	private:
-		const char* label;
+		std::string label;
 		std::chrono::high_resolution_clock::time_point start_time;
 		double total_time = 0.0;
 	};

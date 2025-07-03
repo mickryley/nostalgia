@@ -10,6 +10,7 @@ namespace nostalgia::benchmarking::exporting {
 		double allocateTime;
 		double deallocateTime;
 		int iterations;
+		std::string allocator;
 		std::string label;
 		std::string description;
 	};

@@ -16,6 +16,7 @@ namespace nostalgia::benchmarking::exporting {
 				{"deallocateTime", result.deallocateTime},
 				{"iterations", result.iterations},
 				{"label", result.label},
+				{"allocator", result.allocator},
 				{"description", result.description}
 				});
 		}

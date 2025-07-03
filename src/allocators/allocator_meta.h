@@ -32,5 +32,8 @@ namespace nostalgia {
         bool has(AllocatorFlags flag) const {
             return hasFlag(requiredFlags, flag);
         }
+        bool isCompatibleWith(AllocatorFlags compatibleFlags) const {
+            return (compatibleFlags & requiredFlags) == requiredFlags;
+		}
     };
 }
