@@ -103,6 +103,5 @@ namespace nostalgia::stack {
 
     void StackAllocator::rewind() noexcept {
         m_offset = 0;
-        //log::print("StackAllocator: Rewind allocator to initial state (offset: [{}])", m_offset);
     }
 }

@@ -22,6 +22,9 @@ namespace nostalgia::freelist {
 		std::byte* findFirstFit(size_t size);
 		std::byte* findNextFit(size_t size);
 
+
+		inline void rewind() noexcept {} // no-op for freelist allocator
+
 	private:
 		std::byte* m_buffer;
 		std::byte* m_head;

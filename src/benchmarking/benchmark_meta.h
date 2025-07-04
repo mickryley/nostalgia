@@ -8,9 +8,13 @@
 #include <functional>
 
 namespace nostalgia {
-// Vector of all benchmarks is held for now in the benchmarking_manager
-    struct BenchmarkType {
 
+    enum class BenchmarkID {
+        NONE,
+        IBM_Bursts
+    };
+
+    struct BenchmarkType {
         const std::string label;
 		const std::string description;
         const AllocatorFlags compatibleFlags;
@@ -20,18 +24,7 @@ namespace nostalgia {
         const std::function<void()> dispatcher;
 
         bool compatible(AllocatorFlags flags) const {
-			return (compatibleFlags & flags) == flags;
-        }
-    };
-
-    struct ImplementationType {
-        const std::string label;
-		const std::string description;
-        const AllocatorFlags compatibleFlags;
-
-        const std::function<void()> run;
-        bool compatible(AllocatorFlags flags) const {
-			return (compatibleFlags & flags) == flags;
-        }
+            return (compatibleFlags & flags) == flags;
+        };
     };
 }

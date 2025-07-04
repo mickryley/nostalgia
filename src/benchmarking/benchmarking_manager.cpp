@@ -13,6 +13,7 @@
 
 #include "allocators/allocator_meta.h"
 #include "benchmarking/benchmark_meta.h"
+#include "implementations/implementation_meta.h"
 
 
 #include "timer.h"
@@ -21,6 +22,10 @@
 #include <array>
 #include <memory_resource>
 
+
+#include "benchmarking/benchmark_atlas.h"
+#include "allocators/allocator_atlas.h"
+#include "implementations/implementation_atlas.h"
 
 namespace nostalgia::benchmarking {
 
@@ -79,6 +84,7 @@ namespace nostalgia::benchmarking {
 		//benchmark_linearAllocators_None();
 	}
 	// Temp hardcoding, load in DD later
+	/*
 	std::vector<AllocatorType> getAllAllocators(){
 		return {
 			{
@@ -107,23 +113,49 @@ namespace nostalgia::benchmarking {
 			},
 		};
 	}
+	*/
+
 
 	// Read this in from another data block or file in the future
 	// Keep naming consistent so only the namespace needs changing
 	std::vector<BenchmarkType> getAllBenchmarks() {
+		/*std::vector<BenchmarkType> _all = {};
+
+		for (const auto& bench : nostalgia::benchmark::atlas) {
+
+			for (const auto& imp : nostalgia::implementation::atlas) {
+				_all.push_back{
+					.label = bench
+				}
+			}
+		}*/
 		return {
 			{
-				.label = "IMB Bursts",
+				.label = "IBM Bursts Linear",
 				.description = "IBM Bursts",
-				.compatibleFlags = AllocatorFlags::FIXED_SIZE,
-				.dispatcher = {[]() { IBMBursts::dispatch(getAllAllocators()[3]); }}
+				//.compatibleFlags = AllocatorFlags::FIXED_SIZE,
+				.dispatcher = {[]() { IBMBursts::dispatch(AllocatorID::Linear); }}
 			},
 			{
-				.label = "Extra IMB Bursts",
+				.label = "IBM Bursts Stack",
 				.description = "IBM Bursts",
-				.compatibleFlags = AllocatorFlags::FIXED_SIZE,
+				//.compatibleFlags = AllocatorFlags::FIXED_SIZE,
 				//.disabled = true,
-				.dispatcher = {[]() { IBMBursts::dispatch(getAllAllocators()[2]); }}
+				.dispatcher = {[]() { IBMBursts::dispatch(AllocatorID::Stack); }}
+			},
+			{
+				.label = "IBM Bursts Pool",
+				.description = "IBM Bursts",
+				//.compatibleFlags = AllocatorFlags::FIXED_SIZE,
+				//.disabled = true,
+				.dispatcher = {[]() { IBMBursts::dispatch(AllocatorID::Pool); }}
+			},
+			{
+				.label = "IBM Bursts Freelist",
+				.description = "IBM Bursts",
+				//.compatibleFlags = AllocatorFlags::FIXED_SIZE,
+				//.disabled = true,
+				.dispatcher = {[]() { IBMBursts::dispatch(AllocatorID::Pool); }}
 			}
 		};
 	}

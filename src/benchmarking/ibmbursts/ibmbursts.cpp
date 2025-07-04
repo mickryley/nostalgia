@@ -20,9 +20,20 @@
 // Therefore details of the benchmark function should be drawn from another INC file that is consistent 
 // within the benchmarking namespace.
 
+#include "allocators/linear_bump/allocator_linear.h"
+#include "allocators/stack_lifo/allocator_stack.h"
+#include "allocators/pool_slab/allocator_pool.h"
+#include "allocators/freelist_variable/allocator_freelist.h"
 
+#include "objects/objects_linear.h"
+#include "objects/objects_stack.h"
 #include "objects/objects_pool.h"
 #include "objects/objects_freelist.h"
+
+#include "allocators/allocator_meta.h"
+#include "benchmarking/benchmark_meta.h"
+#include "implementations/implementation_meta.h"
+#include "implementations/implementation_atlas.h"
 
 #include "benchmarking/macros.h"
 
@@ -32,78 +43,25 @@ struct ImplementationDetails {
 	const char* desc;
 };
 
-
 namespace nostalgia::benchmarking::IBMBursts {
-	//void run_ibmbursts_benchmark(int argc, char** argv);
-
-	/*
-#pragma region Timer Macros
-#define BEGIN_ALL_TIMERS()			timer::Timer _allocateTimer = timer::Timer(std::format("Allocate Timer {} {}", _impDetails.name, _impDetails.allocator)); \
-									timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer "); \
-									timer::Timer _timer = timer::Timer("Total Timer "); \
-									_timer.start();
-
-#define START_ALLOC_TIMERS()		_allocateTimer.start();
-#define PAUSE_ALLOC_TIMERS()		_allocateTimer.pause();
-#define START_DEALLOC_TIMERS()		_deallocateTimer.start();
-#define PAUSE_DEALLOC_TIMERS()		_deallocateTimer.pause();
-
-#define STOP_ALL_TIMERS()			_timer.stop();
-
-#define PRINT_ALL_TIMERS()			_allocateTimer.print(); \
-									_deallocateTimer.print(); \
-									_timer.print();
-#pragma endregion
-
-#pragma region Export Results Macros
-#define EXPORT_BENCHMARK_RESULTS() \
-								exporting::BenchmarkResult result = exporting::BenchmarkResult{ \
-									.totalTime = _timer.print(), \
-									.allocateTime = _allocateTimer.print(), \
-									.deallocateTime = _deallocateTimer.print(), \
-									.iterations = iterations, \
-									.allocator = _impDetails.allocator, \
-									.label = _impDetails.name, \
-									.description = _impDetails.desc \
-								}; \
-								std::vector<exporting::BenchmarkResult> results = { result }; \
-								exporting::exportResultsToFile(results, "benchmark_results.txt");
-#pragma endregion
-*/
-
-#pragma region Allocation Specific Macros - These must be set for every namespace 
-//#define OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS	nostalgia::freelist::objects::Vector2D_LocalOverride_StaticAccess
-#pragma endregion
-	void run_ibmbursts_benchmark() {}
-
-
-	// Need to use namespaces to designate the functions to be used in the benchmark with a shared name
-	// We need to piece this together from two separate lists of macros
-	// But first we'll write it out by hand
-	// Some definitions need to be specific to the allocator type
+	//void run_ibmbursts_benchmark() {}
 
 	namespace linear {
-		void run_ibmbursts_benchmark(int iterations, int passes, int size){}
+#include "allocators/linear_bump/defines_linear.inl"
+#include "benchmarking/ibmbursts/ibmbursts.inl"
+
 	}
 	namespace stack {
-		void run_ibmbursts_benchmark(int iterations, int passes, int size){}
+#include "allocators/stack_lifo/defines_stack.inl"
+#include "benchmarking/ibmbursts/ibmbursts.inl"
+
 	}
 	namespace pool {
-	#define NAME_ALLOCATOR		"Pool Allocator"
-	#define OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS	nostalgia::pool::objects::Vector2D_LocalOverride_StaticAccess
-
-	#include "benchmarking/ibmbursts/ibmbursts.inl"
-
-	#undef OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS
-	#undef NAME_ALLOCATOR
+#include "allocators/pool_slab/defines_pool.inl"
+#include "benchmarking/ibmbursts/ibmbursts.inl"
 	}
 	namespace freelist {
-	#define NAME_ALLOCATOR		"Freelist Allocator"
-	#define OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS	nostalgia::freelist::objects::Vector2D_LocalOverride_StaticAccess
-		
-	#include "benchmarking/ibmbursts/ibmbursts.inl"
-
-	#undef OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS
-	#undef NAME_ALLOCATOR
+#include "allocators/freelist_variable/defines_freelist.inl"
+#include "benchmarking/ibmbursts/ibmbursts.inl"
 	}
 }

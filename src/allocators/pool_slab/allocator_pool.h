@@ -18,6 +18,7 @@ namespace nostalgia::pool {
 		PoolAllocator(std::byte* buf, size_t objectSize, size_t objectCount);
 		void* allocate();
 		void deallocate(std::byte* ptr);
+		inline void rewind() noexcept {} // no-op for pool allocator
 
 	private:
 		std::byte* m_buffer;

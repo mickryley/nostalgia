@@ -22,5 +22,6 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 	void dispatch(); // Default to all allocators, empty for now
 
-    void dispatch(AllocatorType allocator);
+    void dispatch(AllocatorID allocator);
+	void dispatch(AllocatorType allocator);
 }

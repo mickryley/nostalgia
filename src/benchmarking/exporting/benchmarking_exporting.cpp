@@ -14,10 +14,10 @@ namespace nostalgia::benchmarking::exporting {
 				{"totalTime", result.totalTime},
 				{"allocateTime", result.allocateTime},
 				{"deallocateTime", result.deallocateTime},
-				{"iterations", result.iterations},
-				{"label", result.label},
-				{"allocator", result.allocator},
-				{"description", result.description}
+				{"iterations", result.iterations}
+				//{"label", result.label},
+				//{"allocator", result.allocator},
+				//{"description", result.description}
 				});
 		}
 		std::ofstream file(filename);
@@ -28,5 +28,10 @@ namespace nostalgia::benchmarking::exporting {
 		else {
 			throw std::runtime_error("Could not open file for writing: " + filename);
 		}
+	}
+
+
+	void exportBenchmark(BenchmarkResult results) {
+
 	}
 }

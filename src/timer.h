@@ -11,7 +11,7 @@ namespace nostalgia::timer {
 	class Timer {
 	public:
 		// Constructor
-		Timer(std::string label) : label(label) {
+		Timer(std::string _label) : label(_label) {
 			log::print("Timer '{}' created.", label);
 		}
 		// Destructor

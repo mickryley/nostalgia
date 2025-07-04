@@ -1,5 +1,8 @@
 #pragma once
 
+#include "implementations/implementation_meta.h"
+
+
 #include <string>
 #include <vector>
 
@@ -10,11 +13,14 @@ namespace nostalgia::benchmarking::exporting {
 		double allocateTime;
 		double deallocateTime;
 		int iterations;
-		std::string allocator;
-		std::string label;
-		std::string description;
+		nostalgia::ImplementationDetails implementation;
+		//std::string allocator;
+		//std::string label;
+		//std::string description;
 	};
 
+
+	void exportBenchmark(BenchmarkResult results);
 	// Function to export benchmark results to a file
 
 	void exportResultsToFile(const std::vector<BenchmarkResult>& results, const std::string& filename);
