@@ -5,7 +5,7 @@
 #include "implementations/implementation_atlas.h"
 
 #include <fstream>
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 

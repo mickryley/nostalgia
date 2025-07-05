@@ -1,6 +1,6 @@
 #include "benchmark_visualiser.h"
 
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 #include <fstream>
 
 #include <imgui.h>

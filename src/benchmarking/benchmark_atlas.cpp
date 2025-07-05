@@ -8,6 +8,7 @@ namespace nostalgia::benchmark {
 			"IBM Bursts",
 			"IBM Bursts Of Alloc and Dealloc",
 			AllocatorFlags::NONE,
+			false,
 			[]() { nostalgia::benchmarking::IBMBursts::dispatch(); }
 			} }
 		}
