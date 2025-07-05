@@ -57,8 +57,9 @@
 										.allocateTime = _allocateTimer.print(), \
 										.deallocateTime = _deallocateTimer.print(), \
 										.iterations = iterations, \
-										.implementation = _impDetails \
+										.passes = passes, \
+										.implementation = _impDetails, \
+										.benchmarkID = benchmarkID, \
 									}; \
-									std::vector<exporting::BenchmarkResult> results = { result }; \
-									exporting::exportResultsToFile(results, "benchmark_results.txt");
+									exporting::addBenchmarkResult(result);
 #pragma endregion

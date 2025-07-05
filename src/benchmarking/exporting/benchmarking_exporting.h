@@ -1,6 +1,7 @@
 #pragma once
 
 #include "implementations/implementation_meta.h"
+#include "benchmarking/benchmark_atlas.h"
 
 
 #include <string>
@@ -13,15 +14,13 @@ namespace nostalgia::benchmarking::exporting {
 		double allocateTime;
 		double deallocateTime;
 		int iterations;
+		int passes;
 		nostalgia::ImplementationDetails implementation;
-		//std::string allocator;
-		//std::string label;
-		//std::string description;
+		nostalgia::BenchmarkID benchmarkID;
 	};
 
-
+	void addBenchmarkResult(const BenchmarkResult& result);
 	void exportBenchmark(BenchmarkResult results);
-	// Function to export benchmark results to a file
-
+	void exportCurrentBenchmarks();
 	void exportResultsToFile(const std::vector<BenchmarkResult>& results, const std::string& filename);
 }

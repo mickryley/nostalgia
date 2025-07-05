@@ -1,6 +1,8 @@
 //#include "benchmarking/macros.h" // Ensure is commented out at compile time
 //#include "implementations/implementation_atlas.h"
 
+nostalgia::BenchmarkID benchmarkID = nostalgia::BenchmarkID::IBM_Bursts;
+
 void run_static_v2d_contPointer(nostalgia::AllocatorType allocator, int iterations, int passes, int size) {
 
 	nostalgia::ImplementationID iid = nostalgia::ImplementationID::OO_St_cP_RD;
@@ -18,8 +20,8 @@ void run_static_v2d_contPointer(nostalgia::AllocatorType allocator, int iteratio
 		for (size_t j = 0; j < iterations; j++) {
 			vec[j] = new OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS(1.0f, 2.0f);    // [ALLOC SPECIFIC]
 		}
-		PAUSE_ALLOC_TIMERS();
 
+		PAUSE_ALLOC_TIMERS();
 		START_DEALLOC_TIMERS();
 
 		for (int k = static_cast<int>(iterations) - 1; k >= 0; --k) {
@@ -53,8 +55,8 @@ void run_static_v2d_contPointer_rewindDealloc(nostalgia::AllocatorType allocator
 		for (size_t j = 0; j < iterations; j++) {
 			vec[j] = new OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS(1.0f, 2.0f);    // [ALLOC SPECIFIC]
 		}
-		PAUSE_ALLOC_TIMERS();
 
+		PAUSE_ALLOC_TIMERS();
 		START_DEALLOC_TIMERS();
 
 		ALLOCATOR_STATIC_ACCESS.rewind();
@@ -85,8 +87,8 @@ void run_static_v2d_contPointer_forwardDealloc(nostalgia::AllocatorType allocato
 		for (size_t j = 0; j < iterations; j++) {
 			vec[j] = new OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS(1.0f, 2.0f);    // [ALLOC SPECIFIC]
 		}
-		PAUSE_ALLOC_TIMERS();
 
+		PAUSE_ALLOC_TIMERS();
 		START_DEALLOC_TIMERS();
 
 		for (size_t k = 0; k < iterations; k++) {
@@ -104,9 +106,6 @@ void run_static_v2d_contPointer_forwardDealloc(nostalgia::AllocatorType allocato
 }
 
 void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations, int passes, int size) {
-
-	// Implement a switch for the allocator and implementation compatability
-	// Easiest to do it directly in the implementation for readability
 
 	run_static_v2d_contPointer(allocator, iterations, passes, size);
 	run_static_v2d_contPointer_forwardDealloc(allocator, iterations, passes, size);

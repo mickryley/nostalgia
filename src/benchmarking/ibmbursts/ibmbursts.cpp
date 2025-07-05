@@ -32,8 +32,10 @@
 
 #include "allocators/allocator_meta.h"
 #include "benchmarking/benchmark_meta.h"
+
 #include "implementations/implementation_meta.h"
 #include "implementations/implementation_atlas.h"
+#include "benchmarking/benchmark_atlas.h"
 
 #include "benchmarking/macros.h"
 

@@ -1,7 +1,9 @@
 #include "headless.h"
 
+#include "log.h"
+
 namespace nostalgia {
     int init_headless(){
-        return 0;
+        return INIT_OK;
     };
 }

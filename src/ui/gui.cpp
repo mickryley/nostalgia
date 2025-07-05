@@ -7,6 +7,10 @@
 #include "allocators/linear_bump/allocator_linear.h"
 
 #include "benchmarking/benchmarking_manager.h"
+#include "benchmarking/exporting/benchmarking_exporting.h"
+
+#include "benchmarking/visualiser/benchmark_visualiser.h"
+
 
 #include <iostream>
 
@@ -17,29 +21,18 @@
 namespace nostalgia::gui{
 
     namespace {
+		// Layout Settings
 		bool g_leftPanelOpen = true;
 		bool g_topBarOpen = true;
 
-		float sidePanelWidth = 300.0f; 
-		float sidePanelButtonHeight = 30.0f;
-
-		float topBarHeight = 300.0; 
-
-		float mainPageRightPanelWidth = 400.0f; // Width of the right panel on the main page
+		// Layout ~Constants
+		const float sidePanelWidth = 300.0f; 
+		const float sidePanelButtonHeight = 30.0f;
+		const float topBarHeight = 300.0; 
+		const float mainPageRightPanelWidth = 400.0f; // Width of the right panel on the main page
     }
 
-
-    int init_gui () {
-		log::print("Initializing GUI...");
-
-        benchmarking::init_benchmarking_manager();
-
-        init_render();
-
-        return 0;
-    };
-
-
+	// Per-Frame GUI Entry Point
     void draw_gui() {
 		style::withExpandedWindow("Nostalgia", []() {
 
@@ -61,11 +54,9 @@ namespace nostalgia::gui{
         });
     };
 
-
+	// Left Panel - For Benchmark Selection
 	void draw_leftPanel() {
-		//ImGuiIO& _io = ImGui::GetIO();
 		ImVec2 _sidebarStartPos = ImGui::GetCursorScreenPos();
-		//log::print("Drawing left panel at [{}, {}]", _sidebarStartPos.x, _sidebarStartPos.y);
 
 		style::withChildWrapper("Side Panel", ImVec2(sidePanelWidth, 0), []() {
 			if (ImGui::ArrowButton("##toggleSidePanel", g_leftPanelOpen ? ImGuiDir_Left : ImGuiDir_Right)) {
@@ -90,18 +81,27 @@ namespace nostalgia::gui{
 				if (button.disabled) ImGui::EndDisabled();
 				ImGui::Spacing();
 			}
+
+			style::drawWideButton("Export Benchmarks", 0.9f, sidePanelButtonHeight, []() {
+				nostalgia::benchmarking::exporting::exportCurrentBenchmarks();
+				});
+
+			style::drawWideButton("Visualise Benchmarks", 0.9f, sidePanelButtonHeight, []() {
+				nostalgia::visualiser::loadBenchmarkPlotData();
+				});
 		});
 	}
 
+	// Top Bar - Trigger Benchmarks, Implementation Setup, Details, and Hover Descriptions
     void draw_topBar() {
 		ImVec2 _topbarStartPos = ImGui::GetCursorScreenPos();
-		//log::print("Drawing top panel at [{}, {}]", _topbarStartPos.x, _topbarStartPos.y);
 		
 		style::withChildWrapper("Top Bar", ImVec2(0, topBarHeight), []() {
 
 		});
     }
 
+	// Main Page - Results Graphs
     void draw_mainPage() {
 		ImVec2 _mainStartPos = ImGui::GetCursorScreenPos();
 		//log::print("Drawing main panel at [{}, {}]", _mainStartPos.x, _mainStartPos.y);
@@ -112,7 +112,9 @@ namespace nostalgia::gui{
 			float _panelWidth = std::max(_availWidth - mainPageRightPanelWidth, _availWidth * 0.66f);
 			style::withChildWrapper("Main Page Content", ImVec2(_panelWidth, 0), []() {
 
-			ImGui::Text("Main Page");
+			// ImGui::Text("Main Page");
+
+			visualiser::ShowBenchmarkPlot();
 
 			});
 
@@ -121,8 +123,16 @@ namespace nostalgia::gui{
 			style::withChildWrapper("Main Page Details", ImVec2(0, 0), []() {
 
 				ImGui::Text("Main Page Details");
+				visualiser::ShowDetails();
 
 			});
 		}, false);
     }
+
+	// Initialises SDL-Vulkan-DearIMGUI backend, calls draw_gui() every frame
+	int init_gui() {
+		init_renderBackend();
+		return INIT_OK;
+	};
+
 }

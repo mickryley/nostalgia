@@ -4,18 +4,12 @@
 #include <string>
 
 int main(int argc, char** argv) {
+
     bool headless = false;
-
-    for (int i = 1; i < argc; ++i) {
-        
-        if (std::string(argv[i]) == "-headless") {
+    for (size_t i = 1; i < argc; ++i)        
+        if (std::string(argv[i]) == "-headless")
             headless = true;
-        }
-    }
 
-    if (headless) {
-        return nostalgia::init_headless();
-    } else {
-        return nostalgia::gui::init_gui();
-    }
+    if (headless) return nostalgia::init_headless();
+    return nostalgia::gui::init_gui();
 }

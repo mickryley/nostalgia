@@ -7,14 +7,11 @@
 
 namespace nostalgia::timer {
 
-	// High Speed Timer Wrapper 
 	class Timer {
 	public:
-		// Constructor
 		Timer(std::string _label) : label(_label) {
 			log::print("Timer '{}' created.", label);
 		}
-		// Destructor
 		~Timer() {
 			log::print("Timer '{}' destroyed.", label);
 		}
@@ -26,13 +23,11 @@ namespace nostalgia::timer {
 		double stop() {
 			auto end_time = std::chrono::high_resolution_clock::now();
 			total_time += std::chrono::duration<double, std::milli>(end_time - start_time).count();
-			log::print("Timer stopped. Elapsed time: {} ms", total_time);
 			return total_time;
 		}
 		void pause() {
 			auto pause_time = std::chrono::high_resolution_clock::now();
 			total_time += std::chrono::duration<double, std::milli>(pause_time - start_time).count();
-			//log::print("Timer paused. Total time: {} ms", total_time);
 		}
 		double print() const {
 			log::print("Timer '{}' total time: {} ms", label, total_time);

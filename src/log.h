@@ -12,6 +12,12 @@ inline x& operator|=(x& a, x b) { a = a | b; return a; } \
 inline bool hasFlag(x value, x flag) { return (value & flag) != x::NONE; }
 
 namespace nostalgia {
+	// Shared minimal return codes for the library
+	enum RETURN_CODES {
+		INIT_OK = 0,
+	};
+
+	// Shared bitmask for log flags
 	enum class logFlags : uint32_t {
 		NONE = 0,
 		INFO = 1 << 0,
@@ -35,16 +41,16 @@ namespace nostalgia::log {
 		
 		std::string formatted = std::format(fmt, std::forward<decltype(args)>(args)...);
 		if (hasFlag(flags, logFlags::INFO)) {
-			formatted = "[INFO] " + formatted;
+			formatted = "            [INFO] " + formatted;
 		} 
 		if (hasFlag(flags, logFlags::WARN)) {
-			formatted = "[WARN] " + formatted;
+			formatted = "      [WARN]       " + formatted;
 		} 
 		if (hasFlag(flags, logFlags::ERROR)) {
-			formatted = "[ERROR] " + formatted;
+			formatted = "[ERROR]             " + formatted;
 		} 
 		if (hasFlag(flags, logFlags::DEBUG)) {
-			formatted = "[DEBUG] " + formatted;
+			formatted = "[DEBUG]             " + formatted;
 		}
 		std::cout << formatted << std::endl; 
 	}

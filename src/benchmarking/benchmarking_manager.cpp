@@ -75,45 +75,13 @@ namespace nostalgia::benchmarking {
 
 	}
 
+	// Leftover - tester
 	void init_benchmarking_manager() {
 		//IBMBursts::benchmark_IBMBursts_linearAllocators();
 		//IBMBursts::benchmark_IBMBursts_stackAllocators();
 		//IBMBursts::benchmark_IBMBursts_poolAllocators();
 		IBMBursts::benchmark_IBMBursts_freelistAllocators();
-
-		//benchmark_linearAllocators_None();
 	}
-	// Temp hardcoding, load in DD later
-	/*
-	std::vector<AllocatorType> getAllAllocators(){
-		return {
-			{
-				.id = AllocatorID::Linear,
-				.label = "Linear Allocator",
-				.description = "Linear Allocator",
-				.requiredFlags = AllocatorFlags::NONE
-			},
-			{
-				.id = AllocatorID::Stack,
-				.label = "Stack Allocator",
-				.description = "Stack Allocator",
-				.requiredFlags = AllocatorFlags::NONE
-			},
-			{
-				.id = AllocatorID::Pool,
-				.label = "Pool Allocator",
-				.description = "Pool Allocator",
-				.requiredFlags = AllocatorFlags::FIXED_SIZE
-			},
-			{
-				.id = AllocatorID::Freelist,
-				.label = "Freelist Allocator",
-				.description = "Freelist Allocator",
-				.requiredFlags = AllocatorFlags::NONE
-			},
-		};
-	}
-	*/
 
 
 	// Read this in from another data block or file in the future
@@ -155,7 +123,7 @@ namespace nostalgia::benchmarking {
 				.description = "IBM Bursts",
 				//.compatibleFlags = AllocatorFlags::FIXED_SIZE,
 				//.disabled = true,
-				.dispatcher = {[]() { IBMBursts::dispatch(AllocatorID::Pool); }}
+				.dispatcher = {[]() { IBMBursts::dispatch(AllocatorID::Freelist); }}
 			}
 		};
 	}
