@@ -43,6 +43,7 @@ void run_static_v2d_contPointer_rewindDealloc(nostalgia::AllocatorType allocator
 	nostalgia::ImplementationID iid = nostalgia::ImplementationID::OO_St_cP_RwD;
 
 	IMPLEMENTATION_DETAILS(std::format("{}x ({}x alloc + {}x free)", passes, iterations, iterations).c_str());
+	//log::print("Checking Compatability of Rewind");
 	CHECK_ALLOCATOR_COMPATABILITY();
 	BEGIN_ALL_TIMERS();
 
@@ -109,6 +110,7 @@ void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations,
 
 	run_static_v2d_contPointer(allocator, iterations, passes, size);
 	run_static_v2d_contPointer_forwardDealloc(allocator, iterations, passes, size);
+	run_static_v2d_contPointer_rewindDealloc(allocator, iterations, passes, size);
 }
 
 #undef OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS
