@@ -1,0 +1,28 @@
+# === Normalize Line Endings ===
+
+* text=auto eol=lf
+
+# === Force known binary files ===
+*.png binary
+*.jpg binary
+*.ogg binary
+*.wav binary
+*.glb binary
+*.fbx binary
+
+# === Exclude Third-Party Code from GitHub Linguist Stats ===
+libs/** linguist-vendored
+external/** linguist-vendored
+third_party/** linguist-vendored
+_deps/** linguist-vendored
+cmake/** linguist-vendored
+
+# src/** linguist-language=C++
+
+# === Custom Diff Behavior ===
+*.json diff=json
+*.vert diff=cpp
+*.frag diff=cpp
+*.glsl diff=cpp
+*.cmake diff=cmake
+*.hlsl diff=cpp
