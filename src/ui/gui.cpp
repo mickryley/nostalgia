@@ -44,13 +44,20 @@ namespace nostalgia::gui{
 		std::unordered_map<std::string, bool> boolInputs;
 
 		const std::vector<BenchmarkParamSpec>* m_paramSpecs = nullptr; 
-		nostalgia::BenchmarkParams* m_paramOutput = nullptr;
+		nostalgia::BenchmarkParams* m_parameters = nullptr;
     }
 
-	void load_benchmarking_params(const std::vector<BenchmarkParamSpec>& specs, nostalgia::BenchmarkParams& outputParams) {
+	void load_benchmarking_params(const std::vector<BenchmarkParamSpec>& specs) {
+		log::print(logFlags::DEBUG, "Params loaded into m_parameters: {} keys", specs.size());
+
 		m_paramSpecs = &specs;
-		m_paramOutput = &outputParams;
+		m_parameters = &nostalgia::benchmarking::loader::getParameters();
+
+
+		log::print("[PARAM] Assigned m_parameters = {}", static_cast<const void*>(&m_parameters));
+
 		for (const auto& spec : specs) {
+
 			if (spec.typeName == "int") {
 				log::print(logFlags::DEBUG, "Loading int parameter: {}", spec.key);
 				intInputs[spec.key] = spec.defaultValue ? std::stoi(*spec.defaultValue) : 0;
@@ -98,13 +105,15 @@ namespace nostalgia::gui{
 			ImGui::Spacing();
 			bool first = true;
 
-			//for (const auto& button : benchmarking::getAllBenchmarks()) {
-			// Get the key value pairs from the atlas
 			for (const auto& [bID, bType] : nostalgia::benchmark::atlas) {
 			
 				if (bType.disabled) ImGui::BeginDisabled();
 
-				style::drawWideButton(bType.label.c_str(), 0.9f, sidePanelButtonHeight, [&bID](){nostalgia::benchmarking::loader::loadBenchmark(bID);});
+				style::drawWideButton(
+					bType.label.c_str(), 
+					0.9f, 
+					sidePanelButtonHeight, 
+					[&bID](){nostalgia::benchmarking::loader::loadBenchmark(bID);});
 
 				if (first) {
 					first = false;
@@ -128,7 +137,7 @@ namespace nostalgia::gui{
 	// Top Bar - Trigger Benchmarks, Implementation Setup, Details, and Hover Descriptions
     void draw_topBar() {
 		ImVec2 _topbarStartPos = ImGui::GetCursorScreenPos();
-		if (!m_paramSpecs || !m_paramOutput) return;
+		if (!m_paramSpecs || !m_parameters) return;
 		style::withChildWrapper("Top Bar", ImVec2(0, topBarHeight), []() {
 
 			// Parameter Input
@@ -145,8 +154,8 @@ namespace nostalgia::gui{
 
 			if (type == "int") {
 				int& value = intInputs[key];
-				ImGui::InputInt(key.c_str(), &value);
-				m_paramOutput->set<int>(key, value);				
+				if (ImGui::InputInt(key.c_str(), &value))
+					m_parameters->set<int>(key, value);				
 			}
 			else if (type == "string") {
 				std::string& buf = stringInputs[key];
@@ -160,26 +169,27 @@ namespace nostalgia::gui{
 					buf = input;
 				}
 
-				m_paramOutput->set<std::string>(key, buf);
+				m_parameters->set<std::string>(key, buf);
 			}
 			else if (type == "bool") {
 				bool& value = boolInputs[key];
 				ImGui::Checkbox(key.c_str(), &value);
-				m_paramOutput->set<bool>(key, value);
+				m_parameters->set<bool>(key, value);
 			}
 			else {
 				ImGui::TextColored(ImVec4(1, 0, 0, 1), "Unsupported type: %s", type.c_str());
 			}
-
-		//
 		}
-   		
+		//log::print("m_parameters pointer: {}", reinterpret_cast<uintptr_t>(m_parameters));
+
 		ImGui::Separator();
 
 		if (ImGui::Button("Run Benchmark")) {
 			// Run the benchmark with the current parameters
 			// Temp hardcoded for now
 			nostalgia::benchmarking::loader::dispatchBenchmark(nostalgia::BenchmarkID::IBM_Bursts);
+			nostalgia::benchmarking::exporting::exportCurrentBenchmarks();
+			nostalgia::visualiser::loadBenchmarkPlotData();
 		}
 
 

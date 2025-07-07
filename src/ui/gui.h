@@ -7,7 +7,7 @@ namespace nostalgia::gui{
 
 	void draw_gui();
 
-	void load_benchmarking_params(const std::vector<BenchmarkParamSpec>& specs, nostalgia::BenchmarkParams& outputParams);
+	void load_benchmarking_params(const std::vector<BenchmarkParamSpec>& specs);
 
 	void draw_leftPanel();
 	void draw_topBar();

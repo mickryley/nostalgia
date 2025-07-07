@@ -5,12 +5,10 @@
 namespace nostalgia::benchmarking::loader {
 
     namespace {
-    nostalgia::BenchmarkParams m_paramOutput;
+        nostalgia::BenchmarkParams m_paramOutput;
     }
 
-    inline nostalgia::BenchmarkParams& getParameters() {
-        return m_paramOutput;
-    }
+    nostalgia::BenchmarkParams& getParameters();
 
     void loadBenchmark(const nostalgia::BenchmarkID id);
 

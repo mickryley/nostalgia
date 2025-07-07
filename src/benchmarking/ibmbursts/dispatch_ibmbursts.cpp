@@ -10,6 +10,7 @@
 #include "implementations/implementation_atlas.h"
 #include "ibmbursts.h"
 
+
 #include "log.h"
 
 namespace nostalgia::benchmarking::IBMBursts {
@@ -45,28 +46,11 @@ namespace nostalgia::benchmarking::IBMBursts {
             return;
         }
         
-        // Parse the parameters from the command line or GUI
-        // Stored in the loader
-
-        nostalgia::BenchmarkParams& params = nostalgia::benchmarking::loader::getParameters();
-
-        log::print("Before editing, passes = {}", params.get<int>("passes"));
+        nostalgia::BenchmarkParams* params = &nostalgia::benchmarking::loader::getParameters();
         
-        if (!params.contains("passes")) {
-            log::print(logFlags::DEBUG, "No 'passes' parameter found, setting default to 5000.");
-            params.set("passes", 5000); // Default to 5000 passes
-        }
-        if (!params.contains("iterations")) {
-            log::print(logFlags::DEBUG, "No 'iterations' parameter found, setting default to 1000.");
-            params.set("iterations", 1000); // Default to 1000 iterations
-        }
-        if (!params.contains("object")) {
-            log::print(logFlags::DEBUG, "No 'object' parameter found, setting default to false.");
-            params.set("object", 0); // Default to false (no object override)
-        }
 		// Passes the allocator to ibmbursts.h for routed dispatching with selective implementation compatabilitiy
 
-    #define RUN_BENCHMARK(ns) ns::run_ibmbursts_benchmark(allocator, params.get<int>("iterations"), params.get<int>("passes"));
+    #define RUN_BENCHMARK(ns) ns::run_ibmbursts_benchmark(allocator, params->get<int>("iterations").value_or(1000), params->get<int>("passes").value_or(5000));
         
 #include "benchmarking/allocator_dispatch.inc"        
 
