@@ -93,9 +93,16 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 
 # === Compiler Strictness Flags ===
 target_compile_options(${PROJECT_NAME} PRIVATE
-    $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall;-Wextra;-pedantic;-Werror>
-    $<$<CXX_COMPILER_ID:MSVC>:/W4;/WX>
+    $<$<CXX_COMPILER_ID:GNU,Clang>:
+        -Wall -Wextra -Wpedantic -Werror
+        -Wshadow -Wconversion -Wsign-conversion
+        -Wnull-dereference -Wdouble-promotion -Wformat=2 -Wcast-align
+    >
+    $<$<CXX_COMPILER_ID:MSVC>:
+        /W4 /WX /permissive-
+    >
 )
+
 # === Windows-Specific Compiler Flags ===
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /std:c++latest /Zc:__cplusplus)
