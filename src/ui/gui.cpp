@@ -8,13 +8,20 @@
 
 #include "benchmarking/benchmarking_manager.h"
 #include "benchmarking/exporting/benchmarking_exporting.h"
+#include "benchmarking/benchmark_atlas.h"
 
 #include "benchmarking/visualiser/benchmark_visualiser.h"
 
+#include "benchmarking/benchmark_loader.h"
 
 #include <iostream>
+#include <unordered_map>
+#include <string>
+#include <vector>
 
 #include "imgui.h"
+
+#include "benchmarking/benchmark_params.h"
 
 #include "log.h"
 
@@ -30,7 +37,30 @@ namespace nostalgia::gui{
 		const float sidePanelButtonHeight = 30.0f;
 		const float topBarHeight = 300.0; 
 		const float mainPageRightPanelWidth = 400.0f; // Width of the right panel on the main page
+
+		// Parameter Inputs
+		std::unordered_map<std::string, std::string> stringInputs;
+		std::unordered_map<std::string, int> intInputs;
+		std::unordered_map<std::string, bool> boolInputs;
+
+		const std::vector<BenchmarkParamSpec>* m_paramSpecs = nullptr; 
+		nostalgia::BenchmarkParams* m_paramOutput = nullptr;
     }
+
+	void load_benchmarking_params(const std::vector<BenchmarkParamSpec>& specs, nostalgia::BenchmarkParams& outputParams) {
+		m_paramSpecs = &specs;
+		m_paramOutput = &outputParams;
+		for (const auto& spec : specs) {
+			if (spec.typeName == "int") {
+				log::print(logFlags::DEBUG, "Loading int parameter: {}", spec.key);
+				intInputs[spec.key] = spec.defaultValue ? std::stoi(*spec.defaultValue) : 0;
+			} else if (spec.typeName == "string") {
+				stringInputs[spec.key] = spec.defaultValue ? *spec.defaultValue : "";
+			} else if (spec.typeName == "bool") {
+				boolInputs[spec.key] = spec.defaultValue ? (*spec.defaultValue == "true") : false;
+			}
+		}
+	}
 
 	// Per-Frame GUI Entry Point
     void draw_gui() {
@@ -68,17 +98,20 @@ namespace nostalgia::gui{
 			ImGui::Spacing();
 			bool first = true;
 
-			for (const auto& button : benchmarking::getAllBenchmarks()) {
-				if (button.disabled) ImGui::BeginDisabled();
+			//for (const auto& button : benchmarking::getAllBenchmarks()) {
+			// Get the key value pairs from the atlas
+			for (const auto& [bID, bType] : nostalgia::benchmark::atlas) {
+			
+				if (bType.disabled) ImGui::BeginDisabled();
 
-				style::drawWideButton(button.label.c_str(), 0.9f, sidePanelButtonHeight, button.dispatcher);
+				style::drawWideButton(bType.label.c_str(), 0.9f, sidePanelButtonHeight, [&bID](){nostalgia::benchmarking::loader::loadBenchmark(bID);});
 
 				if (first) {
 					first = false;
 					ImGui::Spacing();
 					ImGui::Separator();
 				}
-				if (button.disabled) ImGui::EndDisabled();
+				if (bType.disabled) ImGui::EndDisabled();
 				ImGui::Spacing();
 			}
 
@@ -95,8 +128,60 @@ namespace nostalgia::gui{
 	// Top Bar - Trigger Benchmarks, Implementation Setup, Details, and Hover Descriptions
     void draw_topBar() {
 		ImVec2 _topbarStartPos = ImGui::GetCursorScreenPos();
-		
+		if (!m_paramSpecs || !m_paramOutput) return;
 		style::withChildWrapper("Top Bar", ImVec2(0, topBarHeight), []() {
+
+			// Parameter Input
+			//static std::unordered_map<std::string, std::string> stringInputs;
+			//static std::unordered_map<std::string, int> intInputs;
+			//static std::unordered_map<std::string, bool> boolInputs;
+				
+//void ShowBenchmarkParamEditor(const std::vector<BenchmarkParamSpec>& specs, nostalgia::BenchmarkParams& outputParams) {
+		for (const auto& spec : *m_paramSpecs) {
+			const std::string& key = spec.key;
+			const std::string& type = spec.typeName;
+
+			ImGui::Text("%s", spec.description.c_str());
+
+			if (type == "int") {
+				int& value = intInputs[key];
+				ImGui::InputInt(key.c_str(), &value);
+				m_paramOutput->set<int>(key, value);				
+			}
+			else if (type == "string") {
+				std::string& buf = stringInputs[key];
+				if (buf.empty() && spec.defaultValue) buf = *spec.defaultValue;
+
+				char input[256];
+				strncpy(input, buf.c_str(), sizeof(input));
+				input[sizeof(input) - 1] = 0;
+
+				if (ImGui::InputText(key.c_str(), input, sizeof(input))) {
+					buf = input;
+				}
+
+				m_paramOutput->set<std::string>(key, buf);
+			}
+			else if (type == "bool") {
+				bool& value = boolInputs[key];
+				ImGui::Checkbox(key.c_str(), &value);
+				m_paramOutput->set<bool>(key, value);
+			}
+			else {
+				ImGui::TextColored(ImVec4(1, 0, 0, 1), "Unsupported type: %s", type.c_str());
+			}
+
+		//
+		}
+   		
+		ImGui::Separator();
+
+		if (ImGui::Button("Run Benchmark")) {
+			// Run the benchmark with the current parameters
+			// Temp hardcoded for now
+			nostalgia::benchmarking::loader::dispatchBenchmark(nostalgia::BenchmarkID::IBM_Bursts);
+		}
+
 
 		});
     }

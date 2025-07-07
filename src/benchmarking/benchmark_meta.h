@@ -1,6 +1,7 @@
 #pragma once
 
 #include "allocators/allocator_meta.h"
+#include "benchmark_params.h"
 
 #include "log.h"
 
@@ -22,6 +23,8 @@ namespace nostalgia {
         bool disabled = false;
 
         const std::function<void()> dispatcher;
+        const std::function<void()> loader; // Unused for now - remove
+        const std::vector<BenchmarkParamSpec> paramSpecs;
 
         bool compatible(AllocatorFlags flags) const {
             return (compatibleFlags & flags) == flags;

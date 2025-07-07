@@ -5,6 +5,8 @@
 
 build/
 *.DS_Store
+imgui.ini
+benchmark_results.txt
 
 # User-specific files
 *.rsuser
