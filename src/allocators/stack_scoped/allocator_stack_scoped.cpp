@@ -21,7 +21,7 @@ namespace nostalgia::stack::scoped {
         }
 
     // Alignment-first allocation method
-    void* StackAllocator::allocate(size_t bytes, size_t _alignment){
+    void* StackAllocator::allocate(size_t bytes){
         size_t alignment = sizeof(StackBlockHeader);
         
         size_t _allocStart = (m_offset + alignment - 1) & ~(alignment - 1);

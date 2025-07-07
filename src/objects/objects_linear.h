@@ -16,10 +16,7 @@ namespace nostalgia::linear::objects {
 
 		inline void* operator new(size_t, void* ptr) noexcept { return ptr; }
 
-		void operator delete(void* ptr) noexcept {
-			//::operator delete(ptr);
-			// No need to deallocate
-		}
+		void operator delete(void* ptr) noexcept { (void)ptr; };
 	};
 
 	class Vector3D_LocalOverride_StaticAccess {
@@ -31,10 +28,7 @@ namespace nostalgia::linear::objects {
 		void* operator new(size_t size) {
 			return s_linearAllocator.allocate(size);
 		}
-		void operator delete(void* ptr) noexcept {
-			//::operator delete(ptr);
-			// No need to deallocate
-		}
+		void operator delete(void* ptr) noexcept { (void)ptr; };
 	};
 
 	class Vector2D_LocalOverride_SingletonAccess {
@@ -48,10 +42,7 @@ namespace nostalgia::linear::objects {
 
 		inline void* operator new(size_t, void* ptr) noexcept { return ptr; }
 
-		void operator delete(void* ptr) noexcept {
-			//::operator delete(ptr);
-			// No need to deallocate
-		}
+		void operator delete(void* ptr) noexcept { (void)ptr; };
 	};
 
 	class Vector3D_LocalOverride_SingletonAccess {
@@ -61,10 +52,7 @@ namespace nostalgia::linear::objects {
 		void* operator new(size_t size) {
 			return linear::SingletonLinearAllocator::getInstance().allocate(size);
 		}
-		void operator delete(void* ptr) noexcept {
-			//::operator delete(ptr);
-			// No need to deallocate
-		}
+		void operator delete(void* ptr) noexcept { (void)ptr; };
 	};
 
 }

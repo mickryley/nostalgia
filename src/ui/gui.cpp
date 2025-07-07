@@ -162,7 +162,8 @@ namespace nostalgia::gui{
 				if (buf.empty() && spec.defaultValue) buf = *spec.defaultValue;
 
 				char input[256];
-				strncpy(input, buf.c_str(), sizeof(input));
+				snprintf(input, sizeof(input), "%s", buf.c_str());
+				//strncpy(input, buf.c_str(), sizeof(input));
 				input[sizeof(input) - 1] = 0;
 
 				if (ImGui::InputText(key.c_str(), input, sizeof(input))) {

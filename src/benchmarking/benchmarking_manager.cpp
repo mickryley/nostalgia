@@ -1,6 +1,6 @@
 #include "benchmarking_manager.h"
 
-#include "benchmarking_ibmbursts/benchmarking_ibmbursts.h"
+//#include "benchmarking_ibmbursts/benchmarking_ibmbursts.h"
 
 #include "benchmarking/allocator_dispatch.h"
 
@@ -55,34 +55,30 @@ namespace nostalgia::benchmarking {
 
 		_allocator.rewind();
 
-		void* d = _allocator.allocate(512);   // 256 bytes
+		//void* d = 
+		_allocator.allocate(512);   // 256 bytes
 
 		_allocator.rewind();
 
-		void* e = _allocator.allocate(513);   // 256 bytes
+		//void* e = 
+		_allocator.allocate(513);   // 256 bytes
 
 		_allocator.rewind();
 
-		void* f = _allocator.allocate(bufferSize - 1);   // 256 bytes
+		//void* f = 
+		_allocator.allocate(bufferSize - 1);   // 256 bytes
 
 		_allocator.rewind();
 
-		void* g = _allocator.allocate(bufferSize);   // 256 bytes
+		//void* g = 
+		_allocator.allocate(bufferSize);   // 256 bytes
 
 		_allocator.rewind();
 
-		void* h = _allocator.allocate(bufferSize + 1);   // 256 bytes
+		//void* h = 
+		_allocator.allocate(bufferSize + 1);   // 256 bytes
 
 	}
-
-	// Leftover - tester
-	void init_benchmarking_manager() {
-		//IBMBursts::benchmark_IBMBursts_linearAllocators();
-		//IBMBursts::benchmark_IBMBursts_stackAllocators();
-		//IBMBursts::benchmark_IBMBursts_poolAllocators();
-		IBMBursts::benchmark_IBMBursts_freelistAllocators();
-	}
-
 
 	// Read this in from another data block or file in the future
 	// Keep naming consistent so only the namespace needs changing

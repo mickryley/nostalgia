@@ -2,11 +2,11 @@
 #include "benchmarking/benchmark_params.h"
 
 namespace nostalgia {
-
+    /*
     void BenchmarkParams::mergeFromCLI(const std::unordered_map<std::string, std::string>& cliArgs){
 
     }
-
+    */
     /*
     
     BenchmarkParams p;

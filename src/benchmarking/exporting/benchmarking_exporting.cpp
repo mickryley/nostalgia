@@ -59,9 +59,10 @@ namespace nostalgia::benchmarking::exporting {
 		m_currentBenchmarkResults.push_back(result);
 	}
 
+	/*
 	void exportBenchmark(BenchmarkResult results) {
 
-	}
+	}*/
 
 	void exportCurrentBenchmarks() {
 		exportResultsToFile(m_currentBenchmarkResults, "benchmark_results.txt");

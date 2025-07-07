@@ -46,6 +46,9 @@ endif()
 
 # === Source Files ===
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/*.cpp")
+list(FILTER SRC_FILES EXCLUDE REGEX ".*/legacy/.*")
+list(FILTER SRC_FILES EXCLUDE REGEX "[/\\]legacy[/\\]")
+
 
 # === ImGui + ImPlot Source Files ===
 set(IMGUI_SRC
@@ -88,6 +91,11 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     $<$<CONFIG:Release>:BUILD_RELEASE>
 )
 
+# === Compiler Strictness Flags ===
+target_compile_options(${PROJECT_NAME} PRIVATE
+    $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall;-Wextra;-pedantic;-Werror>
+    $<$<CXX_COMPILER_ID:MSVC>:/W4;/WX>
+)
 # === Windows-Specific Compiler Flags ===
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /std:c++latest /Zc:__cplusplus)

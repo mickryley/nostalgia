@@ -44,7 +44,7 @@ public:
 
     const auto& debugDump() const { return _params; }
 
-    void mergeFromCLI(const std::unordered_map<std::string, std::string>& cliArgs);
+    // void mergeFromCLI(const std::unordered_map<std::string, std::string>& cliArgs);
 
 private:
     struct BaseHolder { virtual ~BaseHolder() = default; };

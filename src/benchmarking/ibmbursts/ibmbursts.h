@@ -13,15 +13,15 @@ namespace nostalgia::benchmarking::IBMBursts {
 	// The actual logic is written in the matching .inl
 
 	namespace linear {
-		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations = 1000, int passes = 5000, int size = 16);
+		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations = 1000, int passes = 5000);
 	}
 	namespace stack {
-		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations = 1000, int passes = 5000, int size = 16);
+		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations = 1000, int passes = 5000);
 	}
 	namespace pool{
-		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations = 1000, int passes = 5000, int size = 16);
+		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations = 1000, int passes = 5000);
 	}
 	namespace freelist{
-		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations = 1000, int passes = 5000, int size = 16);
+		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations = 1000, int passes = 5000);
 	}
 }

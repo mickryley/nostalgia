@@ -150,7 +150,7 @@ namespace nostalgia::visualiser {
         if (ImPlot::BeginPlot("Benchmark Results Grouped By Allocator Type", ImVec2(-1, -1), ImPlotFlags_NoMouseText)) {
 
             // UI Storage for labels
-            std::vector<std::string> labelStorage;
+            //std::vector<std::string> labelStorage;
             //std::vector<const char*> labels;
             std::vector<std::string> hoverStorage;
 			std::vector<int> hoveredRealIndices; 

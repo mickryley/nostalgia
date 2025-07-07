@@ -161,14 +161,9 @@ namespace nostalgia::freelist {
 			//log::print("Logging Alloc success [{}] at [{}]", m_allocCount++, (void*)ptr);
 			return ptr;
 		}
-		// No Fit
 		log::print("Logging Bad Alloc no fit");
 		throw std::bad_alloc();
-
-		return nullptr;
-		//std::byte* slot = m_head;
-		//m_head = *reinterpret_cast<std::byte**>(m_head);
-		//return slot;
+		//return nullptr;
 	}
 
 	void* FreeAllocator::coalesce(std::byte* ptr) {

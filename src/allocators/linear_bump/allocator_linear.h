@@ -146,7 +146,8 @@ namespace nostalgia::linear {
         template<typename... Args>
         T* emplace_back(Args&&... args) {
             assert(m_size < m_capacity && "Exceeded FastLinearVector capacity!");
-            T* obj = new (&m_data[m_size]) T(std::forward<Args>(args)...);
+            //T* obj = 
+            new (&m_data[m_size]) T(std::forward<Args>(args)...);
             return &m_data[m_size++];
         }
 

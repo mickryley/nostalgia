@@ -20,7 +20,7 @@ namespace nostalgia::stack {
     class StackAllocator {
     public:
         StackAllocator(char* buf, size_t cap);
-        void* allocate(size_t bytes, size_t alignment = alignof(std::max_align_t));
+        void* allocate(size_t bytes/*, size_t alignment = alignof(std::max_align_t)*/);
         bool free(void* ptr) noexcept;
         void reset() noexcept;
         void rewind() noexcept;
