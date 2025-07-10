@@ -21,12 +21,20 @@ namespace nostalgia::benchmarking::IBMBursts {
 
     void dispatch() {
         nostalgia::log::print(nostalgia::logFlags::DEBUG, "Dispatching IBM Bursts benchmark for all compatible allocators.");
+        nostalgia::log::print(nostalgia::logFlags::DEBUG, "Filtering IBM Bursts benchmark for all selected allocators in loader.");
 
         for (const auto& [allocatorID, allocator] : nostalgia::allocator::atlas) {
-            if (allocator.isCompatibleWith(nostalgia::benchmark::getCompatibleFlags(m_benchmarkID))) {
-                dispatch(allocator);
-            } else {
-                log::print(logFlags::WARN, "Allocator type [{}] is not compatible with IBM Bursts benchmark.", allocator.label);
+
+            if (nostalgia::benchmarking::loader::isAllocatorInBenchmark(allocatorID)) {
+                if (allocator.isCompatibleWith(nostalgia::benchmark::getCompatibleFlags(m_benchmarkID))) {
+                    dispatch(allocator);
+                }
+                else {
+                    log::print(logFlags::WARN, "Allocator type [{}] is not compatible with IBM Bursts benchmark.", allocator.label);
+                }
+            }
+            else {
+                log::print(logFlags::INFO, "Allocator type [{}] is not selected by the loader for this benchmark.", allocator.label);
             }
         }
     }

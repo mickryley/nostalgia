@@ -22,15 +22,10 @@ public:
     template <typename T>
     void set(const std::string& key, T value) {
         _params[key] = std::make_shared<Holder<T>>(std::move(value));
-        //log::print("SET key='{}' value={} -- map size = {}", key, value, _params.size());
-
-		//log::print("Setting {} to {}", key, value);
     }
 
     template <typename T>
     std::optional<T> get(const std::string& key) const {
-        //log::print("GET key='{}' -> {}", key, _params.contains(key) ? "FOUND" : "MISSING");
-
         auto it = _params.find(key);
         if (it == _params.end()) return std::nullopt;
         auto holder = std::dynamic_pointer_cast<Holder<T>>(it->second);
@@ -43,8 +38,6 @@ public:
     }
 
     const auto& debugDump() const { return _params; }
-
-    // void mergeFromCLI(const std::unordered_map<std::string, std::string>& cliArgs);
 
 private:
     struct BaseHolder { virtual ~BaseHolder() = default; };

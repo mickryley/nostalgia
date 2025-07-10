@@ -215,7 +215,7 @@ namespace nostalgia::gui {
         if (std::filesystem::exists("assets/fonts/CascadiaCodeNF.ttf")){
             ImGuiIO& io = ImGui::GetIO();
             ImFont* loadedFont = io.Fonts->AddFontFromFileTTF("assets/fonts/CascadiaCodeNF.ttf",
-                 16.0f, nullptr, io.Fonts->GetGlyphRangesDefault());
+                 12.0f, nullptr, io.Fonts->GetGlyphRangesDefault());
             if (loadedFont != nullptr)
                 io.FontDefault = loadedFont;
         }

@@ -17,6 +17,7 @@ namespace nostalgia {
 
     struct BenchmarkType {
         const std::string label;
+        const std::string labelLong;
 		const std::string description;
         const AllocatorFlags compatibleFlags;
 

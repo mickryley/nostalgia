@@ -44,14 +44,17 @@ namespace nostalgia::gui::style {
 		float availableWidth = ImGui::GetContentRegionAvail().x;
 		float buttonWidth = availableWidth * widthOfAvail;
 
-		//ImGui::SetCursorPosX(ImGui::GetContentRegionAvail().x * (1 - widthOfAvail) * 0.5f + ImGui::GetStyle().ItemInnerSpacing.x);
-
 		ImGui::SetCursorPosX(cursorX + (availableWidth - buttonWidth) * 0.5f);
 
 		if (ImGui::Button(label, ImVec2(buttonWidth, height))) {
 			std::forward<F>(onClick)();
 		}
-
 		//	ImGui::PopID();
 	}
+
+	bool draw_tabButton(const char* label, bool selected, ImVec2 size);
+
+	void draw_textCentered(const char* text);
+
+	void draw_separatorSpace();
 }
