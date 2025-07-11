@@ -113,11 +113,13 @@ target_include_directories(implot_obj
 )
 target_compile_options(implot_obj PRIVATE -w)
 
-# === Lower Strictness for ImGui and ImPlot inclusion ===
-set_source_files_properties(src/benchmarking/visualiser/benchmark_visualiser.cpp
-    PROPERTIES
-    COMPILE_OPTIONS "-Wno-implicit-int-float-conversion"
-)
+# === Lower Strictness for ImGui and ImPlot inclusion on Clang/GUN ===
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    set_source_files_properties(src/benchmarking/visualiser/benchmark_visualiser.cpp
+        PROPERTIES
+        COMPILE_OPTIONS "-Wno-implicit-int-float-conversion"
+    )
+endif()
 
 # === Main Executable ===
 add_executable(${PROJECT_NAME}
