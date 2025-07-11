@@ -187,59 +187,50 @@ namespace nostalgia::gui{
 			style::withChildWrapper("Benchmark Details", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0), []() {
 
 				nostalgia::BenchmarkID _benchmarkID = nostalgia::benchmarking::loader::getBenchmarkID();
-
 				float _arrowButtonSize = ImGui::GetFrameHeight();
-
-				ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (ImGui::GetTextLineHeight() - _arrowButtonSize) * 0.5f);
+				float _padding = ImGui::GetStyle().ItemSpacing.y;
 				
-				if (_benchmarkID == nostalgia::BenchmarkID::NONE) {
-					if (!g_leftPanelOpen) {
-						if (ImGui::ArrowButton("##toggleSidePanel", g_leftPanelOpen ? ImGuiDir_Left : ImGuiDir_Right)) {
-							g_leftPanelOpen = !g_leftPanelOpen;
-						}
-						if (ImGui::IsItemHovered()) {
-							ImGui::SetTooltip("Show Benchmark Selection Panel (Toggle)");
-						}
+				// ~~~ Sidebar Toggle Button ~~~
+				if (!g_leftPanelOpen) {
+					ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (ImGui::GetTextLineHeight() - _arrowButtonSize) * 0.5f);
+					if (ImGui::ArrowButton("##toggleSidePanel", g_leftPanelOpen ? ImGuiDir_Left : ImGuiDir_Right)) {
+						g_leftPanelOpen = !g_leftPanelOpen;
 					}
-					else {
-						ImGui::Spacing();
-						// float _arrowButtonSize = ImGui::GetFrameHeight();
-						ImGui::Dummy(ImVec2(_arrowButtonSize, _arrowButtonSize));
+					if (ImGui::IsItemHovered()) {
+						ImGui::SetTooltip("Show Benchmark Selection Panel (Toggle)");
 					}
-					ImGui::SameLine();
-
-					style::draw_textCentered("Select a Benchmark on the Left to get started!");
-					
 				}
 				else {
+					ImGui::Dummy(ImVec2(_arrowButtonSize, _arrowButtonSize - _padding));
+				}
+
+				ImGui::SameLine();
+
+				// ~~~ No Benchmark Selected Prompt ~~~
+				if (_benchmarkID == nostalgia::BenchmarkID::NONE)
+					style::draw_textCentered("Select a Benchmark on the Left to get started!");
+				
+				// === Benchmark Details Display ===
+				else {
 					const nostalgia::BenchmarkType& benchmarkType = nostalgia::benchmark::atlas.at(_benchmarkID);
-
-					if (!g_leftPanelOpen) {
-						if (ImGui::ArrowButton("##toggleSidePanel", g_leftPanelOpen ? ImGuiDir_Left : ImGuiDir_Right)) {
-							g_leftPanelOpen = !g_leftPanelOpen;
-						}
-					}
-					else {
-						ImGui::Spacing();
-						//float _arrowButtonSize = ImGui::GetFrameHeight();
-						ImGui::Dummy(ImVec2(_arrowButtonSize, _arrowButtonSize));
-					}
-					ImGui::SameLine();
+					// ~~~ Benchmark Label ~~~
 					style::draw_textCentered(benchmarkType.labelLong.c_str());
-
-					//ImGui::Text("%s", benchmarkType.labelLong.c_str());
-					ImGui::Spacing();
+					
 					ImGui::Separator();
-					ImGui::Spacing();
+
+					// ~~~ Scrollable Benchmark Description ~~~
+					style::withChildWrapper("Benchmark Description", ImVec2(0, 0), [&benchmarkType](){
 					ImGui::TextWrapped("%s", benchmarkType.description.c_str());
+					}, style::BorderStyle::NONE, style::SpacingStyle::NONE);
 				}
 
 				}, style::BorderStyle::NONE, style::SpacingStyle::SINGLE);
 
-			ImGui::SameLine();
+			style::draw_verticalSeparator(0.9f);
+			
 			if (m_paramSpecs && m_parameters) { // If parameters are loaded
-				// === Mid Section of Top Bar [Parameters] ===
-				style::withChildWrapper("Benchmark Parameters", ImVec2(0, 0), []() {
+				// === Right Section of Top Bar [Code] ===
+				style::withChildWrapper("Code Preview", ImVec2(0, 0), []() {
 
 
 				}, style::BorderStyle::NONE, style::SpacingStyle::SINGLE);
@@ -255,172 +246,175 @@ namespace nostalgia::gui{
 				ImVec2 _availSpace = ImGui::GetContentRegionAvail();
 
 				// === Benchmark Specific Parameters ===
-				style::withChildWrapper("Benchmark Parameters", ImVec2(_availSpace.x * 0.75f, _availSpace.y * 0.5f), []() {
+				style::withChildWrapper("Benchmark Parameters", ImVec2(_availSpace.x * 0.75f, _availSpace.y * 0.4f), []() {
+					ImGui::Spacing();
 					style::draw_textCentered("Benchmark Parameters");
+					ImGui::Separator();
+					// ~~~ Scrollable Display of Parameters ~~~
+					style::withChildWrapper("Parameter Inputs", ImVec2(0, 0), []() {
+						for (const BenchmarkParamSpec& spec : *m_paramSpecs) {
+							const std::string& key = spec.key;
+							const std::string& type = spec.typeName;
 
-					for (const BenchmarkParamSpec& spec : *m_paramSpecs) {
-						const std::string& key = spec.key;
-						const std::string& type = spec.typeName;
+							ImGui::Text("%s", spec.description.c_str());
+							ImGui::PushID(key.c_str());
 
-						ImGui::Text("%s", spec.description.c_str());
-						ImGui::PushID(key.c_str());
-
-						if (type == "int") {
-							int& value = intInputs[key];
-							if (ImGui::InputInt("##hiddenIntInput", &value, 1000, 10000))
-								m_parameters->set<int>(key, value);
-						}
-						else if (type == "string") {
-							std::string& buf = stringInputs[key];
-							if (buf.empty() && spec.defaultValue) buf = *spec.defaultValue;
-
-							char input[256];
-							snprintf(input, sizeof(input), "%s", buf.c_str());
-							//strncpy(input, buf.c_str(), sizeof(input));
-							input[sizeof(input) - 1] = 0;
-
-							if (ImGui::InputText(key.c_str(), input, sizeof(input))) {
-								buf = input;
+							if (type == "int") {
+								int& value = intInputs[key];
+								if (ImGui::InputInt("##hiddenIntInput", &value, 1000, 10000))
+									m_parameters->set<int>(key, value);
 							}
+							else if (type == "string") {
+								std::string& buf = stringInputs[key];
+								if (buf.empty() && spec.defaultValue) buf = *spec.defaultValue;
 
-							m_parameters->set<std::string>(key, buf);
+								char input[256];
+								snprintf(input, sizeof(input), "%s", buf.c_str());
+								//strncpy(input, buf.c_str(), sizeof(input));
+								input[sizeof(input) - 1] = 0;
+
+								if (ImGui::InputText(key.c_str(), input, sizeof(input))) {
+									buf = input;
+								}
+
+								m_parameters->set<std::string>(key, buf);
+							}
+							else if (type == "bool") {
+								bool& value = boolInputs[key];
+								ImGui::Checkbox(key.c_str(), &value);
+								m_parameters->set<bool>(key, value);
+							}
+							else {
+								ImGui::TextColored(ImVec4(1, 0, 0, 1), "Unsupported type: %s", type.c_str());
+							}
+							
+							if (ImGui::IsItemHovered()) {
+								m_hoveredParameter = &spec;
+								m_hoverState = HoverDetailState::parameter;
+							}
+							ImGui::PopID();
 						}
-						else if (type == "bool") {
-							bool& value = boolInputs[key];
-							ImGui::Checkbox(key.c_str(), &value);
-							m_parameters->set<bool>(key, value);
-						}
-						else {
-							ImGui::TextColored(ImVec4(1, 0, 0, 1), "Unsupported type: %s", type.c_str());
-						}
-						
-						if (ImGui::IsItemHovered()) {
-							m_hoveredParameter = &spec;
-							m_hoverState = HoverDetailState::parameter;
-						}
-						ImGui::PopID();
-					}
-				}, style::BorderStyle::NONE);
+					}, style::BorderStyle::NONE, style::SpacingStyle::SINGLE);
+				}, style::BorderStyle::NONE, style::SpacingStyle::HALF);
 
 				ImGui::SameLine();
 
 				// === Benchmark Specific Parameters ===
-				style::withChildWrapper("Benchmark Buttons", ImVec2(0, _availSpace.y * 0.5f), []() {
-					ImGui::Dummy(ImVec2(0, ImGui::GetContentRegionAvail().y * 0.8f));
-					// === Run Benchmark Button ===
-					ImVec2 _runButtonSize = ImVec2(ImGui::GetContentRegionAvail());
+				style::withChildWrapper("Benchmark Buttons", ImVec2(0, _availSpace.y * 0.4f), []() {
+					style::withChildWrapper("Inner Highlight", ImVec2(0, 0), []() {
+						ImGui::Dummy(ImVec2(0, ImGui::GetContentRegionAvail().y * 0.7f));
+						// === Run Benchmark Button ===
+						ImVec2 _runButtonSize = ImVec2(ImGui::GetContentRegionAvail());
 
-					if (ImGui::Button("Run Benchmark", _runButtonSize)) {
-						nostalgia::benchmarking::loader::dispatchBenchmark(nostalgia::benchmarking::loader::getBenchmarkID());
-						nostalgia::benchmarking::exporting::exportCurrentBenchmarks();
-						nostalgia::visualiser::loadBenchmarkPlotData();
-					}
+						if (ImGui::Button("Run Benchmark", _runButtonSize)) {
+							nostalgia::benchmarking::loader::dispatchBenchmark(nostalgia::benchmarking::loader::getBenchmarkID());
+							nostalgia::benchmarking::exporting::exportCurrentBenchmarks();
+							nostalgia::visualiser::loadBenchmarkPlotData();
+						}
 
-					if (ImGui::IsItemHovered()) {
-						m_hoverState = HoverDetailState::run;
-						ImGui::SetTooltip("Are you sure?!");
-					}
+						if (ImGui::IsItemHovered()) {
+							m_hoverState = HoverDetailState::run;
+							ImGui::SetTooltip("Are you sure?!");
+						}
+					}, style::BorderStyle::HIGHLIGHT, style::SpacingStyle::HALF);
+				}, style::BorderStyle::NONE, style::SpacingStyle::HALF);
+				
+				//ImGui::Separator();
+				ImGui::Spacing();
 
-				}, style::BorderStyle::NONE);
-
-				// === Allocator Selection Flags ===
-				style::draw_separatorSpace();
-
+				// === Allocator Selection ===
 				style::withChildWrapper("Allocator Selection", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0), []() {
-
 					style::draw_textCentered("Allocator/s Selection");
+					ImGui::Separator();
+					style::withChildWrapper("Allocator List", ImVec2(0, 0), []() {
+						// ~~~ Scrollable Display ALL allocators ~~~
+						for (const auto& [aID, aType] : nostalgia::allocator::atlas) {
+							nostalgia::AllocatorFlags _benchmarkAllocatorFlags = nostalgia::benchmarking::loader::getAllocatorFlags();
 
-					ImGui::Spacing();
+							// ~~~ Display but Disable incompatible allocators ~~~
+							bool _isCompatible = aType.isCompatibleWith(_benchmarkAllocatorFlags);
+							bool _isIncluded = nostalgia::benchmarking::loader::isAllocatorInBenchmark(aID);
 
-					// ~~~ Display ALL allocators ~~~
-					for (const auto& [aID, aType] : nostalgia::allocator::atlas) {
-						nostalgia::AllocatorFlags _benchmarkAllocatorFlags = nostalgia::benchmarking::loader::getAllocatorFlags();
+							if (!_isCompatible) ImGui::BeginDisabled();
+							std::string _buttonLabel = (!_isCompatible ? "Incompatible" : (_isIncluded ? "Remove" : "Add"));
 
-						// ~~~ Display but Disable incompatible allocators ~~~
-						bool _isCompatible = aType.isCompatibleWith(_benchmarkAllocatorFlags);
-						bool _isIncluded = nostalgia::benchmarking::loader::isAllocatorInBenchmark(aID);
+							ImGui::PushID(aType.label.c_str());
+							if (_isIncluded) ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetColorU32(ImGuiCol_ButtonHovered));
+							
+							// ~~~ Toggle Inclusion in Benchmark ~~~
+							if (ImGui::Button(_buttonLabel.c_str(), allocatorButtonSize)) {
+								nostalgia::benchmarking::loader::addAllocatorToBenchmark(aID, !_isIncluded);
+							}
 
-						if (!_isCompatible) ImGui::BeginDisabled();
-						std::string _buttonLabel = (!_isCompatible ? "Incompatible" : (_isIncluded ? "Remove" : "Add"));
+							if (ImGui::IsItemHovered()) {
+								m_hoveredAllocator = aID;
+								m_hoverState = HoverDetailState::allocator;
+							}
 
-						ImGui::PushID(aType.label.c_str());
-						if (_isIncluded) ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetColorU32(ImGuiCol_ButtonHovered));
-						
-						// ~~~ Toggle Inclusion in Benchmark ~~~
-						if (ImGui::Button(_buttonLabel.c_str(), allocatorButtonSize)) {
-							nostalgia::benchmarking::loader::addAllocatorToBenchmark(aID, !_isIncluded);
+							if (_isIncluded) ImGui::PopStyleColor();
+							ImGui::PopID();
+
+							if (!_isCompatible) ImGui::EndDisabled();
+
+							ImGui::SameLine();
+
+							std::string _allocatorLabel = std::format("{} [{}]", aType.label, aType.description);
+							ImGui::TextWrapped("%s", _allocatorLabel.c_str());
+
+							if (ImGui::IsItemHovered()) {
+								m_hoveredAllocator = aID;
+								m_hoverState = HoverDetailState::allocator;
+							}
+
 						}
+					}, style::BorderStyle::NONE, style::SpacingStyle::NONE);
+				}, style::BorderStyle::NONE, style::SpacingStyle::HALF);
 
-						if (ImGui::IsItemHovered()) {
-							m_hoveredAllocator = aID;
-							m_hoverState = HoverDetailState::allocator;
-						}
-
-						if (_isIncluded) ImGui::PopStyleColor();
-						ImGui::PopID();
-
-						if (!_isCompatible) ImGui::EndDisabled();
-
-						ImGui::SameLine();
-
-						std::string _allocatorLabel = std::format("{} [{}]", aType.label, aType.description);
-						ImGui::TextWrapped("%s", _allocatorLabel.c_str());
-
-						if (ImGui::IsItemHovered()) {
-							m_hoveredAllocator = aID;
-							m_hoverState = HoverDetailState::allocator;
-						}
-
-					}
-
-				}, style::BorderStyle::NONE);
-
-				ImGui::SameLine();
+				style::draw_verticalSeparator(0.6f);
 
 				// === Implementation Selection Flags ===
 				style::withChildWrapper("Implementation Selection", ImVec2(0, 0), []() {
-
 					style::draw_textCentered("Implementation/s Selection");
+					ImGui::Separator();
+					// ~~~ Scrollable Display ALL Implementations ~~~
+					style::withChildWrapper("Implementation List", ImVec2(0, 0), []() {
 
-					ImGui::Spacing();
+						ImGui::TextWrapped("Implementations run PER Allocator, and automatically filter for compatability.\nUse this window to disable unwanted implementations across ALL allocators.");
+						ImGui::Spacing();
 
-					ImGui::TextWrapped("Implementations run PER Allocator, and automatically filter for compatability.\nUse this window to disable unwanted implementations across ALL allocators.");
+						
+						for (const auto& [iID, iType] : nostalgia::implementation::atlas) {						
+							bool _isIncluded = nostalgia::benchmarking::loader::isImplementationInBenchmark(iID);
 
-					ImGui::Spacing();
+							std::string _buttonLabel = (_isIncluded ? "Disable" : "Enable");
 
-					// ~~~ Display ALL implementations ~~~
-					for (const auto& [iID, iType] : nostalgia::implementation::atlas) {						
-						bool _isIncluded = nostalgia::benchmarking::loader::isImplementationInBenchmark(iID);
+							ImGui::PushID(iType.label);
+							if (_isIncluded) ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetColorU32(ImGuiCol_ButtonHovered));
 
-						std::string _buttonLabel = (_isIncluded ? "Disable" : "Enable");
+							// ~~~ Toggle Inclusion in Benchmark ~~~
+							if (ImGui::Button(_buttonLabel.c_str(), allocatorButtonSize))
+								nostalgia::benchmarking::loader::addImplementationToBenchmark(iID, !_isIncluded);
 
-						ImGui::PushID(iType.label);
-						if (_isIncluded) ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetColorU32(ImGuiCol_ButtonHovered));
+							if (ImGui::IsItemHovered()) {
+								m_hoveredImplementation = iID;
+								m_hoverState = HoverDetailState::implementation;
+							}
 
-						// ~~~ Toggle Inclusion in Benchmark ~~~
-						if (ImGui::Button(_buttonLabel.c_str(), allocatorButtonSize))
-							nostalgia::benchmarking::loader::addImplementationToBenchmark(iID, !_isIncluded);
+							if (_isIncluded) ImGui::PopStyleColor();
+							ImGui::PopID();
 
-						if (ImGui::IsItemHovered()) {
-							m_hoveredImplementation = iID;
-							m_hoverState = HoverDetailState::implementation;
+							ImGui::SameLine();
+
+							std::string _implementationLabel = std::format("{}", iType.desc);
+							ImGui::TextWrapped("%s", _implementationLabel.c_str());
+
+							if (ImGui::IsItemHovered()) {
+								m_hoveredImplementation = iID;
+								m_hoverState = HoverDetailState::implementation;
+							}
 						}
-
-						if (_isIncluded) ImGui::PopStyleColor();
-						ImGui::PopID();
-
-						ImGui::SameLine();
-
-						std::string _implementationLabel = std::format("{}", iType.desc);
-						ImGui::TextWrapped("%s", _implementationLabel.c_str());
-
-						if (ImGui::IsItemHovered()) {
-							m_hoveredImplementation = iID;
-							m_hoverState = HoverDetailState::implementation;
-						}
-					}
-
-					}, style::BorderStyle::NONE);
+					}, style::BorderStyle::NONE, style::SpacingStyle::NONE);
+				}, style::BorderStyle::NONE, style::SpacingStyle::HALF);
 
 			}, style::BorderStyle::NONE, style::SpacingStyle::NONE);
 		}
@@ -482,7 +476,7 @@ namespace nostalgia::gui{
 				
 				if (m_currentResultTab == -1) draw_mainPage_New();
 				else visualiser::ShowBenchmarkPlot();
-			});
+			}, style::BorderStyle::LINE, style::SpacingStyle::NONE);
 
 			ImGui::SameLine();
 
@@ -495,7 +489,7 @@ namespace nostalgia::gui{
 				else visualiser::ShowDetails();
 
 			});
-		}, style::BorderStyle::LINE, style::SpacingStyle::SINGLE);
+		}, style::BorderStyle::NONE, style::SpacingStyle::NONE);
     }
 
 	// Initialises SDL-Vulkan-DearIMGUI backend, calls draw_gui() every frame

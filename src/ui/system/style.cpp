@@ -45,4 +45,27 @@ namespace nostalgia::gui::style {
 		ImGui::Separator();
 		ImGui::Spacing();
 	}
+
+	void draw_verticalSeparator(float fillPercent) {
+		ImGui::SameLine(0.0f, 0.0f);
+
+		ImU32 color = ImGui::GetColorU32(ImGuiCol_Separator);
+		float availHeight = ImGui::GetContentRegionAvail().y;
+		float height = availHeight * (fillPercent > 0 ? fillPercent : 1.0f);
+		float thickness = 1;
+
+		ImVec2 screenPos = ImGui::GetCursorScreenPos();
+		ImVec2 pos = ImVec2(
+			screenPos.x,
+			screenPos.y + (availHeight - height) * 0.5f
+		);
+
+		ImGui::GetWindowDrawList()->AddRectFilled(
+			pos,
+			ImVec2(pos.x + thickness, pos.y + height),
+			color
+		);
+		ImGui::Dummy(ImVec2(thickness, height));
+		ImGui::SameLine(0.0f, 0.0f);
+	}
 }

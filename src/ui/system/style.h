@@ -8,14 +8,17 @@ namespace nostalgia::gui::style {
 
 	enum class BorderStyle{
 		NONE,
-		LINE
+		LINE,
+		HIGHLIGHT
 	};
 
 	enum class SpacingStyle{
 		NONE,
+		HALF,
 		SINGLE,
 		DOUBLE
 	};
+
 
 	template <typename F>
 	void withChildWrapper(const char* label, ImVec2 size, F&& fn, 
@@ -24,7 +27,11 @@ namespace nostalgia::gui::style {
 		//ImVec2 _curPadding = ImGui::GetStyle().WindowPadding;
 
 		switch(spacing) {
-			
+			case SpacingStyle::HALF:
+				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 3.0f);
+				ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 1.0f);
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(7.0f, 7.0f));
+				break;
 			case SpacingStyle::SINGLE:
 				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 6.0f);
 				ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 1.0f);
@@ -42,16 +49,22 @@ namespace nostalgia::gui::style {
 				break;
 		}
 
-		if(border == BorderStyle::NONE)
-			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0,0,0,0));
+		switch (border){
+			case BorderStyle::LINE:
+				ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetColorU32(ImGuiCol_Border));
+				break;
+			case BorderStyle::HIGHLIGHT:
+			ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetColorU32(ImGuiCol_Separator));
+				break;
+			case BorderStyle::NONE:
+				ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0,0,0,0));
+				break;
+		}
 
 		bool _drawBorder = (border != BorderStyle::NONE || spacing != SpacingStyle::NONE);
 		ImGui::BeginChild(label, size, _drawBorder); // true = border
 		
-		if(border == BorderStyle::NONE)
-			ImGui::PopStyleColor(); // 1x Border Color
-
-		
+		ImGui::PopStyleColor(); // 1x Border Color
 		ImGui::PopStyleVar(3); // 3x Child Spacing
 
 		std::forward<F>(fn)();
@@ -100,4 +113,6 @@ namespace nostalgia::gui::style {
 	void draw_textCentered(const char* text);
 
 	void draw_separatorSpace();
+
+	void draw_verticalSeparator(float fillPercent);
 }
