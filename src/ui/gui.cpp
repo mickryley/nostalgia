@@ -1,7 +1,7 @@
 #include "gui.h"
 
-#include "render.h"
-#include "style.h"
+#include "ui/system/render.h"
+#include "ui/system/style.h"
 
 #include "allocators/allocator_meta.h"
 #include "allocators/allocator_atlas.h"
@@ -21,6 +21,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "imgui.h"
 
@@ -109,40 +110,42 @@ namespace nostalgia::gui{
 				// Main Content - Benchmark Results + Hover Details
 				draw_mainPage();
 
-			}, false);
+			}, style::BorderStyle::NONE, style::SpacingStyle::NONE);
         });
     };
 
 	// Left Panel - For Benchmark Selection
 	void draw_leftPanel() {
-		// ImVec2 _sidebarStartPos = ImGui::GetCursorScreenPos();
-
 		style::withChildWrapper("Side Panel", ImVec2(sidePanelWidth, 0), []() {
 
-			ImGui::Spacing();
-
+			float _textY = ImGui::GetCursorPosY();
 			style::draw_textCentered("Benchmarks");
-
+			float _textHeight = ImGui::GetTextLineHeight();
 			ImGui::SameLine();
 
 			float _arrowButtonSize = ImGui::GetFrameHeight();
-			float avialableWidth = ImGui::GetContentRegionAvail().x;
+			float _availableWidth = ImGui::GetContentRegionAvail().x;
 			float _spacing = ImGui::GetStyle().ItemSpacing.x;
 
-			ImGui::Dummy(ImVec2(avialableWidth - _arrowButtonSize - _spacing, 0.0f));
+			ImGui::Dummy(ImVec2(_availableWidth - _arrowButtonSize - _spacing, 0.0f));
 			ImGui::SameLine();
 
+			ImGui::SetCursorPosY(_textY + (_textHeight - _arrowButtonSize) * 0.5f);
+			
 			if (ImGui::ArrowButton("##toggleSidePanel", g_leftPanelOpen ? ImGuiDir_Left : ImGuiDir_Right)) {
 				g_leftPanelOpen = !g_leftPanelOpen;
 			}
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetTooltip("Hide Benchmark Selection Panel (Toggle)");
+			}
 
-			ImGui::Spacing();
+			// ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
 			bool first = true;
 
+			// ~~~ Benchmark Selection Buttons ~~~
 			for (const auto& [bID, bType] : nostalgia::benchmark::atlas) {
-			
 				if (bType.disabled) ImGui::BeginDisabled();
 
 				style::drawWideButton(
@@ -151,11 +154,17 @@ namespace nostalgia::gui{
 					sidePanelButtonHeight, 
 					[&bID](){nostalgia::benchmarking::loader::loadBenchmark(bID);});
 
+				if (ImGui::IsItemHovered()) {
+					ImGui::SetTooltip("Load and Prepare %s Benchmark...", bType.label.c_str());
+				}
+
 				if (first) {
 					first = false;
 					ImGui::Spacing();
 					ImGui::Separator();
 				}
+
+
 				if (bType.disabled) ImGui::EndDisabled();
 				ImGui::Spacing();
 			}
@@ -172,32 +181,35 @@ namespace nostalgia::gui{
 
 	// Top Bar - Trigger Benchmarks, Implementation Setup, Details, and Hover Descriptions
     void draw_topBar() {
-		// ImVec2 _topbarStartPos = ImGui::GetCursorScreenPos();
-
 		// === Top Bar Layout ===
-		style::withChildWrapper("Top Bar", ImVec2(0, topBarHeight), []() {
-
+		style::withChildWrapper("Top Bar", ImVec2(0, std::min(topBarHeight, ImGui::GetContentRegionAvail().y * 0.3f)), []() {
 			// === Left Section of Top Bar [Benchmark Details] ===
 			style::withChildWrapper("Benchmark Details", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0), []() {
 
 				nostalgia::BenchmarkID _benchmarkID = nostalgia::benchmarking::loader::getBenchmarkID();
 
+				float _arrowButtonSize = ImGui::GetFrameHeight();
+
+				ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (ImGui::GetTextLineHeight() - _arrowButtonSize) * 0.5f);
+				
 				if (_benchmarkID == nostalgia::BenchmarkID::NONE) {
 					if (!g_leftPanelOpen) {
 						if (ImGui::ArrowButton("##toggleSidePanel", g_leftPanelOpen ? ImGuiDir_Left : ImGuiDir_Right)) {
 							g_leftPanelOpen = !g_leftPanelOpen;
 						}
+						if (ImGui::IsItemHovered()) {
+							ImGui::SetTooltip("Show Benchmark Selection Panel (Toggle)");
+						}
 					}
 					else {
 						ImGui::Spacing();
-						float _arrowButtonSize = ImGui::GetFrameHeight();
+						// float _arrowButtonSize = ImGui::GetFrameHeight();
 						ImGui::Dummy(ImVec2(_arrowButtonSize, _arrowButtonSize));
 					}
 					ImGui::SameLine();
 
 					style::draw_textCentered("Select a Benchmark on the Left to get started!");
-					//ImVec2
-					//ImGui::Text("Select a Benchmark on the Left to get started!");
+					
 				}
 				else {
 					const nostalgia::BenchmarkType& benchmarkType = nostalgia::benchmark::atlas.at(_benchmarkID);
@@ -209,7 +221,7 @@ namespace nostalgia::gui{
 					}
 					else {
 						ImGui::Spacing();
-						float _arrowButtonSize = ImGui::GetFrameHeight();
+						//float _arrowButtonSize = ImGui::GetFrameHeight();
 						ImGui::Dummy(ImVec2(_arrowButtonSize, _arrowButtonSize));
 					}
 					ImGui::SameLine();
@@ -222,7 +234,7 @@ namespace nostalgia::gui{
 					ImGui::TextWrapped("%s", benchmarkType.description.c_str());
 				}
 
-				}, false);
+				}, style::BorderStyle::NONE, style::SpacingStyle::SINGLE);
 
 			ImGui::SameLine();
 			if (m_paramSpecs && m_parameters) { // If parameters are loaded
@@ -230,9 +242,9 @@ namespace nostalgia::gui{
 				style::withChildWrapper("Benchmark Parameters", ImVec2(0, 0), []() {
 
 
-				}, false);
+				}, style::BorderStyle::NONE, style::SpacingStyle::SINGLE);
 			}
-		});
+		}, style::BorderStyle::LINE, style::SpacingStyle::NONE);
     }
 
 	void draw_mainPage_New() {
@@ -288,7 +300,7 @@ namespace nostalgia::gui{
 						}
 						ImGui::PopID();
 					}
-				}, false);
+				}, style::BorderStyle::NONE);
 
 				ImGui::SameLine();
 
@@ -306,9 +318,10 @@ namespace nostalgia::gui{
 
 					if (ImGui::IsItemHovered()) {
 						m_hoverState = HoverDetailState::run;
+						ImGui::SetTooltip("Are you sure?!");
 					}
 
-				}, false);
+				}, style::BorderStyle::NONE);
 
 				// === Allocator Selection Flags ===
 				style::draw_separatorSpace();
@@ -331,7 +344,7 @@ namespace nostalgia::gui{
 						std::string _buttonLabel = (!_isCompatible ? "Incompatible" : (_isIncluded ? "Remove" : "Add"));
 
 						ImGui::PushID(aType.label.c_str());
-						if (_isIncluded) ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetColorU32(ImGuiCol_ButtonActive));
+						if (_isIncluded) ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetColorU32(ImGuiCol_ButtonHovered));
 						
 						// ~~~ Toggle Inclusion in Benchmark ~~~
 						if (ImGui::Button(_buttonLabel.c_str(), allocatorButtonSize)) {
@@ -360,7 +373,7 @@ namespace nostalgia::gui{
 
 					}
 
-				}, false);
+				}, style::BorderStyle::NONE);
 
 				ImGui::SameLine();
 
@@ -382,7 +395,7 @@ namespace nostalgia::gui{
 						std::string _buttonLabel = (_isIncluded ? "Disable" : "Enable");
 
 						ImGui::PushID(iType.label);
-						if (_isIncluded) ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetColorU32(ImGuiCol_ButtonActive));
+						if (_isIncluded) ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetColorU32(ImGuiCol_ButtonHovered));
 
 						// ~~~ Toggle Inclusion in Benchmark ~~~
 						if (ImGui::Button(_buttonLabel.c_str(), allocatorButtonSize))
@@ -407,9 +420,9 @@ namespace nostalgia::gui{
 						}
 					}
 
-					}, false);
+					}, style::BorderStyle::NONE);
 
-			}, false);
+			}, style::BorderStyle::NONE, style::SpacingStyle::NONE);
 		}
 	}
 
@@ -447,7 +460,6 @@ namespace nostalgia::gui{
 	// === Main Window [Parameters & Results] ===
     void draw_mainPage() {
 
-		// ImVec2 _mainStartPos = ImGui::GetCursorScreenPos();
 		style::withChildWrapper("Main Page", ImVec2(0, 0), []() {
 
 			float _availWidth = ImGui::GetContentRegionAvail().x;
@@ -483,7 +495,7 @@ namespace nostalgia::gui{
 				else visualiser::ShowDetails();
 
 			});
-		}, false);
+		}, style::BorderStyle::LINE, style::SpacingStyle::SINGLE);
     }
 
 	// Initialises SDL-Vulkan-DearIMGUI backend, calls draw_gui() every frame

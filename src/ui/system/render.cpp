@@ -1,6 +1,6 @@
 #include "render.h"
 
-#include "gui.h"
+#include "ui/gui.h"
 
 // Dear ImGui: standalone example application for SDL3 + Vulkan
 
@@ -37,6 +37,8 @@
 #define VOLK_IMPLEMENTATION
 #include <volk.h>
 #endif
+
+#include "presets.h"
 
 #include <filesystem> 
 
@@ -211,16 +213,6 @@ namespace nostalgia::gui {
         }
     }
 
-    static void LoadLocalFonts(){
-        if (std::filesystem::exists("assets/fonts/CascadiaCodeNF.ttf")){
-            ImGuiIO& io = ImGui::GetIO();
-            ImFont* loadedFont = io.Fonts->AddFontFromFileTTF("assets/fonts/CascadiaCodeNF.ttf",
-                 12.0f, nullptr, io.Fonts->GetGlyphRangesDefault());
-            if (loadedFont != nullptr)
-                io.FontDefault = loadedFont;
-        }
-    }
-
     // All the ImGui_ImplVulkanH_XXX structures/functions are optional helpers used by the demo.
     // Your real engine/app may not use them.
     static void SetupVulkanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height)
@@ -374,7 +366,7 @@ namespace nostalgia::gui {
         // Create window with Vulkan graphics context
         float main_scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
         SDL_WindowFlags window_flags = SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN | SDL_WINDOW_HIGH_PIXEL_DENSITY;
-        SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL3+Vulkan example", (int)(1280 * main_scale), (int)(720 * main_scale), window_flags);
+        SDL_Window* window = SDL_CreateWindow("nostalgia", (int)(1280 * main_scale), (int)(720 * main_scale), window_flags);
         if (window == nullptr)
         {
             printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
@@ -416,19 +408,23 @@ namespace nostalgia::gui {
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
         // Setup Dear ImGui style
-        ImGui::StyleColorsDark();
-        //ImGui::StyleColorsLight();
+        // ImGui::StyleColorsDark();
+        
 
         // Setup scaling
         ImGuiStyle& style = ImGui::GetStyle();
         style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
-        LoadLocalFonts();
+        nostalgia::gui::style::LoadLocalFonts();
+
+        io.FontGlobalScale = main_scale; // scales all fonts globally
+
+        nostalgia::gui::style::StyleShapes();
+       // nostalgia::gui::style::StyleColors();
+        nostalgia::gui::style::StyleColorsSlate();
+        // ImGui::StyleColorsLight();
+
         //style.FontScaleDpi = main_scale;        // Set initial font scale. (using io.ConfigDpiScaleFonts=true makes this unnecessary. We leave both here for documentation purpose)
         
-
-
-        
-        io.FontGlobalScale = main_scale; // scales all fonts globally
 
         // Setup Platform/Renderer backends
         ImGui_ImplSDL3_InitForVulkan(window);
