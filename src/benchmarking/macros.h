@@ -3,11 +3,12 @@
 #pragma region General Implementation Macros
 
 #define IMPLEMENTATION_DETAILS(_desc) \
-									nostalgia::ImplementationDetails _impDetails = { \
-									iid, \
-									allocator.id, \
-									_desc \
-								}; \
+    nostalgia::ImplementationDetails _impDetails = { \
+        .id = iid, \
+        .allocator = allocator.id, \
+        .parameters = _desc, \
+		.run = nullptr \
+    }; \
 
 #define CHECK_ALLOCATOR_COMPATABILITY()      	if (!nostalgia::implementation::isCompatibleWithAllocator(iid, allocator)) { \
 												log::print("Failed Implementation Compatability Check. [{} - {} - {}]", \

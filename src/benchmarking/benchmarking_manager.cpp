@@ -82,8 +82,9 @@ namespace nostalgia::benchmarking {
 
 	// Read this in from another data block or file in the future
 	// Keep naming consistent so only the namespace needs changing
+	/*
 	std::vector<BenchmarkType> getAllBenchmarks() {
-		/*std::vector<BenchmarkType> _all = {};
+		std::vector<BenchmarkType> _all = {};
 
 		for (const auto& bench : nostalgia::benchmark::atlas) {
 
@@ -92,7 +93,7 @@ namespace nostalgia::benchmarking {
 					.label = bench
 				}
 			}
-		}*/
+		}
 		return {
 			{
 				.label = "IBM Bursts Linear",
@@ -123,5 +124,5 @@ namespace nostalgia::benchmarking {
 			}
 		};
 	}
-
+	*/
 }

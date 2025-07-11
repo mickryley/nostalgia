@@ -104,7 +104,7 @@ namespace nostalgia::gui {
             uint32_t properties_count;
             ImVector<VkExtensionProperties> properties;
             vkEnumerateInstanceExtensionProperties(nullptr, &properties_count, nullptr);
-            properties.resize(properties_count);
+            properties.resize(static_cast<int>(properties_count));
             err = vkEnumerateInstanceExtensionProperties(nullptr, &properties_count, properties.Data);
             check_vk_result(err);
 
@@ -167,7 +167,7 @@ namespace nostalgia::gui {
             uint32_t properties_count;
             ImVector<VkExtensionProperties> properties;
             vkEnumerateDeviceExtensionProperties(g_PhysicalDevice, nullptr, &properties_count, nullptr);
-            properties.resize(properties_count);
+            properties.resize(static_cast<int>(properties_count));
             vkEnumerateDeviceExtensionProperties(g_PhysicalDevice, nullptr, &properties_count, properties.Data);
 #ifdef VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME
             if (IsExtensionAvailable(properties, VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME))
@@ -276,8 +276,8 @@ namespace nostalgia::gui {
 
     static void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
     {
-        VkSemaphore image_acquired_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].ImageAcquiredSemaphore;
-        VkSemaphore render_complete_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].RenderCompleteSemaphore;
+        VkSemaphore image_acquired_semaphore = wd->FrameSemaphores[static_cast<int>(wd->SemaphoreIndex)].ImageAcquiredSemaphore;
+        VkSemaphore render_complete_semaphore = wd->FrameSemaphores[static_cast<int>(wd->SemaphoreIndex)].RenderCompleteSemaphore;
         VkResult err = vkAcquireNextImageKHR(g_Device, wd->Swapchain, UINT64_MAX, image_acquired_semaphore, VK_NULL_HANDLE, &wd->FrameIndex);
         if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR)
             g_SwapChainRebuild = true;
@@ -286,7 +286,7 @@ namespace nostalgia::gui {
         if (err != VK_SUBOPTIMAL_KHR)
             check_vk_result(err);
 
-        ImGui_ImplVulkanH_Frame* fd = &wd->Frames[wd->FrameIndex];
+        ImGui_ImplVulkanH_Frame* fd = &wd->Frames[static_cast<int>(wd->FrameIndex)];
         {
             err = vkWaitForFences(g_Device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);    // wait indefinitely instead of periodically checking
             check_vk_result(err);
@@ -308,8 +308,8 @@ namespace nostalgia::gui {
             info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
             info.renderPass = wd->RenderPass;
             info.framebuffer = fd->Framebuffer;
-            info.renderArea.extent.width = wd->Width;
-            info.renderArea.extent.height = wd->Height;
+            info.renderArea.extent.width = static_cast<uint32_t>(wd->Width);
+            info.renderArea.extent.height = static_cast<uint32_t>(wd->Height);
             info.clearValueCount = 1;
             info.pClearValues = &wd->ClearValue;
             vkCmdBeginRenderPass(fd->CommandBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
@@ -343,7 +343,7 @@ namespace nostalgia::gui {
     {
         if (g_SwapChainRebuild)
             return;
-        VkSemaphore render_complete_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].RenderCompleteSemaphore;
+        VkSemaphore render_complete_semaphore = wd->FrameSemaphores[static_cast<int>(wd->SemaphoreIndex)].RenderCompleteSemaphore;
         VkPresentInfoKHR info = {};
         info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
         info.waitSemaphoreCount = 1;

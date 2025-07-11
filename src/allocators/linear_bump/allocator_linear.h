@@ -75,7 +75,7 @@ namespace nostalgia::linear {
         }
 
         void deallocate(T* p, std::size_t n) noexcept {
-            // No deallocation in linear allocator
+            (void)p; (void)n; // No-op: handled by allocator reset
         }
 
         void rewind() {

@@ -6,7 +6,7 @@
 int main(int argc, char** argv) {
 
     bool headless = false;
-    for (size_t i = 1; i < argc; ++i)        
+    for (int i = 1; i < argc; ++i)        
         if (std::string(argv[i]) == "-headless")
             headless = true;
 

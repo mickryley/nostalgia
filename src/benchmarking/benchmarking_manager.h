@@ -3,5 +3,5 @@
 #include "benchmark_meta.h"
 
 namespace nostalgia::benchmarking {
-	std::vector<BenchmarkType> getAllBenchmarks();
+	//std::vector<BenchmarkType> getAllBenchmarks();
 }

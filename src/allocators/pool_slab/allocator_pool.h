@@ -23,12 +23,12 @@ namespace nostalgia::pool {
 	private:
 		std::byte* m_buffer;
 		std::byte* m_head;
-		size_t m_objectSize;
-		size_t m_objectCount;
-		size_t m_offset = 0;
+		//size_t m_objectSize;
+		//size_t m_objectCount;
+		//size_t m_offset = 0;
 
-		size_t m_peakCapacity = 0;
-		size_t m_peakOffset = 0;
+		//size_t m_peakCapacity = 0;
+		//size_t m_peakOffset = 0;
 	};
 
 	static PoolAllocator s_poolAllocator{ reinterpret_cast<std::byte*>(buffer), 16, bufferSize / 16 };

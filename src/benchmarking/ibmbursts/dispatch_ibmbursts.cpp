@@ -58,7 +58,7 @@ namespace nostalgia::benchmarking::IBMBursts {
         
 		// Passes the allocator to ibmbursts.h for routed dispatching with selective implementation compatabilitiy
 
-    #define RUN_BENCHMARK(ns) ns::run_ibmbursts_benchmark(allocator, params->get<int>("iterations").value_or(1000), params->get<int>("passes").value_or(5000));
+    #define RUN_BENCHMARK(ns) ns::run_ibmbursts_benchmark(allocator, static_cast<size_t>(params->get<int>("iterations").value_or(1000)), static_cast<size_t>(params->get<int>("passes").value_or(5000)));
         
 #include "benchmarking/allocator_dispatch.inc"        
 

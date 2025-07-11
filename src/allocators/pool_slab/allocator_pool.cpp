@@ -6,7 +6,7 @@ namespace nostalgia::pool {
 
 	// This method uses a pre-linked list
 	PoolAllocator::PoolAllocator(std::byte* buf, size_t objectSize, size_t objectCount)
-		: m_buffer(buf), m_objectSize(objectSize), m_objectCount(objectCount), m_offset(0), m_peakCapacity(0) {
+		: m_buffer(buf) {
 		
 		for (size_t i = 0; i < objectCount - 1; ++i) {
 			std::byte* currentSlot = m_buffer + i * objectSize;

@@ -13,8 +13,8 @@ namespace nostalgia::benchmarking::exporting {
 		double totalTime;
 		double allocateTime;
 		double deallocateTime;
-		int iterations;
-		int passes;
+		size_t iterations;
+		size_t passes;
 		nostalgia::ImplementationDetails implementation;
 		nostalgia::BenchmarkID benchmarkID;
 	};

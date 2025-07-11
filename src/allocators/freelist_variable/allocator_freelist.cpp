@@ -64,12 +64,13 @@ namespace nostalgia::freelist {
 #pragma endregion
 
 	// 
-	FreeAllocator::FreeAllocator(std::byte* buf, size_t cap) : m_offset(0), m_peakCapacity(0), m_allocCount(0) {
+	FreeAllocator::FreeAllocator(std::byte* buf, size_t cap) {
 
 		// Align 
 		std::byte* _alignedBuffer = reinterpret_cast<std::byte*>(
 			(reinterpret_cast<std::uintptr_t>(buf) + (DSIZE - 1)) & ~(DSIZE - 1));
-		size_t aligned_capacity = cap - (_alignedBuffer - buf);
+		// Should never be negative, but a defensive check can be used here
+		size_t aligned_capacity = cap - static_cast<size_t>(_alignedBuffer - buf);
 
 		// Sentinel
 		put(_alignedBuffer, pack(DSIZE, true));

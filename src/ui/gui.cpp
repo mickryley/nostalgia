@@ -115,7 +115,7 @@ namespace nostalgia::gui{
 
 	// Left Panel - For Benchmark Selection
 	void draw_leftPanel() {
-		ImVec2 _sidebarStartPos = ImGui::GetCursorScreenPos();
+		// ImVec2 _sidebarStartPos = ImGui::GetCursorScreenPos();
 
 		style::withChildWrapper("Side Panel", ImVec2(sidePanelWidth, 0), []() {
 
@@ -172,7 +172,7 @@ namespace nostalgia::gui{
 
 	// Top Bar - Trigger Benchmarks, Implementation Setup, Details, and Hover Descriptions
     void draw_topBar() {
-		ImVec2 _topbarStartPos = ImGui::GetCursorScreenPos();
+		// ImVec2 _topbarStartPos = ImGui::GetCursorScreenPos();
 
 		// === Top Bar Layout ===
 		style::withChildWrapper("Top Bar", ImVec2(0, topBarHeight), []() {
@@ -351,7 +351,7 @@ namespace nostalgia::gui{
 						ImGui::SameLine();
 
 						std::string _allocatorLabel = std::format("{} [{}]", aType.label, aType.description);
-						ImGui::TextWrapped(_allocatorLabel.c_str());
+						ImGui::TextWrapped("%s", _allocatorLabel.c_str());
 
 						if (ImGui::IsItemHovered()) {
 							m_hoveredAllocator = aID;
@@ -399,7 +399,7 @@ namespace nostalgia::gui{
 						ImGui::SameLine();
 
 						std::string _implementationLabel = std::format("{}", iType.desc);
-						ImGui::TextWrapped(_implementationLabel.c_str());
+						ImGui::TextWrapped("%s", _implementationLabel.c_str());
 
 						if (ImGui::IsItemHovered()) {
 							m_hoveredImplementation = iID;
@@ -431,13 +431,13 @@ namespace nostalgia::gui{
 			std::string _parameterLabel = m_hoveredParameter->key;
 			ImGui::TextWrapped("Parameter: %s", _parameterLabel.c_str());
 			std::string _parameterDescription = m_hoveredParameter->description;
-			ImGui::TextWrapped(_parameterDescription.c_str());
+			ImGui::TextWrapped("%s", _parameterDescription.c_str());
 			break;
 		}
 		case HoverDetailState::run: {
 			std::string _runLabel = std::format("This will launch the {} benchmark with your current parameters on your local machine.\n\nThis could take seconds or several minutes depending upon your settings.\n\nAre you ready?",
 				nostalgia::benchmark::atlas.at(nostalgia::benchmarking::loader::getBenchmarkID()).label);
-			ImGui::TextWrapped(_runLabel.c_str());
+			ImGui::TextWrapped("%s", _runLabel.c_str());
 		}
 		default:
 			break;
@@ -447,7 +447,7 @@ namespace nostalgia::gui{
 	// === Main Window [Parameters & Results] ===
     void draw_mainPage() {
 
-		ImVec2 _mainStartPos = ImGui::GetCursorScreenPos();
+		// ImVec2 _mainStartPos = ImGui::GetCursorScreenPos();
 		style::withChildWrapper("Main Page", ImVec2(0, 0), []() {
 
 			float _availWidth = ImGui::GetContentRegionAvail().x;

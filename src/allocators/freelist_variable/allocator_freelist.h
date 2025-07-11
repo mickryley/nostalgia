@@ -30,15 +30,15 @@ namespace nostalgia::freelist {
 		std::byte* m_head;
 
 		//std::byte* m_maxAddress;
-		size_t m_allocCount;
+		//size_t m_allocCount;
 		size_t m_cap;
 
-		size_t m_objectSize;
-		size_t m_objectCount;
-		size_t m_offset = 0;
+		//size_t m_objectSize;
+		//size_t m_objectCount;
+		//size_t m_offset = 0;
 
-		size_t m_peakCapacity = 0;
-		size_t m_peakOffset = 0;
+		//size_t m_peakCapacity = 0;
+		//size_t m_peakOffset = 0;
 	};
 
 	static FreeAllocator s_freeAllocator{ reinterpret_cast<std::byte*>(buffer), bufferSize };

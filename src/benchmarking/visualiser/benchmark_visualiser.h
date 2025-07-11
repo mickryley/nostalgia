@@ -16,11 +16,11 @@ namespace nostalgia::visualiser {
 		std::string implementationLabel;
 		std::string implementationDesc;
 		std::string implementationParameters;
-		float totalTime;
-		float allocateTime;
-		float deallocateTime;
-		int iterations;
-		int passes;
+		double totalTime;
+		double allocateTime;
+		double deallocateTime;
+		size_t iterations;
+		size_t passes;
 	};
 
 	namespace {

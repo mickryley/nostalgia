@@ -8,6 +8,14 @@ build/
 imgui.ini
 benchmark_results.txt
 
+# Ignore common CMake build artifacts in project root
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/Makefile
+/compile_commands.json
+/_deps/
+
 # User-specific files
 *.rsuser
 *.suo

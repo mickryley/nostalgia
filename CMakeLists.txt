@@ -41,6 +41,8 @@ if(WIN32)
 elseif(APPLE)
     set(SDL3_DIR "${CMAKE_SOURCE_DIR}/libs/SDL3/mac")
 else()
+    # Todo: Add support for Linux and other platforms
+    #set(SDL3_DIR "${CMAKE_SOURCE_DIR}/libs/SDL3/linux")
     message(FATAL_ERROR "Unsupported platform: ${CMAKE_SYSTEM_NAME}")
 endif()
 
@@ -60,39 +62,15 @@ set(IMGUI_SRC
     ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp
 )
-
 set(IMPLOT_SRC
     ${implot_SOURCE_DIR}/implot.cpp
     ${implot_SOURCE_DIR}/implot_items.cpp
     ${implot_SOURCE_DIR}/implot_demo.cpp
 )
 
-# === Executable ===
-add_executable(${PROJECT_NAME}
-    ${SRC_FILES}
-    ${IMGUI_SRC}
-    ${IMPLOT_SRC}
-)
-
-# === Include Paths ===
-target_include_directories(${PROJECT_NAME} PRIVATE
-    "${CMAKE_SOURCE_DIR}/src"
-    "${Vulkan_INCLUDE_DIRS}"
-    ${imgui_SOURCE_DIR}
-    ${imgui_SOURCE_DIR}/backends
-    ${implot_SOURCE_DIR}
-    "${SDL3_DIR}/include"
-)
-
-# === Debug Flag Support ===
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-    $<$<CONFIG:Debug>:BUILD_DEBUG>
-    $<$<CONFIG:RelWithDebInfo>:BUILD_DEV>
-    $<$<CONFIG:Release>:BUILD_RELEASE>
-)
-
-# === Compiler Strictness Flags ===
-target_compile_options(${PROJECT_NAME} PRIVATE
+# === Source-Scoped Strict Compiler Flags ===
+add_library(project_obj OBJECT ${SRC_FILES})
+target_compile_options(project_obj PRIVATE
     $<$<CXX_COMPILER_ID:GNU,Clang>:
         -Wall -Wextra -Wpedantic -Werror
         -Wshadow -Wconversion -Wsign-conversion
@@ -101,6 +79,63 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:
         /W4 /WX /permissive-
     >
+)
+target_include_directories(project_obj
+    PRIVATE
+        "${CMAKE_SOURCE_DIR}/src"
+    SYSTEM
+        "${Vulkan_INCLUDE_DIRS}"
+        "${SDL3_DIR}/include"
+        ${imgui_SOURCE_DIR}
+        ${imgui_SOURCE_DIR}/backends
+        ${implot_SOURCE_DIR}
+        ${json_SOURCE_DIR}/include  # ← Add this!
+)
+# === Include ImGui and ImPlot without Strict Flags ===
+add_library(imgui_obj OBJECT ${IMGUI_SRC})
+target_include_directories(imgui_obj
+    PRIVATE
+        ${imgui_SOURCE_DIR}
+        ${imgui_SOURCE_DIR}/backends
+        # All dependencies needed by imgui sources, e.g. SDL, Vulkan
+        "${SDL3_DIR}/include"
+        "${Vulkan_INCLUDE_DIRS}"
+)
+target_compile_options(imgui_obj PRIVATE -w)
+add_library(implot_obj OBJECT ${IMPLOT_SRC})
+target_include_directories(implot_obj
+    PRIVATE
+        ${implot_SOURCE_DIR}
+        ${imgui_SOURCE_DIR}         # so ImPlot can see ImGui headers!
+        ${imgui_SOURCE_DIR}/backends
+        "${SDL3_DIR}/include"
+        "${Vulkan_INCLUDE_DIRS}"
+)
+target_compile_options(implot_obj PRIVATE -w)
+
+# === Lower Strictness for ImGui and ImPlot inclusion ===
+set_source_files_properties(src/benchmarking/visualiser/benchmark_visualiser.cpp
+    PROPERTIES
+    COMPILE_OPTIONS "-Wno-implicit-int-float-conversion"
+)
+
+# === Main Executable ===
+add_executable(${PROJECT_NAME}
+    $<TARGET_OBJECTS:project_obj>
+    $<TARGET_OBJECTS:imgui_obj>
+    $<TARGET_OBJECTS:implot_obj>
+)
+
+# === Include Paths ===
+target_include_directories(${PROJECT_NAME} PRIVATE
+    "${CMAKE_SOURCE_DIR}/src"
+)
+
+# === Debug Flag Support ===
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    $<$<CONFIG:Debug>:BUILD_DEBUG>
+    $<$<CONFIG:RelWithDebInfo>:BUILD_DEV>
+    $<$<CONFIG:Release>:BUILD_RELEASE>
 )
 
 # === Windows-Specific Compiler Flags ===
@@ -124,7 +159,7 @@ if(WIN32)
     )
 elseif(APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE "${SDL3_DIR}/libSDL3.dylib")
-elseif(UNIX)
+else()
     # Add Unix specific SDL linkage if needed
 endif()
 

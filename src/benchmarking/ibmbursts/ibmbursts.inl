@@ -3,7 +3,7 @@
 
 nostalgia::BenchmarkID benchmarkID = nostalgia::BenchmarkID::IBM_Bursts;
 
-void run_static_v2d_contPointer(nostalgia::AllocatorType allocator, int iterations, int passes) {
+void run_static_v2d_contPointer(nostalgia::AllocatorType allocator, size_t iterations, size_t passes) {
 	nostalgia::ImplementationID iid = nostalgia::ImplementationID::OO_St_cP_RD;
 
 	IMPLEMENTATION_DETAILS(std::format("{}x ({}x alloc + {}x free)", passes, iterations, iterations).c_str());
@@ -37,7 +37,7 @@ void run_static_v2d_contPointer(nostalgia::AllocatorType allocator, int iteratio
 	EXPORT_BENCHMARK_RESULTS();
 }
 
-void run_static_v2d_contPointer_rewindDealloc(nostalgia::AllocatorType allocator, int iterations, int passes) {
+void run_static_v2d_contPointer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes) {
 
 	nostalgia::ImplementationID iid = nostalgia::ImplementationID::OO_St_cP_RwD;
 
@@ -70,7 +70,7 @@ void run_static_v2d_contPointer_rewindDealloc(nostalgia::AllocatorType allocator
 	EXPORT_BENCHMARK_RESULTS();
 }
 
-void run_static_v2d_contPointer_forwardDealloc(nostalgia::AllocatorType allocator, int iterations, int passes) {
+void run_static_v2d_contPointer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes) {
 
 	nostalgia::ImplementationID iid = nostalgia::ImplementationID::OO_St_cP_FD; 
 
@@ -105,7 +105,7 @@ void run_static_v2d_contPointer_forwardDealloc(nostalgia::AllocatorType allocato
 	EXPORT_BENCHMARK_RESULTS();
 }
 
-void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, int iterations, int passes) {
+void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations, size_t passes) {
 	log::print("Running IBM Bursts benchmark with allocator: {} and parameters: iterations={}, passes={}",
 		allocator.label, iterations, passes);
 	run_static_v2d_contPointer(allocator, iterations, passes);

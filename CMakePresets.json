@@ -41,7 +41,6 @@
       "name": "windows-clang",
       "inherits": "base",
       "description": "Windows build using Clang (from LLVM for Windows)",
-      "generator": "Ninja",
       "environment": {
         "CC": "clang",
         "CXX": "clang++"
@@ -51,17 +50,17 @@
 
   "buildPresets": [
     {
-      "name": "build-debug",
+      "name": "build-debug-msvc",
       "configurePreset": "windows-msvc",
       "configuration": "Debug"
     },
     {
-      "name": "build-release",
+      "name": "build-release-msvc",
       "configurePreset": "windows-msvc",
       "configuration": "Release"
     },
     {
-      "name": "build-relwithdebinfo",
+      "name": "build-relwithdeb-msvc",
       "configurePreset": "windows-msvc",
       "configuration": "RelWithDebInfo"
     },
@@ -74,7 +73,16 @@
       "name": "build-release-clang",
       "configurePreset": "windows-clang",
       "configuration": "Release"
+    },
+    {
+      "name": "build-debug-macos",
+      "configurePreset": "macos-clang",
+      "configuration": "Debug"
+    },
+    {
+      "name": "build-release-macos",
+      "configurePreset": "macos-clang",
+      "configuration": "Release"
     }
-
   ]
 }

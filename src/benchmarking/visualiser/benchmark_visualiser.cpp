@@ -1,12 +1,12 @@
 #include "benchmark_visualiser.h"
 
-#include <nlohmann/json.hpp>
+//#include <nlohmann/json.hpp>
+#include "utils/json_wrapped.h"
 #include <fstream>
 
 #include <imgui.h>
-#include <implot.h>
-#include "implot_internal.h"
 
+#include "utils/implot_wrapped.h"
 
 using json = nlohmann::json;
 
@@ -110,8 +110,8 @@ namespace nostalgia::visualiser {
 
         ImGui::Text("Benchmark Parameters:");
 
-        if (m_hoveredData)  ImGui::TextWrapped("%d Passes of ", m_hoveredData->passes);
-        if (m_hoveredData)  ImGui::TextWrapped("%d Iterations", m_hoveredData->iterations);
+        if (m_hoveredData)  ImGui::TextWrapped("%d Passes of ", static_cast<int>(m_hoveredData->passes));
+        if (m_hoveredData)  ImGui::TextWrapped("%d Iterations", static_cast<int>(m_hoveredData->iterations));
 
         ImGui::Separator();
 
@@ -159,7 +159,7 @@ namespace nostalgia::visualiser {
             labels.clear();
 
             // Data storage for bars
-            std::vector<float> allocs, deallocs, totals;
+            std::vector<double> allocs, deallocs, totals;
 
             int letterIndex = 0;
             int hoveredRealIndex = 0;
@@ -199,23 +199,23 @@ namespace nostalgia::visualiser {
             //ImPlot::SetupAxisTicks(ImAxis_X1, 0, count - 1, count, labelStorage.data());
             ImPlot::SetupAxisTicks(ImAxis_X1, 0, count - 1, count, labelPtrs.data());
 
-            ImPlot::PlotBars("Alloc", allocs.data(), count, 0.25f, -0.25f);
-            ImPlot::PlotBars("Dealloc", deallocs.data(), count, 0.25f, 0.25f);
-            ImPlot::PlotBars("Total", totals.data(), count, 0.25f, 0.0f);
+            ImPlot::PlotBars("Alloc", allocs.data(), count, 0.25, -0.25);
+            ImPlot::PlotBars("Dealloc", deallocs.data(), count, 0.25, 0.25);
+            ImPlot::PlotBars("Total", totals.data(), count, 0.25, 0.0);
             
             if (ImPlot::IsPlotHovered()) {
                 ImPlotPoint mouse = ImPlot::GetPlotMousePos();
-                int hoveredIndex = (int)(mouse.x + 0.5f);
+                int hoveredIndex = (int)(mouse.x + 0.5);
 
-                if (hoveredIndex >= 0 && hoveredIndex < (int)labelStorage.size() && hoverStorage[hoveredIndex].length() > 0) {
-                    const char* tooltipLabel = hoverStorage[hoveredIndex].c_str(); // full label is stored before short
+                if (hoveredIndex >= 0 && hoveredIndex < (int)labelStorage.size() && hoverStorage[static_cast<size_t>(hoveredIndex)].length() > 0) {
+                    const char* tooltipLabel = hoverStorage[static_cast<size_t>(hoveredIndex)].c_str(); // full label is stored before short
                     if (tooltipLabel[0] != '\0') {
                         ImGui::BeginTooltip();
                         ImGui::TextUnformatted(tooltipLabel);
                         ImGui::EndTooltip();
                         // Need to store this index to then pass and use to reference the rest of the data.
                         DisplayHoverDetails(hoveredIndex);
-                        m_hoveredData = const_cast<BenchmarkPlotData*>(&data[hoveredRealIndices[hoveredIndex]]);
+                        m_hoveredData = const_cast<BenchmarkPlotData*>(&data[static_cast<size_t>(hoveredRealIndices[static_cast<size_t>(hoveredIndex)])]);
                     }
                 }
             }
