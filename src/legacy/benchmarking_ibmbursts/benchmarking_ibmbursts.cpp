@@ -10,10 +10,10 @@
 #include "objects/objects_linear.h"
 #include "objects/objects.h"
 
-#include "allocators/allocator_meta.h"
-#include "benchmarking/benchmark_meta.h"
+#include "allocators/info/allocator_meta.h"
+#include "benchmarking/info/benchmark_meta.h"
 
-#include "benchmarking/exporting/benchmarking_exporting.h"
+#include "benchmarking/exporter/benchmarking_exporting.h"
 
 #include "implementations/implementation_meta.h"
 
@@ -30,9 +30,9 @@ namespace nostalgia::benchmarking::IBMBursts {
 	void benchmark_IBMBursts_None_V2D(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Cached Singleton V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Cached Singleton V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Cached Singleton V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Cached Singleton V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Cached Singleton V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Cached Singleton V2D");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
@@ -42,7 +42,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 			std::vector<void*> rawPointers;
 			rawPointers.reserve(iterations); // Prevent realloc
 
-			_allocateTimer.start();
+			allocate_timer.start();
 
 			for (size_t j = 0; j < iterations; j++) {
 				// Allocate a Vector2D object
@@ -52,126 +52,126 @@ namespace nostalgia::benchmarking::IBMBursts {
 				rawPointers.push_back(mem);
 				new (mem) objects::Vector2D(1.0f, 2.0f); // Placement new
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			//linear::s_linearAllocator.rewind();
 			for (void* mem : rawPointers) {
 				reinterpret_cast<objects::Vector2D*>(mem)->~Vector2D(); // Call destructor
 				std::free(mem); // Free memory
 			}
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Static_V2D(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			for (size_t j = 0; j < iterations; j++) {
 				// Allocate a Vector2D object
 				volatile auto* vec =
 					new linear::objects::Vector2D_LocalOverride_StaticAccess(1.0f, 2.0f);
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Singleton_V2D(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Singleton V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Singleton V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Singleton V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Singleton V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Singleton V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Singleton V2D");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			for (size_t j = 0; j < iterations; j++) {
 				// Allocate a Vector2D object
 				volatile auto* vec =
 					new linear::objects::Vector2D_LocalOverride_SingletonAccess(1.0f, 2.0f);
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Static_V2D_ContPointer(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D Cont Pointer");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D Cont Pointer");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D Cont Pointer");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D Cont Pointer");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D Cont Pointer");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D Cont Pointer");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			auto** vec = new linear::objects::Vector2D_LocalOverride_StaticAccess * [iterations];
 
 			for (size_t j = 0; j < iterations; j++) {
 				vec[j] = new linear::objects::Vector2D_LocalOverride_StaticAccess(1.0f, 2.0f);
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			delete[] vec;
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Static_V2D_CustomPointerVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D Cont Pointer");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D Cont Pointer");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D Cont Pointer");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D Cont Pointer");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D Cont Pointer");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D Cont Pointer");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			//auto** vec = new linear::objects::Vector2D_LocalOverride_StaticAccess * [iterations];
 			linear::PointerLinearVector_ObjectOverride<linear::objects::Vector2D_LocalOverride_StaticAccess> vec(iterations);
 
@@ -179,65 +179,65 @@ namespace nostalgia::benchmarking::IBMBursts {
 				//vec[j] = new linear::objects::Vector2D_LocalOverride_StaticAccess(1.0f, 2.0f);
 				vec.emplace_back(1.0f, 2.0f);
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			//delete[] vec;
 			vec.clear(); // Clear the vector
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Singleton_V2D_ContPointer(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Singleton V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Singleton V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Singleton V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Singleton V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Singleton V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Singleton V2D");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			auto** vec = new linear::objects::Vector2D_LocalOverride_SingletonAccess * [iterations];
 
 			for (size_t j = 0; j < iterations; j++) {
 				vec[j] = new linear::objects::Vector2D_LocalOverride_SingletonAccess(1.0f, 2.0f);
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			//std::free(vec); 
 			delete[] vec;
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Static_V2D_ContPointVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D Cont Pointer Vector");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D Cont Pointer Vector");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D Cont Vector");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D Cont Pointer Vector");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D Cont Pointer Vector");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D Cont Vector");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			std::vector<linear::objects::Vector2D_LocalOverride_StaticAccess*> vecs;
 			vecs.reserve(iterations); // Reserve space to prevent reallocations
 
@@ -245,32 +245,32 @@ namespace nostalgia::benchmarking::IBMBursts {
 				// Allocate a Vector2D object								
 				vecs.emplace_back(new linear::objects::Vector2D_LocalOverride_StaticAccess(1.0f, 2.0f)); // Store the pointer in the vector
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			vecs.clear();
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Singleton_V2D_ContPointVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Singleton V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Singleton V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Singleton V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Singleton V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Singleton V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Singleton V2D");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			std::vector<linear::objects::Vector2D_LocalOverride_SingletonAccess*> vecs;
 			vecs.reserve(iterations); // Reserve space to prevent reallocations
 
@@ -278,25 +278,25 @@ namespace nostalgia::benchmarking::IBMBursts {
 				// Allocate a Vector2D object
 				vecs.emplace_back(new linear::objects::Vector2D_LocalOverride_SingletonAccess(1.0f, 2.0f)); // Store the pointer in the vector
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			vecs.clear();
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_CachedSingleton_V2D(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Cached Singleton V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Cached Singleton V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Cached Singleton V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Cached Singleton V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Cached Singleton V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Cached Singleton V2D");
 
 
 		// Extra code required for cached singleton
@@ -307,31 +307,31 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			for (size_t j = 0; j < iterations; j++) {
 				// Allocate a Vector2D object
 				void* mem = _allocator.allocate(sizeof(linear::objects::Vector2D_LocalOverride_SingletonAccess));
 				volatile auto* vec = new (mem) linear::objects::Vector2D_LocalOverride_SingletonAccess(1.0f, 2.0f);
 
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Template_V2D_ContPoint_Inplace(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		using V2D = objects::Vector2D;
 		linear::LinearAllocatorTemplate<V2D> _allocator;
@@ -341,30 +341,30 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			V2D* vecs = _allocator.allocate(iterations);
 			for (size_t j = 0; j < iterations; j++) {
 				// Allocate a Vector2D object
 				new (&vecs[j]) V2D(1.0f, 2.0f); // Placement new
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Template_V2D_ContPoint(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		using V2D = objects::Vector2D;
 		linear::LinearAllocatorTemplate<V2D> _allocator;
@@ -374,7 +374,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			auto** vec = new V2D * [iterations];
 
 			//V2D* vecs = _allocator.allocate(iterations);
@@ -383,25 +383,25 @@ namespace nostalgia::benchmarking::IBMBursts {
 				//new (&vecs[j]) V2D(1.0f, 2.0f); // Placement new
 				vec[j] = _allocator.create(1.0f, 2.0f); // Allocate a Vector2D object
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			delete[] vec;
 			_allocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Template_V2D_ContPointVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		using V2D = objects::Vector2D;
 		linear::LinearAllocatorTemplate<V2D> _allocator;
@@ -411,7 +411,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			std::vector<V2D*> vecs;
 			vecs.reserve(iterations);
 
@@ -420,24 +420,24 @@ namespace nostalgia::benchmarking::IBMBursts {
 				//new (&vecs[j]) V2D(1.0f, 2.0f); // Placement new
 				vecs.push_back(_allocator.create(1.0f, 2.0f)); // Full allocation via allocator
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			_allocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_STL_Template_V2D_ContPointVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		using V2D = objects::Vector2D;
 		linear::LinearAllocatorStlTemplate<V2D> _allocator;
@@ -447,7 +447,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			std::vector<V2D*> vecs;
 			vecs.reserve(iterations);
 
@@ -456,24 +456,24 @@ namespace nostalgia::benchmarking::IBMBursts {
 				//new (&vecs[j]) V2D(1.0f, 2.0f); // Placement new
 				vecs.push_back(_allocator.create(1.0f, 2.0f)); // Full allocation via allocator
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			_allocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_STL_Template_V2D_ContVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		using V2D = objects::Vector2D;
 
@@ -482,7 +482,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			std::vector<V2D, linear::LinearAllocatorStlTemplate<V2D>> vecs;
 
 			vecs.reserve(iterations);
@@ -492,25 +492,25 @@ namespace nostalgia::benchmarking::IBMBursts {
 				//new (&vecs[j]) V2D(1.0f, 2.0f); // Placement new
 				vecs.emplace_back(1.0f, 2.0f); // Full allocation via allocator
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			vecs.clear(); // Clear the vector
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_STL_Template_V2D_CustomVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		using V2D = objects::Vector2D;
 		linear::LinearAllocatorStlTemplate<V2D> _allocator;
@@ -521,7 +521,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			//std::vector<V2D, linear::LinearAllocatorStlTemplate<V2D>> vecs;
 			linear::LinearVector_StlTemplateAllocator<V2D> vec(iterations * sizeof(V2D), _allocator);
 
@@ -530,25 +530,25 @@ namespace nostalgia::benchmarking::IBMBursts {
 				//new (&vecs[j]) V2D(1.0f, 2.0f); // Placement new
 				vec.emplace_back(1.0f, 2.0f); // Full allocation via allocator
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			vec.clear(); // Clear the vector
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_PMR_Monotonic_PmrVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		using V2D = objects::Vector2D;
 		//linear::LinearAllocatorStlTemplate<V2D> _allocator;
@@ -559,7 +559,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			//std::vector<V2D, linear::LinearAllocatorStlTemplate<V2D>> vecs;
 			//linear::LinearVector_StlTemplateAllocator<V2D> vec(iterations * sizeof(V2D), _allocator);
 			size_t byteCount = iterations * sizeof(V2D); // Allocate a buffer for the PMR vector
@@ -582,25 +582,25 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 				vec.emplace_back(1.0f, 2.0f); // Full allocation via allocator
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			vec.clear(); // Clear the vector
 			//linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_PMR_Monotonic_HardCoded_PmrVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		using V2D = objects::Vector2D;
 
@@ -613,7 +613,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			//std::pmr::vector<V2D> vec(&resource); //MSVC Only
 			//std::pmr::vector<V2D> vec(std::pmr::polymorphic_allocator<V2D>{&resource});
 			std::vector<V2D, std::pmr::polymorphic_allocator<V2D>> vec(std::pmr::polymorphic_allocator<V2D>{&resource});
@@ -625,26 +625,26 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 				vec.emplace_back(1.0f, 2.0f); // Full allocation via allocator
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			vec.clear(); // Clear the vector
 			resource.release();
 			//linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_PMR_Unsync_PmrVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		using V2D = objects::Vector2D;
 		//linear::LinearAllocatorStlTemplate<V2D> _allocator;
@@ -655,7 +655,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			//std::vector<V2D, linear::LinearAllocatorStlTemplate<V2D>> vecs;
 			//linear::LinearVector_StlTemplateAllocator<V2D> vec(iterations * sizeof(V2D), _allocator);
 			//size_t byteCount = iterations * sizeof(V2D); // Allocate a buffer for the PMR vector
@@ -683,25 +683,25 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 				vec.emplace_back(1.0f, 2.0f); // Full allocation via allocator
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			vec.clear(); // Clear the vector
 			//linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts_Template_V2D_CustomVector(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D");
 
 		using V2D = objects::Vector2D;
 		linear::LinearAllocatorTemplate<V2D> _allocator;
@@ -712,7 +712,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			//std::vector<V2D, linear::LinearAllocatorStlTemplate<V2D>> vecs;
 			linear::LinearVector_TemplateAllocator<V2D> vec(iterations * sizeof(V2D), _allocator);
 
@@ -721,17 +721,17 @@ namespace nostalgia::benchmarking::IBMBursts {
 				//new (&vecs[j]) V2D(1.0f, 2.0f); // Placement new
 				vec.emplace_back(1.0f, 2.0f); // Full allocation via allocator
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			vec.clear(); // Clear the vector
 			linear::s_linearAllocator.rewind();
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 	}
 
 	void benchmark_IBMBursts(int iterations = 1000, int passes = 5000, int size = 8) {
@@ -743,30 +743,30 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer");
-		timer::Timer _timer = timer::Timer("Total Timer");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer");
+		timer::Timer overall_timer = timer::Timer("Total Timer");
 
 		_timer.start();
 		for (size_t i = 0; i < passes; i++)
 		{
-			_allocateTimer.start();
+			allocate_timer.start();
 			for (size_t j = 0; j < iterations; j++) {
 				_allocator.allocate(size); // Allocate 16 bytes
 			}
-			_allocateTimer.pause();
-			_deallocateTimer.start();
+			allocate_timer.pause();
+			deallocate_timer.start();
 
 			_allocator.rewind(); // Rewind the allocator after each pass
 
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 			/*for (size_t j = 0; j < iterations; j++) {
 				_allocator.deallocate(); // Deallocate the last allocated block
 			}*/
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 
 
 	}
@@ -778,7 +778,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		.parameters = "5000x (1000x alloc + 1000x free)",
 		//.label = "IBM Bursts Malloc",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_None_V2D(); }
 	},
 	{
@@ -788,7 +788,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts (Manual Alloc only)",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//////.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//////.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts(); }
 	},
 	{
@@ -798,7 +798,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Static Object",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Static_V2D(); }
 	},
 	{
@@ -808,7 +808,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Singleton Object",
 		////.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Singleton_V2D(); }
 	},
 	{
@@ -818,7 +818,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Cached Singleton Object",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_CachedSingleton_V2D(); }
 	},
 	{
@@ -828,7 +828,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Static Object + Cont: Point Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Static_V2D_ContPointVector(); }
 	},
 	{
@@ -838,7 +838,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//		.label = "IBM Bursts Singleton Object + Cont: Point",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Static_V2D_ContPointer(); }
 	},
 	{
@@ -848,7 +848,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Singleton Object + Cont: Point Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Singleton_V2D_ContPointVector(); }
 	},
 	{
@@ -858,7 +858,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Singleton Object + Cont: Point",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Singleton_V2D_ContPointer(); }
 	},
 	{
@@ -868,7 +868,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Templated Allocator Object + Cont: Point (In Place)",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Template_V2D_ContPoint_Inplace(); }
 	},
 	{
@@ -878,7 +878,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Templated Allocator Object + Cont: Point",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Template_V2D_ContPoint(); }
 	},
 	{
@@ -888,7 +888,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Templated Allocator Object + Cont: Point Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Template_V2D_ContPointVector(); }
 	},
 	{
@@ -898,7 +898,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts STL Templated Allocator Object + Cont: Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_STL_Template_V2D_ContVector(); }
 	},
 	{
@@ -908,7 +908,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts STL Templated Allocator Object + Cont: Point Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_STL_Template_V2D_ContPointVector(); }
 	},
 	{
@@ -918,7 +918,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts STL Templated Allocator Object + Cont: Custom Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_STL_Template_V2D_CustomVector(); }
 	},
 	{
@@ -928,7 +928,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Templated Allocator Object + Cont: Custom Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Template_V2D_CustomVector(); }
 	},
 	{
@@ -938,7 +938,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Static Allocator Object + Cont: Custom Pointer Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_Static_V2D_CustomPointerVector(); }
 	},
 	{
@@ -948,7 +948,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts PMR Default unsync + Cont: PMR Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_PMR_Unsync_PmrVector(); }
 	},
 	{
@@ -958,7 +958,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts PMR Default monotonic_buffer_resource + Cont: PMR Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::ImplementationID::NONE,
+		//.compatible_flags = AllocatorFlags::ImplementationID::NONE,
 		.run = []() { benchmark_IBMBursts_PMR_Monotonic_PmrVector(); }
 	},
 	{
@@ -968,7 +968,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts PMR Default hardcoded monotonic_buffer_resource + Cont: PMR Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::NONE,
+		//.compatible_flags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_PMR_Monotonic_HardCoded_PmrVector(); }
 	}
 
@@ -988,69 +988,69 @@ namespace nostalgia::benchmarking::IBMBursts {
 		nostalgia::stack::StackAllocator _allocator(buffer, bufferSize);
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer");
-		timer::Timer _timer = timer::Timer("Total Timer");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer");
+		timer::Timer overall_timer = timer::Timer("Total Timer");
 
 		_timer.start();
 		for (size_t i = 0; i < passes; i++)
 		{
-			_allocateTimer.start();
+			allocate_timer.start();
 			for (size_t j = 0; j < iterations; j++) {
 				_allocator.allocate(size); // Allocate 16 bytes
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
-			_deallocateTimer.start();
+			deallocate_timer.start();
 
 			_allocator.rewind(); // Rewind the allocator after each pass
 			
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 			/*for (size_t j = 0; j < iterations; j++) {
 				_allocator.deallocate(); // Deallocate the last allocated block
 			}*/
 		}
 		_timer.stop();
-		_allocateTimer.print();
-		_deallocateTimer.print();
+		allocate_timer.print();
+		deallocate_timer.print();
 
 	}
 
 	void benchmark_IBMBursts_Stack_Static_V2D_ContPointer(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D Cont Pointer");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D Cont Pointer");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D Cont Pointer");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D Cont Pointer");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D Cont Pointer");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D Cont Pointer");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			auto** vec = new stack::objects::Vector2D_LocalOverride_StaticAccess * [iterations];
 
 			for (size_t j = 0; j < iterations; j++) {
 				vec[j] = new stack::objects::Vector2D_LocalOverride_StaticAccess(1.0f, 2.0f);
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			for (int i = static_cast<int>(iterations) - 1; i >= 0; --i){
 				delete vec[i]; // Deallocate each Vector2D object
 			}
 			delete[] vec;
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		//_allocateTimer.print();
-		//_deallocateTimer.print();
+		//allocate_timer.print();
+		//deallocate_timer.print();
 		exporting::BenchmarkResult result = exporting::BenchmarkResult{
-			.totalTime = _timer.print(),
-			.allocateTime = _allocateTimer.print(),
-			.deallocateTime = _deallocateTimer.print(),
+			.total_time = overall_timer.print(),
+			.allocate_time = allocate_timer.print(),
+			.deallocate_time = deallocate_timer.print(),
 			.iterations = iterations,
 			//.label = "IBM Bursts Stack Allocator Object + Cont: Point",
 			//.description = "5000x (1000x alloc + 1000x free)"
@@ -1069,7 +1069,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Stack Allocator Object + Cont: Point Vector",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::NONE,
+		//.compatible_flags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Stack(); }
 	},
 	{
@@ -1080,7 +1080,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 		//.label = "IBM Bursts Stack Allocator Object + Cont: Point",
 		//.description = "5000x (1000x alloc + 1000x free)",
-		//.compatibleFlags = AllocatorFlags::NONE,
+		//.compatible_flags = AllocatorFlags::NONE,
 		.run = []() { benchmark_IBMBursts_Stack_Static_V2D_ContPointer(); }
 	}
 	};
@@ -1092,38 +1092,38 @@ namespace nostalgia::benchmarking::IBMBursts {
 	void benchmark_IBMBursts_Pool_Static_V2D_ContPointer(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Static V2D Cont Pointer");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Static V2D Cont Pointer");
-		timer::Timer _timer = timer::Timer("Total Timer Static V2D Cont Pointer");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Static V2D Cont Pointer");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Static V2D Cont Pointer");
+		timer::Timer overall_timer = timer::Timer("Total Timer Static V2D Cont Pointer");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			auto** vec = new pool::objects::Vector2D_LocalOverride_StaticAccess * [iterations];
 
 			for (size_t j = 0; j < iterations; j++) {
 				vec[j] = new pool::objects::Vector2D_LocalOverride_StaticAccess(1.0f, 2.0f);
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			for (int i = static_cast<int>(iterations) - 1; i >= 0; --i) {
 				delete vec[i]; // Deallocate each Vector2D object
 			}
 			delete[] vec;
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		//_allocateTimer.print();
-		//_deallocateTimer.print();
+		//allocate_timer.print();
+		//deallocate_timer.print();
 		exporting::BenchmarkResult result = exporting::BenchmarkResult{
-			.totalTime = _timer.print(),
-			.allocateTime = _allocateTimer.print(),
-			.deallocateTime = _deallocateTimer.print(),
+			.total_time = overall_timer.print(),
+			.allocate_time = allocate_timer.print(),
+			.deallocate_time = deallocate_timer.print(),
 			.iterations = iterations,
 			//.label = "IBM Bursts Pool Allocator Static Object + Cont: Point",
 			//.description = "5000x (1000x alloc + 1000x free)"
@@ -1141,13 +1141,13 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 			//.label = "IBM Bursts Pool Allocator Static Object + Cont: Point Vector",
 			//.description = "5000x (1000x alloc + 1000x free)",
-			//.compatibleFlags = AllocatorFlags::NONE,
+			//.compatible_flags = AllocatorFlags::NONE,
 			.run = []() { benchmark_IBMBursts_Pool_Static_V2D_ContPointer(); }
 		}/*,
 		{
 			.label = "IBM Bursts Pool Allocator Object + Cont: Point",
 			.description = "5000x (1000x alloc + 1000x free)",
-			.compatibleFlags = AllocatorFlags::NONE,
+			.compatible_flags = AllocatorFlags::NONE,
 			.run = []() { benchmark_IBMBursts_Stack_Static_V2D_ContPointer(); }
 		}*/
 	};
@@ -1157,38 +1157,38 @@ namespace nostalgia::benchmarking::IBMBursts {
 	void benchmark_IBMBursts_Freelist_Static_V2D_ContPointer(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Freelist Static V2D Cont Pointer");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Freelist Static V2D Cont Pointer");
-		timer::Timer _timer = timer::Timer("Total Timer Freelist Static V2D Cont Pointer");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Freelist Static V2D Cont Pointer");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Freelist Static V2D Cont Pointer");
+		timer::Timer overall_timer = timer::Timer("Total Timer Freelist Static V2D Cont Pointer");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			auto** vec = new freelist::objects::Vector2D_LocalOverride_StaticAccess * [iterations];
 
 			for (size_t j = 0; j < iterations; j++) {
 				vec[j] = new freelist::objects::Vector2D_LocalOverride_StaticAccess(1.0f, 2.0f);
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			for (int k = static_cast<int>(iterations) - 1; k >= 0; --k) {
 				delete vec[k]; // Deallocate each Vector2D object
 			}
 			delete[] vec;
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		//_allocateTimer.print();
-		//_deallocateTimer.print();
+		//allocate_timer.print();
+		//deallocate_timer.print();
 		exporting::BenchmarkResult result = exporting::BenchmarkResult{
-			.totalTime = _timer.print(),
-			.allocateTime = _allocateTimer.print(),
-			.deallocateTime = _deallocateTimer.print(),
+			.total_time = overall_timer.print(),
+			.allocate_time = allocate_timer.print(),
+			.deallocate_time = deallocate_timer.print(),
 			.iterations = iterations,
 			//.label = "IBM Bursts Freelist Allocator Static Object + Cont: Point",
 			//.description = "5000x (1000x alloc + 1000x free)"
@@ -1200,38 +1200,38 @@ namespace nostalgia::benchmarking::IBMBursts {
 	void benchmark_IBMBursts_Freelist_Static_V2D_ContPointer_ForwardDealloc(int iterations = 1000, int passes = 5000, int size = 16) {
 
 		// Initialise Main Timers
-		timer::Timer _allocateTimer = timer::Timer("Allocate Timer Freelist Static V2D Cont Pointer");
-		timer::Timer _deallocateTimer = timer::Timer("Deallocate Timer Freelist Static V2D Cont Pointer");
-		timer::Timer _timer = timer::Timer("Total Timer Freelist Static V2D Cont Pointer");
+		timer::Timer allocate_timer = timer::Timer("Allocate Timer Freelist Static V2D Cont Pointer");
+		timer::Timer deallocate_timer = timer::Timer("Deallocate Timer Freelist Static V2D Cont Pointer");
+		timer::Timer overall_timer = timer::Timer("Total Timer Freelist Static V2D Cont Pointer");
 
 		_timer.start();
 		// Alloc + Dealloc Passes
 		for (size_t i = 0; i < passes; i++)
 		{
 			// Allocation Iterations
-			_allocateTimer.start();
+			allocate_timer.start();
 			auto** vec = new freelist::objects::Vector2D_LocalOverride_StaticAccess * [iterations];
 
 			for (size_t j = 0; j < iterations; j++) {
 				vec[j] = new freelist::objects::Vector2D_LocalOverride_StaticAccess(1.0f, 2.0f);
 			}
-			_allocateTimer.pause();
+			allocate_timer.pause();
 
 			// Deallocation Iterations
-			_deallocateTimer.start();
+			deallocate_timer.start();
 			for (size_t k = 0; k < iterations; k++) {
 				delete vec[k]; // Deallocate each Vector2D object
 			}
 			delete[] vec;
-			_deallocateTimer.pause();
+			deallocate_timer.pause();
 		}
 		_timer.stop();
-		//_allocateTimer.print();
-		//_deallocateTimer.print();
+		//allocate_timer.print();
+		//deallocate_timer.print();
 		exporting::BenchmarkResult result = exporting::BenchmarkResult{
-			.totalTime = _timer.print(),
-			.allocateTime = _allocateTimer.print(),
-			.deallocateTime = _deallocateTimer.print(),
+			.total_time = overall_timer.print(),
+			.allocate_time = allocate_timer.print(),
+			.deallocate_time = deallocate_timer.print(),
 			.iterations = iterations,
 			//.label = "IBM Bursts Freelist Allocator Static Object + Cont: Point",
 			//.description = "5000x (1000x alloc + 1000x free)"
@@ -1248,13 +1248,13 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 			//.label = "IBM Bursts Freelist Allocator Static Object + Cont: Point Vector",
 			//.description = "5000x (1000x alloc + 1000x free)",
-			//.compatibleFlags = AllocatorFlags::NONE,
+			//.compatible_flags = AllocatorFlags::NONE,
 			.run = []() { benchmark_IBMBursts_Freelist_Static_V2D_ContPointer(); }
 		}/*,
 		{
 			.label = "IBM Bursts Freelist Allocator Static Object + Cont: Point Vector - Forward Dealloc",
 			.description = "5000x (1000x alloc + 1000x free)",
-			.compatibleFlags = AllocatorFlags::NONE,
+			.compatible_flags = AllocatorFlags::NONE,
 			.run = []() { benchmark_IBMBursts_Freelist_Static_V2D_ContPointer_ForwardDealloc(); }
 		}*/
 	};

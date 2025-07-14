@@ -1,6 +1,6 @@
 #pragma once
 
-#include "allocators/freelist_variable/allocator_freelist.h"
+#include "allocators/concrete/freelist_variable/allocator_freelist.h"
 
 namespace nostalgia::freelist::objects {
 

@@ -1,15 +1,19 @@
-#include "ui/headless.h"
-#include "ui/gui.h"
+#include "ui/headless/headless.h"
+#include "ui/gui/gui.h"
+#include "utils/return_codes.h"
+#include <string_view>
 
-#include <string>
+namespace {
+    bool is_headless(int argc, char* argv[]) {
+        for (int i = 1; i < argc; ++i)
+            if (std::string_view(argv[i]) == "-headless")
+                return true;
+        return false;
+    }
+}
 
 int main(int argc, char** argv) {
-
-    bool headless = false;
-    for (int i = 1; i < argc; ++i)        
-        if (std::string(argv[i]) == "-headless")
-            headless = true;
-
-    if (headless) return nostalgia::init_headless();
-    return nostalgia::gui::init_gui();
+    if (is_headless(argc, argv) )
+        return static_cast<int>(nostalgia::headless::init_headless(argc, argv));
+    return  static_cast<int>(nostalgia::gui::init_gui());
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "allocators/allocator_meta.h"
+#include "allocators/info/allocator_meta.h"
 
 namespace nostalgia::benchmarking::IBMBursts {
 	//void run_ibmbursts_benchmark(int argc, char** argv);

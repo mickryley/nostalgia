@@ -1,7 +1,7 @@
 #include "style.h"
 
 namespace nostalgia::gui::style {
-	bool draw_tabButton(const char* label, bool selected, ImVec2 size) {
+	bool draw_tab_button(const char* label, bool selected, ImVec2 size) {
 		ImGui::PushID(label);
 		if (!selected) ImGui::SetCursorPosY(ImGui::GetCursorPosY() + size.y * 0.1f); // Offset for selected tab
 		bool pressed = ImGui::InvisibleButton("##tab", (selected ? ImVec2(size.x, size.y * 1.1f) : size));
@@ -33,20 +33,14 @@ namespace nostalgia::gui::style {
 		return pressed;
 	}
 
-	void draw_textCentered(const char* text) {
+	void draw_text_centered(const char* text) {
 		ImGui::Dummy(ImVec2(
 			(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(text).x) * 0.5f - ImGui::GetStyle().ItemSpacing.x, 0));
 		ImGui::SameLine();
 		ImGui::Text("%s", text);
 	}
 
-	void draw_separatorSpace() {
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
-	}
-
-	void draw_verticalSeparator(float fillPercent) {
+	void draw_vertical_separator(float fillPercent) {
 		ImGui::SameLine(0.0f, 0.0f);
 
 		ImU32 color = ImGui::GetColorU32(ImGuiCol_Separator);

@@ -13,7 +13,7 @@ using json = nlohmann::json;
 namespace nostalgia::visualiser {
 
     // Current
-    std::unordered_map<std::string, std::vector<BenchmarkPlotData>> loadResultsFromFile(const std::string& path) {
+    std::unordered_map<std::string, std::vector<BenchmarkPlotData>> load_results_from_file(const std::string& path) {
         std::ifstream file(path);
         json j;
         file >> j;
@@ -21,32 +21,32 @@ namespace nostalgia::visualiser {
         std::unordered_map<std::string, std::vector<BenchmarkPlotData>> results;
 
         for (const auto& entry : j) {
-            std::string benchmarkLabel = entry["benchmarkLabel"];
+            std::string benchmark_label = entry["benchmark_label"];
             const auto& res = entry["results"];
 
             BenchmarkPlotData d;
 
-			d.benchmarkLabel = benchmarkLabel;
+			d.benchmark_label = benchmark_label;
 
-            d.allocatorLabel = res["allocatorLabel"];
-            d.allocatorDescription = res["allocatorDescription"];
-            d.implementationLabel = res["implementationLabel"];
-            d.implementationDesc = res["implementationDesc"];
-            d.implementationParameters = res["implementationParameters"];
-            d.totalTime = res["totalTime"];
-            d.allocateTime = res["allocateTime"];
-            d.deallocateTime = res["deallocateTime"];
+            d.allocator_label = res["allocator_label"];
+            d.allocator_description = res["allocator_description"];
+            d.implementation_label = res["implementation_label"];
+            d.implementation_description = res["implementation_description"];
+            d.implementation_parameters = res["implementation_parameters"];
+            d.total_time = res["total_time"];
+            d.allocate_time = res["allocate_time"];
+            d.deallocate_time = res["deallocate_time"];
             d.iterations = res["iterations"];
             d.passes = res["passes"];
 
-            results[benchmarkLabel].push_back(d);
+            results[benchmark_label].push_back(d);
         }
 
         return results;
     }
 
     // Deprecated
-    std::vector<BenchmarkPlotData> loadBenchmarkPlotData(const std::string& path) {
+    std::vector<BenchmarkPlotData> load_benchmark_plot_data(const std::string& path) {
         std::ifstream file(path);
         json j;
         file >> j;
@@ -55,33 +55,33 @@ namespace nostalgia::visualiser {
         for (const auto& entry : j) {
             const auto& res = entry["results"];
             BenchmarkPlotData d;
-            d.implementationLabel = res["implementationLabel"];
-            d.allocatorLabel = res["allocatorLabel"];
-            d.totalTime = res["totalTime"];
-            d.allocateTime = res["allocateTime"];
-            d.deallocateTime = res["deallocateTime"];
+            d.implementation_label = res["implementation_label"];
+            d.allocator_label = res["allocator_label"];
+            d.total_time = res["total_time"];
+            d.allocate_time = res["allocate_time"];
+            d.deallocate_time = res["deallocate_time"];
             data.push_back(d);
         }
         return data;
     }
 
-    void loadBenchmarkPlotData() {
-        m_currentPlotData = loadBenchmarkPlotData("benchmark_results.txt");
-		m_benchmarkPlotDataMap = loadResultsFromFile("benchmark_results.txt");
+    void load_benchmark_plot_data() {
+        current_benchmark_plot_data = load_benchmark_plot_data("benchmark_results.txt");
+		current_benchmark_plot_data_map = load_results_from_file("benchmark_results.txt");
 
-        if (m_benchmarkPlotDataMap.empty()) ImGui::Text("No benchmark map loaded.");
-        if (m_currentPlotData.empty()) ImGui::Text("No benchmark data loaded.");
+        if (current_benchmark_plot_data_map.empty()) ImGui::Text("No benchmark map loaded.");
+        if (current_benchmark_plot_data.empty()) ImGui::Text("No benchmark data loaded.");
     }
 
 
     static std::vector<std::string> labelStorage;
     static std::vector<const char*> labels;
 
-    void ShowBenchmarkPlot(std::unordered_map<std::string, std::vector<BenchmarkPlotData>>&data) {
+    void draw_benchmark_plot(std::unordered_map<std::string, std::vector<BenchmarkPlotData>>&data) {
         if (ImGui::BeginTabBar("BenchmarkTabs")) {
-            for (auto& [benchmarkLabel, entries] : data) {
-                if (ImGui::BeginTabItem(benchmarkLabel.c_str())) {
-                    ShowBenchmarkPlot(entries);
+            for (auto& [benchmark_label, entries] : data) {
+                if (ImGui::BeginTabItem(benchmark_label.c_str())) {
+                    draw_benchmark_plot(entries);
                     ImGui::EndTabItem();
                 }
             }
@@ -89,50 +89,50 @@ namespace nostalgia::visualiser {
         }
     }
 
-    void ShowBenchmarkPlot() {
-        if (!m_benchmarkPlotDataMap.empty()) {
-            ShowBenchmarkPlot(m_benchmarkPlotDataMap);
+    void draw_benchmark_plot() {
+        if (!current_benchmark_plot_data_map.empty()) {
+            draw_benchmark_plot(current_benchmark_plot_data_map);
         }
     }
 
-    void DisplayHoverDetails(int index) {
-        m_hoveredIndex = index;
+    void display_hover_details(int index) {
+        current_hovered_index = index;
     }
 
-    void ShowDetails() {
+    void draw_benchmark_hover_details() {
         // ImGui::Text("Benchmark:");
 
-        if (m_hoveredData)  ImGui::TextWrapped("Benchmark: %s", m_hoveredData->benchmarkLabel.c_str());
+        if (current_hovered_data)  ImGui::TextWrapped("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
 
         ImGui::Text("Benchmark Details:");
 
-        if (m_hoveredData)  ImGui::TextWrapped("%s", m_hoveredData->benchmarkDesc.c_str());
+        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->benchmark_description.c_str());
 
         ImGui::Text("Benchmark Parameters:");
 
-        if (m_hoveredData)  ImGui::TextWrapped("%d Passes of ", static_cast<int>(m_hoveredData->passes));
-        if (m_hoveredData)  ImGui::TextWrapped("%d Iterations", static_cast<int>(m_hoveredData->iterations));
+        if (current_hovered_data)  ImGui::TextWrapped("%d Passes of ", static_cast<int>(current_hovered_data->passes));
+        if (current_hovered_data)  ImGui::TextWrapped("%d Iterations", static_cast<int>(current_hovered_data->iterations));
 
         ImGui::Separator();
 
         ImGui::Text("Allocator:");
 
-        if (m_hoveredData)  ImGui::TextWrapped("%s", m_hoveredData->allocatorLabel.c_str());
+        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->allocator_label.c_str());
 
         ImGui::Text("Allocator Details:");
 
-        if (m_hoveredData)  ImGui::TextWrapped("%s", m_hoveredData->allocatorDescription.c_str());
+        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->allocator_description.c_str());
 
         ImGui::Separator();
 
         ImGui::Text("Implementation:");
 
-        if (m_hoveredData)  ImGui::TextWrapped("%s", m_hoveredData->implementationLabel.c_str());
+        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->implementation_label.c_str());
 
         ImGui::Text("Implementation Details:");
 
-        if (m_hoveredData)  ImGui::TextWrapped("%s", m_hoveredData->implementationDesc.c_str());
-        if (m_hoveredData)  ImGui::TextWrapped("%s", m_hoveredData->implementationParameters.c_str());
+        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->implementation_description.c_str());
+        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->implementation_parameters.c_str());
         
         ImGui::Separator();
 
@@ -140,12 +140,12 @@ namespace nostalgia::visualiser {
 
         ImGui::Text("Hovered Results:");
 
-        if (m_hoveredData)  ImGui::Text("Total Time: %.3f ms", m_hoveredData->totalTime);
-        if (m_hoveredData)  ImGui::Text("Allocation Time: %.3f ms", m_hoveredData->allocateTime);
-        if (m_hoveredData)  ImGui::Text("Deallocation Time: %.3f ms", m_hoveredData->deallocateTime);
+        if (current_hovered_data)  ImGui::Text("Total Time: %.3f ms", current_hovered_data->total_time);
+        if (current_hovered_data)  ImGui::Text("Allocation Time: %.3f ms", current_hovered_data->allocate_time);
+        if (current_hovered_data)  ImGui::Text("Deallocation Time: %.3f ms", current_hovered_data->deallocate_time);
     }
 
-    void ShowBenchmarkPlot(const std::vector<BenchmarkPlotData>& data) {
+    void draw_benchmark_plot(const std::vector<BenchmarkPlotData>& data) {
 
         if (ImPlot::BeginPlot("Benchmark Results Grouped By Allocator Type", ImVec2(-1, -1), ImPlotFlags_NoMouseText)) {
 
@@ -166,7 +166,7 @@ namespace nostalgia::visualiser {
             std::string lastAllocator; // Only works if allocators are ordered
 
             for (const auto& d : data) {
-                if (!lastAllocator.empty() && lastAllocator != d.allocatorLabel) {
+                if (!lastAllocator.empty() && lastAllocator != d.allocator_label) {
                     labelStorage.emplace_back("");      
                     hoverStorage.emplace_back("");      
                     allocs.push_back(0);
@@ -174,19 +174,19 @@ namespace nostalgia::visualiser {
                     totals.push_back(0);
                     hoveredRealIndices.push_back(-1);
                 }
-                lastAllocator = d.allocatorLabel;
+                lastAllocator = d.allocator_label;
 
                 // Push bar values
-                allocs.push_back(d.allocateTime);
-                deallocs.push_back(d.deallocateTime);
-                totals.push_back(d.totalTime);
+                allocs.push_back(d.allocate_time);
+                deallocs.push_back(d.deallocate_time);
+                totals.push_back(d.total_time);
 
                 // Label with Letters only
                 std::string shortLabel(1, 'A' + (char)letterIndex++);
                 labelStorage.push_back(std::move(shortLabel));           
 
 				hoveredRealIndices.push_back(hoveredRealIndex++); // Store real index for hover
-				hoverStorage.push_back(d.allocatorLabel + ": " + d.implementationLabel); // full name for tooltip
+				hoverStorage.push_back(d.allocator_label + ": " + d.implementation_label); // full name for tooltip
             }
 
             std::vector<const char*> labelPtrs;
@@ -214,8 +214,8 @@ namespace nostalgia::visualiser {
                         ImGui::TextUnformatted(tooltipLabel);
                         ImGui::EndTooltip();
                         // Need to store this index to then pass and use to reference the rest of the data.
-                        DisplayHoverDetails(hoveredIndex);
-                        m_hoveredData = const_cast<BenchmarkPlotData*>(&data[static_cast<size_t>(hoveredRealIndices[static_cast<size_t>(hoveredIndex)])]);
+                        display_hover_details(hoveredIndex);
+                        current_hovered_data = const_cast<BenchmarkPlotData*>(&data[static_cast<size_t>(hoveredRealIndices[static_cast<size_t>(hoveredIndex)])]);
                     }
                 }
             }
@@ -223,6 +223,4 @@ namespace nostalgia::visualiser {
             ImPlot::EndPlot();
         }
     }
-
-
 }

@@ -1,9 +1,9 @@
 #include "ibmbursts.h" 
 
-#include "timer.h"
+#include "utils/timer.h"
 
 // Rough temp exporting, change this later
-#include "benchmarking/exporting/benchmarking_exporting.h"
+#include "benchmarking/exporter/benchmarking_exporting.h"
 
 // Difficulty here is we need to build this from an inc with only a define macro separating the differences
 // They are namespace protected but we must remember to undef the macro after use to be clean.
@@ -20,24 +20,25 @@
 // Therefore details of the benchmark function should be drawn from another INC file that is consistent 
 // within the benchmarking namespace.
 
-#include "allocators/linear_bump/allocator_linear.h"
-#include "allocators/stack_lifo/allocator_stack.h"
-#include "allocators/pool_slab/allocator_pool.h"
-#include "allocators/freelist_variable/allocator_freelist.h"
+#include "allocators/concrete/linear_bump/allocator_linear.h"
+#include "allocators/concrete/stack_lifo/allocator_stack.h"
+#include "allocators/concrete/pool_slab/allocator_pool.h"
+#include "allocators/concrete/freelist_variable/allocator_freelist.h"
 
 #include "objects/objects_linear.h"
 #include "objects/objects_stack.h"
 #include "objects/objects_pool.h"
 #include "objects/objects_freelist.h"
+#include "objects/objects.h"
 
-#include "allocators/allocator_meta.h"
-#include "benchmarking/benchmark_meta.h"
+#include "allocators/info/allocator_meta.h"
+#include "benchmarking/info/benchmark_meta.h"
 
-#include "implementations/implementation_meta.h"
-#include "implementations/implementation_atlas.h"
-#include "benchmarking/benchmark_atlas.h"
+#include "implementations/info/implementation_meta.h"
+#include "implementations/info/implementation_atlas.h"
+#include "benchmarking/info/benchmark_atlas.h"
 
-#include "benchmarking/macros.h"
+#include "benchmarking/dispatcher/macros.h"
 
 struct ImplementationDetails {
 	const char* allocator;
@@ -46,24 +47,23 @@ struct ImplementationDetails {
 };
 
 namespace nostalgia::benchmarking::IBMBursts {
-	//void run_ibmbursts_benchmark() {}
 
 	namespace linear {
-#include "allocators/linear_bump/defines_linear.inl"
+#include "allocators/defines/linear_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts.inl"
 
 	}
 	namespace stack {
-#include "allocators/stack_lifo/defines_stack.inl"
+#include "allocators/defines/stack_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts.inl"
 
 	}
 	namespace pool {
-#include "allocators/pool_slab/defines_pool.inl"
+#include "allocators/defines/pool_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts.inl"
 	}
 	namespace freelist {
-#include "allocators/freelist_variable/defines_freelist.inl"
+#include "allocators/defines/freelist_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts.inl"
 	}
 }

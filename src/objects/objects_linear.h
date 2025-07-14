@@ -1,6 +1,6 @@
 #pragma once
 
-#include "allocators/linear_bump/allocator_linear.h"
+#include "allocators/concrete/linear_bump/allocator_linear.h"
 
 namespace nostalgia::linear::objects {
 

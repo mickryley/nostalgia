@@ -1,0 +1,1 @@
+#define OBJECT_BASIC_VECTOR2D                   nostalgia::objects::Vector2D

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "allocators/pool_slab/allocator_pool.h"
+#include "allocators/concrete/pool_slab/allocator_pool.h"
 
 namespace nostalgia::pool::objects {
 

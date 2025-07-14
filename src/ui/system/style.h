@@ -21,7 +21,7 @@ namespace nostalgia::gui::style {
 
 
 	template <typename F>
-	void withChildWrapper(const char* label, ImVec2 size, F&& fn, 
+	void with_child_wrapper(const char* label, ImVec2 size, F&& fn, 
 		BorderStyle border = BorderStyle::LINE, SpacingStyle spacing = SpacingStyle::SINGLE) {
 		
 		//ImVec2 _curPadding = ImGui::GetStyle().WindowPadding;
@@ -73,7 +73,7 @@ namespace nostalgia::gui::style {
 	}
 
 	template <typename F>
-	void withExpandedWindow(std::string_view title, F&& fn) {
+	void with_expanded_window_wrapper(std::string_view title, F&& fn) {
 
 		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
 		ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize, ImGuiCond_Always);
@@ -94,7 +94,7 @@ namespace nostalgia::gui::style {
 	}
 
 	template <typename F>
-	void drawWideButton(const char* label, float widthOfAvail, float height, F&& onClick) {
+	void draw_wide_button(const char* label, float widthOfAvail, float height, F&& onClick) {
 		//ImGui::PushID(label);
 		float cursorX = ImGui::GetCursorPosX();
 		float availableWidth = ImGui::GetContentRegionAvail().x;
@@ -108,11 +108,9 @@ namespace nostalgia::gui::style {
 		//	ImGui::PopID();
 	}
 
-	bool draw_tabButton(const char* label, bool selected, ImVec2 size);
+	bool draw_tab_button(const char* label, bool selected, ImVec2 size);
 
-	void draw_textCentered(const char* text);
+	void draw_text_centered(const char* text);
 
-	void draw_separatorSpace();
-
-	void draw_verticalSeparator(float fillPercent);
+	void draw_vertical_separator(float fillPercent);
 }
