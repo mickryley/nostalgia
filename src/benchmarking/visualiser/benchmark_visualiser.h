@@ -15,8 +15,10 @@ namespace nostalgia::visualiser {
 	struct BenchmarkPlotData {
 		// Can change this to use the ID lookup but just using the string for now
 		std::string results_source;
+
 		std::string benchmark_label;
 		std::string benchmark_description; 
+		//AllocatorID allocator_id;
 		std::string allocator_label;
 		std::string allocator_description;
 		std::string implementation_label;

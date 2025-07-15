@@ -1,48 +1,51 @@
 #include "allocator_atlas.h"
 
 namespace nostalgia::allocator {
-	std::unordered_map<nostalgia::AllocatorID, nostalgia::AllocatorType> atlas{
-		{ { nostalgia::AllocatorID::NONE, nostalgia::AllocatorType{
-			nostalgia::AllocatorID::NONE,
-			"No Allocator (Default)",
-			"Malloc Allocator (Default)",
-			AllocatorFlags::DEALLOC_REVERSE | AllocatorFlags::DEALLOC_FORWARD |
-			AllocatorFlags::DEALLOC_RANDOM,
-			AllocatorFlags::DEFAULT_MALLOC 	// Limit to Malloc Allocator
-			}
-		},
-		{ nostalgia::AllocatorID::Linear, nostalgia::AllocatorType{
-			nostalgia::AllocatorID::Linear,
-			"Linear",
-			"Basic Minimal Linear Allocator (Rewind Only)",
-			AllocatorFlags::DEALLOC_REWIND,
-			AllocatorFlags::NONE
-			}
-		},
-		{ nostalgia::AllocatorID::Stack, nostalgia::AllocatorType{
-			nostalgia::AllocatorID::Stack,
-			"Stack",
-			"Basic Minimal LIFO Stack Allocator",
-			AllocatorFlags::DEALLOC_REVERSE,
-			AllocatorFlags::NONE
-			}
-		},
-		 {	nostalgia::AllocatorID::Pool, nostalgia::AllocatorType{
-			nostalgia::AllocatorID::Pool,
-			"Pool",
-			"Fixed Size Pre-Formatted Pool Allocator",
-			AllocatorFlags::DEALLOC_REVERSE | AllocatorFlags::DEALLOC_FORWARD,
-			AllocatorFlags::NONE
-			}
-		},
-		{ nostalgia::AllocatorID::Freelist, nostalgia::AllocatorType{
-			nostalgia::AllocatorID::Freelist,
-			"Freelist",
-			"Variable Size Freelist Allocator (Coalesces on Deallocate)",
-			AllocatorFlags::DEALLOC_REVERSE | AllocatorFlags::DEALLOC_FORWARD |
-			AllocatorFlags::DEALLOC_RANDOM,
-			AllocatorFlags::NONE
-			}
-		} }
-	};
+
+    std::unordered_map<nostalgia::AllocatorID, nostalgia::AllocatorType> atlas{
+        { nostalgia::AllocatorID::NONE, nostalgia::AllocatorType{
+            .id = nostalgia::AllocatorID::NONE,
+            .label = "No Allocator (Default)",
+            .description = "Malloc Allocator (Default)",
+            .compatible_flags = AllocatorFlags::DEALLOC_REVERSE |
+                                AllocatorFlags::DEALLOC_FORWARD |
+                                AllocatorFlags::DEALLOC_RANDOM,
+            .required_flags = AllocatorFlags::DEFAULT_MALLOC,
+            .data_color_hue_shift = 0
+        }},
+        { nostalgia::AllocatorID::Linear, nostalgia::AllocatorType{
+            .id = nostalgia::AllocatorID::Linear,
+            .label = "Linear",
+            .description = "Basic Minimal Linear Allocator (Rewind Only)",
+            .compatible_flags = AllocatorFlags::DEALLOC_REWIND,
+            .required_flags = AllocatorFlags::NONE,
+            .data_color_hue_shift = 40
+        }},
+        { nostalgia::AllocatorID::Stack, nostalgia::AllocatorType{
+            .id = nostalgia::AllocatorID::Stack,
+            .label = "Stack",
+            .description = "Basic Minimal LIFO Stack Allocator",
+            .compatible_flags = AllocatorFlags::DEALLOC_REVERSE,
+            .required_flags = AllocatorFlags::NONE,
+            .data_color_hue_shift = 80
+        }},
+        { nostalgia::AllocatorID::Pool, nostalgia::AllocatorType{
+            .id = nostalgia::AllocatorID::Pool,
+            .label = "Pool",
+            .description = "Fixed Size Pre-Formatted Pool Allocator",
+            .compatible_flags = AllocatorFlags::DEALLOC_REVERSE | AllocatorFlags::DEALLOC_FORWARD,
+            .required_flags = AllocatorFlags::NONE,
+            .data_color_hue_shift = 120
+        }},
+        { nostalgia::AllocatorID::Freelist, nostalgia::AllocatorType{
+            .id = nostalgia::AllocatorID::Freelist,
+            .label = "Freelist",
+            .description = "Variable Size Freelist Allocator (Coalesces on Deallocate)",
+            .compatible_flags = AllocatorFlags::DEALLOC_REVERSE |
+                                AllocatorFlags::DEALLOC_FORWARD |
+                                AllocatorFlags::DEALLOC_RANDOM,
+            .required_flags = AllocatorFlags::NONE,
+            .data_color_hue_shift = 160
+        }}
+    };
 }

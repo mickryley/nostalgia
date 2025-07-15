@@ -31,20 +31,7 @@ namespace nostalgia {
         const std::string description;
         const AllocatorFlags compatible_flags;
         const AllocatorFlags required_flags;
-
-        AllocatorType(
-            AllocatorID id_,
-            std::string label_,
-            std::string description_,
-            AllocatorFlags compatible_flags_,
-            AllocatorFlags required_flags_)
-            : id(id_)
-            , label(std::move(label_))
-            , description(std::move(description_))
-            , compatible_flags(compatible_flags_)
-            , required_flags(required_flags_) {
-        }
-
+		const int data_color_hue_shift; 
 
         bool has(AllocatorFlags flag) const {
             return hasFlag(compatible_flags, flag);

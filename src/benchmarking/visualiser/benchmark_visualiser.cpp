@@ -13,6 +13,8 @@
 #include "utils/log.h"
 #include "utils/return_codes.h"
 
+#include "allocators/info/allocator_atlas.h"
+
 using json = nlohmann::json;
 
 namespace nostalgia::visualiser {
@@ -54,6 +56,31 @@ namespace nostalgia::visualiser {
 		// Visible Graph data storage
         std::vector<std::string> labelStorage;
         std::vector<const char*> labels;
+
+        enum class ColorBy {
+            NONE = 0,
+            AllocatorType,
+            ImplementationType,
+            COUNT
+		};
+		ColorBy current_color_by = ColorBy::NONE;
+
+        constexpr float     wrap_color_8bit                = 1.0f / 256.0f;
+        constexpr float     plot_bar_opacity                = 1.0f;
+        constexpr ImVec4    default_hue_color               = ImVec4(1.0f, 0.0f, 0.0f, plot_bar_opacity);
+
+        constexpr ImVec4    alloc_time_color                = ImVec4(1.0f, 0.0f, 0.0f, plot_bar_opacity);
+        constexpr ImVec4    dealloc_time_color              = ImVec4(0.0f, 1.0f, 0.0f, plot_bar_opacity);
+        constexpr ImVec4    total_time_color                = ImVec4(0.0f, 0.0f, 1.0f, plot_bar_opacity);
+        constexpr float     alloc_time_shading              = 0.75f;
+        constexpr float     dealloc_time_shading            = 0.5f;
+        constexpr float     total_time_shading              = 1.0f;
+
+        enum class ResultDataType {
+            AllocTime,
+            DeallocTime,
+            TotalTime
+		};
 	}
 
     size_t get_total_displayed_benchmark_results() {
@@ -192,6 +219,7 @@ namespace nostalgia::visualiser {
 
     void draw_benchmark_results_view(size_t index) {
         draw_benchmark_plot(displayed_benchmark_results[index].local_results);
+
     }
 
     void display_hover_details(int index) {
@@ -203,7 +231,7 @@ namespace nostalgia::visualiser {
         ImGui::Separator();
         if (current_hovered_data) {
             ImGui::Text("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
-            ImGui::Text("Allocator: %s", current_hovered_data->allocator_label.c_str());
+            ImGui::Text("Allocator: %s", current_hovered_data->allocator_label.c_str()); 
             ImGui::Text("Implementation: %s", current_hovered_data->implementation_label.c_str());
             ImGui::Text("Total Time: %.3f ms", current_hovered_data->total_time);
             ImGui::Text("Allocation Time: %.3f ms", current_hovered_data->allocate_time);
@@ -256,6 +284,10 @@ namespace nostalgia::visualiser {
 
     void draw_benchmark_results_hover_view() {
 
+        ImGui::Spacing();
+        ImGui::Text("Color by...");
+        if (ImGui::Button("Allocator Type")) current_color_by = ColorBy::AllocatorType;
+        if (ImGui::Button("Implementation Type")) current_color_by = ColorBy::ImplementationType;
     }
 
     void draw_benchmark_results_hover_export() {
@@ -265,7 +297,6 @@ namespace nostalgia::visualiser {
     void draw_benchmark_results_hover() {
 
         // ~~~ Tabs ~~~
-        //ImGui::Dummy(ImVec2(hover_tab_button_max_size.x * hover_tab_offset_x_perc, expandable_value));
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, expandable_size);
 		float available_width = ImGui::GetContentRegionAvail().x;
 		float hover_tab_button_width = available_width * hover_tab_max_width_perc - ImGui::GetStyle().ItemSpacing.x * (tab_count - 1);
@@ -279,7 +310,6 @@ namespace nostalgia::visualiser {
 		}
         ImGui::PopStyleVar();
 
-		//ImGui::Text("Current Tab is : %s", results_hover_tab_names[static_cast<size_t>(current_hovered_tab)]);
         ImGui::Spacing();
 
         switch (current_hovered_tab) {
@@ -299,49 +329,64 @@ namespace nostalgia::visualiser {
                 ImGui::Text("Unknown tab selected.");
                 break;
 		}
-        /*
-        if (current_hovered_data)  ImGui::TextWrapped("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
+    }
 
-        ImGui::Text("Benchmark Details:");
+    ImVec4 color_mix(const ImVec4& a, const ImVec4& b, float factor = 0.5f, float brightness = 1.0f) {
+        return ImVec4(
+            (a.x * (1.0f - factor) + b.x * factor) * brightness,
+            (a.y * (1.0f - factor) + b.y * factor) * brightness,
+            (a.z * (1.0f - factor) + b.z * factor)* brightness,
+            a.w * (1.0f - factor) + b.w * factor
+        );
+	}
+    
+    ImVec4 get_allocator_color(AllocatorID a_id) {
+        float h, s, v;
+        ImGui::ColorConvertRGBtoHSV(default_hue_color.x, default_hue_color.y, default_hue_color.z, h, s, v);
+		h = fmodf(h + static_cast<float>(nostalgia::allocator::get_color_hue_shift(a_id)) * wrap_color_8bit, 1.0f);
+        float r, g, b; 
+		ImGui::ColorConvertHSVtoRGB(h, s, v, r, g, b);
+		return ImVec4(r, g, b, plot_bar_opacity);
+    }
 
-        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->benchmark_description.c_str());
+    ImVec4 get_allocator_color(const std::string& allocator_label) {
+        for (const auto& [a_id, a_type] : allocator::atlas) {
+            if (a_type.label == allocator_label) {
+                return get_allocator_color(a_id);
+            }
+		}
+        return default_hue_color;
+	}
 
-        ImGui::Text("Benchmark Parameters:");
+    ImVec4 get_color_by_result(ResultDataType data_type, BenchmarkPlotData data) {
+		
+        ImVec4 base_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+		float mix_factor = 0.5f; 
+        bool mix_brightness = false;
 
-        if (current_hovered_data)  ImGui::TextWrapped("%d Passes of ", static_cast<int>(current_hovered_data->passes));
-        if (current_hovered_data)  ImGui::TextWrapped("%d Iterations", static_cast<int>(current_hovered_data->iterations));
+        switch (current_color_by) {
+        case ColorBy::NONE:
+            mix_factor = 1.0f;
+            break;
+        case ColorBy::AllocatorType:
+            base_color = get_allocator_color(data.allocator_label);
+            mix_brightness = true;
+            mix_factor = 0.0f;
+            break;
+		case ColorBy::ImplementationType:
+            //break;
+        default:
+            break;
+		}
 
-        ImGui::Separator();
-
-        ImGui::Text("Allocator:");
-
-        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->allocator_label.c_str());
-
-        ImGui::Text("Allocator Details:");
-
-        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->allocator_description.c_str());
-
-        ImGui::Separator();
-
-        ImGui::Text("Implementation:");
-
-        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->implementation_label.c_str());
-
-        ImGui::Text("Implementation Details:");
-
-        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->implementation_description.c_str());
-        if (current_hovered_data)  ImGui::TextWrapped("%s", current_hovered_data->implementation_parameters.c_str());
-        
-        ImGui::Separator();
-
-        ImGui::Text("Results:");
-
-        ImGui::Text("Hovered Results:");
-
-        if (current_hovered_data)  ImGui::Text("Total Time: %.3f ms", current_hovered_data->total_time);
-        if (current_hovered_data)  ImGui::Text("Allocation Time: %.3f ms", current_hovered_data->allocate_time);
-        if (current_hovered_data)  ImGui::Text("Deallocation Time: %.3f ms", current_hovered_data->deallocate_time);
-        */
+        switch (data_type) {
+        case ResultDataType::AllocTime: return color_mix(base_color, alloc_time_color, mix_factor, (mix_brightness ? alloc_time_shading : 1.0f));
+        case ResultDataType::DeallocTime: return color_mix(base_color, dealloc_time_color, mix_factor, (mix_brightness ? dealloc_time_shading : 1.0f));
+        case ResultDataType::TotalTime: return color_mix(base_color, total_time_color, mix_factor, (mix_brightness ? total_time_shading : 1.0f));
+        default:
+                log::print(LogFlags::Error, "Unknown ResultDataType: %d", static_cast<int>(data_type));
+				return base_color; // Fallback to default color
+        }
     }
 
     void draw_benchmark_plot(const std::vector<BenchmarkPlotData>& data) {
@@ -357,13 +402,22 @@ namespace nostalgia::visualiser {
 
             // Data storage for bars
             std::vector<double> allocs, deallocs, totals;
+            std::vector<AllocatorID> a_id;
 
             int letterIndex = 0;
             int hoveredRealIndex = 0;
-            std::string lastAllocator; // Only works if allocators are ordered
+            // std::string lastAllocator; // Only works if allocators are ordered
 
-            for (const auto& d : data) {
-                if (!lastAllocator.empty() && lastAllocator != d.allocator_label) {
+            //for (const BenchmarkPlotData& d : data) {
+            for (size_t i = 0; i < data.size(); ++i) {
+
+                const BenchmarkPlotData& d = data[i];
+                // Change this to  record an offset index instead - and just increment that
+                // and use it to move the real indices without getting offset
+                // Implement GroupBy to handle this sorting logic
+                
+                // Old Forced Spacing for allocator_label differences
+                /*if (!lastAllocator.empty() && lastAllocator != d.allocator_label) {
                     labelStorage.emplace_back("");      
                     hoverStorage.emplace_back("");      
                     allocs.push_back(0);
@@ -371,12 +425,13 @@ namespace nostalgia::visualiser {
                     totals.push_back(0);
                     hoveredRealIndices.push_back(-1);
                 }
-                lastAllocator = d.allocator_label;
+                lastAllocator = d.allocator_label;*/
 
                 // Push bar values
                 allocs.push_back(d.allocate_time);
                 deallocs.push_back(d.deallocate_time);
                 totals.push_back(d.total_time);
+
 
                 // Label with Letters only
                 std::string shortLabel(1, 'A' + (char)letterIndex++);
@@ -392,14 +447,20 @@ namespace nostalgia::visualiser {
                 labelPtrs.push_back(s.c_str());
             int count = (int)allocs.size();
 
-            ImPlot::SetupAxes(nullptr, "Time (ms)");
+            ImPlot::SetupAxes(nullptr, "Time (ms)", ImPlotAxisFlags_AutoFit, ImPlotAxisFlags_AutoFit);
             //ImPlot::SetupAxisTicks(ImAxis_X1, 0, count - 1, count, labelStorage.data());
             ImPlot::SetupAxisTicks(ImAxis_X1, 0, count - 1, count, labelPtrs.data());
 
-            ImPlot::PlotBars("Alloc", allocs.data(), count, 0.25, -0.25);
-            ImPlot::PlotBars("Dealloc", deallocs.data(), count, 0.25, 0.25);
-            ImPlot::PlotBars("Total", totals.data(), count, 0.25, 0.0);
-            
+            for (size_t i = 0; i < count; ++i) {
+
+                ImPlot::SetNextFillStyle(get_color_by_result(ResultDataType::AllocTime, data[i]));
+                ImPlot::PlotBars("Alloc", &allocs[i], 1, 0.25, static_cast<double>(i) - 0.25);
+                ImPlot::SetNextFillStyle(get_color_by_result(ResultDataType::TotalTime, data[i]));
+                ImPlot::PlotBars("Total", &totals[i], 1, 0.25, static_cast<double>(i));
+                ImPlot::SetNextFillStyle(get_color_by_result(ResultDataType::DeallocTime, data[i]));
+                ImPlot::PlotBars("Dealloc", &deallocs[i], 1, 0.25, static_cast<double>(i) + 0.25);
+            }
+
             if (ImPlot::IsPlotHovered()) {
                 ImPlotPoint mouse = ImPlot::GetPlotMousePos();
                 int hoveredIndex = (int)(mouse.x + 0.5);

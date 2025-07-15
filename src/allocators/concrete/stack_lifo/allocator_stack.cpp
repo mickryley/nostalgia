@@ -29,8 +29,8 @@ namespace nostalgia::stack {
 
         if (_allocStart + _wrappedBytes > m_capacity) {
 #ifdef _DEBUG
-			log::print(logFlags::ERROR, "StackAllocator: Out of memory! Requested [{}] bytes, but only [{}] bytes available.", bytes, m_capacity - m_offset);
-            log::print(logFlags::ERROR, "StackAllocator: Out of memory! Falling back to malloc.");
+			log::print(LogFlags::Error, "StackAllocator: Out of memory! Requested [{}] bytes, but only [{}] bytes available.", bytes, m_capacity - m_offset);
+            log::print(LogFlags::Error, "StackAllocator: Out of memory! Falling back to malloc.");
 #endif
             void* fallback = nullptr;
 #ifdef _MSC_VER
@@ -55,8 +55,8 @@ namespace nostalgia::stack {
 
         m_peakCapacity = std::max(m_peakCapacity, m_offset);
 #ifdef _DEBUG
-			log::print("StackAllocator: Allocated [{}] bytes at [{}] (header at [{}], payload at [{}], new offset: [{}], peak: [{}])", 
-                bytes, (void*)_ptr, _allocStart, _allocStart + sizeof(StackBlockHeader), m_offset, m_peakCapacity);
+			//log::print("StackAllocator: Allocated [{}] bytes at [{}] (header at [{}], payload at [{}], new offset: [{}], peak: [{}])", 
+          //      bytes, (void*)_ptr, _allocStart, _allocStart + sizeof(StackBlockHeader), m_offset, m_peakCapacity);
 #endif
         return _ptr;
     }
@@ -65,7 +65,7 @@ namespace nostalgia::stack {
     bool StackAllocator::free(void* ptr) noexcept {
 
 #ifdef _DEBUG
-        log::print("Size of header (free): [{}]", sizeof(StackBlockHeader));
+      //  log::print("Size of header (free): [{}]", sizeof(StackBlockHeader));
 #endif
         if (ptr == nullptr) return false;
         
@@ -90,7 +90,7 @@ namespace nostalgia::stack {
         }
         m_offset -= blockSize;
 #ifdef _DEBUG
-        log::print("StackAllocator: Freed [{}] bytes at [{}] (new offset: [{}])", header->size, _ptr, m_offset);
+      //  log::print("StackAllocator: Freed [{}] bytes at [{}] (new offset: [{}])", header->size, _ptr, m_offset);
 #endif
 		return true;
     }    

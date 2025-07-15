@@ -29,8 +29,8 @@ namespace nostalgia::stack::scoped {
 
         if (_allocStart + _wrappedBytes > m_capacity) {
 #ifdef _DEBUG
-			log::print(logFlags::ERROR, "StackAllocator: Out of memory! Requested [{}] bytes, but only [{}] bytes available.", bytes, m_capacity - m_offset);
-            log::print(logFlags::ERROR, "StackAllocator: Out of memory! Falling back to malloc.");
+			//log::print(LogFlags::Error, "StackAllocator: Out of memory! Requested [{}] bytes, but only [{}] bytes available.", bytes, m_capacity - m_offset);
+            //log::print(LogFlags::Error, "StackAllocator: Out of memory! Falling back to malloc.");
 #endif
             void* fallback = nullptr;
 #ifdef _MSC_VER
@@ -55,8 +55,8 @@ namespace nostalgia::stack::scoped {
 
         m_peakCapacity = std::max(m_peakCapacity, m_offset);
 #ifdef _DEBUG
-			log::print("StackAllocator: Allocated [{}] bytes at [{}] (header at [{}], payload at [{}], new offset: [{}], peak: [{}])", 
-                bytes, (void*)_ptr, _allocStart, _allocStart + sizeof(StackBlockHeader), m_offset, m_peakCapacity);
+			//log::print("StackAllocator: Allocated [{}] bytes at [{}] (header at [{}], payload at [{}], new offset: [{}], peak: [{}])", 
+           //     bytes, (void*)_ptr, _allocStart, _allocStart + sizeof(StackBlockHeader), m_offset, m_peakCapacity);
 #endif
         return _ptr;
     }
