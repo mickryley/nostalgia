@@ -8,12 +8,48 @@
 
 #include "utils/implot_wrapped.h"
 
+#include "utils/log.h"
+#include "utils/return_codes.h"
+
 using json = nlohmann::json;
 
 namespace nostalgia::visualiser {
 
-    // Current
-    std::unordered_map<std::string, std::vector<BenchmarkPlotData>> load_results_from_file(const std::string& path) {
+	namespace {
+		std::vector<BenchmarkPlotData> current_benchmark_plot_data;
+        std::unordered_map<std::string, std::vector<BenchmarkPlotData>> current_benchmark_plot_data_map;
+
+		int current_hovered_index;
+		BenchmarkPlotData* current_hovered_data = nullptr;
+
+        // New Storage for displayed benchmark results
+        std::vector<BenchmarkResults> displayed_benchmark_results;
+
+        std::string reference_benchmark_path = "reference_benchmark_results.json";
+	}
+
+    size_t get_total_displayed_benchmark_results() {
+		return displayed_benchmark_results.size();
+	}
+
+    std::string get_benchmark_label(size_t index) {
+		if (index < 0 || index >= get_total_displayed_benchmark_results()) return "";
+		return displayed_benchmark_results[index].benchmark_label;
+	}
+
+    std::unordered_map<std::string, std::vector<BenchmarkPlotData>> load_results_from_file(const std::string& path, ImportMapKey map_key, ImportMapKey import_filter_for, std::string benchmark_filter) {
+
+        log::print("Loading benchmark results from: {}", path);
+
+        if (path.empty()) {
+            log::print(LogFlags::Error, "Path is empty, cannot load benchmark results.");
+            return {};
+        }
+        if (!std::filesystem::exists(path)) {
+            log::print(LogFlags::Error, "File does not exist: {}", path);
+            return {};
+        }
+        
         std::ifstream file(path);
         json j;
         file >> j;
@@ -21,12 +57,27 @@ namespace nostalgia::visualiser {
         std::unordered_map<std::string, std::vector<BenchmarkPlotData>> results;
 
         for (const auto& entry : j) {
+            switch(import_filter_for) {
+                case ImportMapKey::NONE:
+                    break;
+                case ImportMapKey::BenchmarkLabel:
+                    if (entry["benchmark_label"] != benchmark_filter) continue;
+                    break;
+                case ImportMapKey::ResultsSource:
+                    if (entry["results_source"] != benchmark_filter) continue;
+                    break;
+                default:
+                    log::print(LogFlags::Error, "Unknown ImportMapKey: %d", static_cast<int>(import_filter_for));
+                    continue;
+            }
             std::string benchmark_label = entry["benchmark_label"];
+            std::string results_source = entry["results_source"];
             const auto& res = entry["results"];
 
             BenchmarkPlotData d;
 
 			d.benchmark_label = benchmark_label;
+            d.results_source = results_source;
 
             d.allocator_label = res["allocator_label"];
             d.allocator_description = res["allocator_description"];
@@ -39,41 +90,70 @@ namespace nostalgia::visualiser {
             d.iterations = res["iterations"];
             d.passes = res["passes"];
 
-            results[benchmark_label].push_back(d);
+            switch (map_key) {
+                case ImportMapKey::BenchmarkLabel:
+                    results[benchmark_label].push_back(d);
+                    break;
+                case ImportMapKey::ResultsSource:
+                    results[results_source].push_back(d);
+                    break;
+                default:
+                    log::print(LogFlags::Error, "Unknown ImportMapKey: %d", static_cast<int>(map_key));
+                    break;
+            }
         }
-
         return results;
     }
 
-    // Deprecated
-    std::vector<BenchmarkPlotData> load_benchmark_plot_data(const std::string& path) {
-        std::ifstream file(path);
-        json j;
-        file >> j;
+    ReturnCode load_reference_benchmark_results(std::string benchmark_label, BenchmarkResults& loaded_results) {
+        log::print("Loading reference benchmark results from: {}", reference_benchmark_path);
 
-        std::vector<BenchmarkPlotData> data;
-        for (const auto& entry : j) {
-            const auto& res = entry["results"];
-            BenchmarkPlotData d;
-            d.implementation_label = res["implementation_label"];
-            d.allocator_label = res["allocator_label"];
-            d.total_time = res["total_time"];
-            d.allocate_time = res["allocate_time"];
-            d.deallocate_time = res["deallocate_time"];
-            data.push_back(d);
+        std::unordered_map<std::string, std::vector<BenchmarkPlotData>> reference_benchmark_data = load_results_from_file(reference_benchmark_path, ImportMapKey::ResultsSource, ImportMapKey::BenchmarkLabel);
+
+
+        if (reference_benchmark_data.empty()) {
+            log::print(LogFlags::Warn, "No reference benchmark results found in file: {}", reference_benchmark_path);
+            return ReturnCode::ImportError;
         }
-        return data;
+        // Check if the benchmark label exists in the reference data
+        if (!reference_benchmark_data.contains(benchmark_label)) {
+            log::print(LogFlags::Warn, "No reference benchmark results found for label: {}", benchmark_label);
+            return ReturnCode::ImportError;
+        }
+
+        loaded_results.reference_results = 
+            reference_benchmark_data;
+        
+        return ReturnCode::Success;
+    }
+        
+
+    void load_local_benchmark_results(std::string path) {
+        
+        BenchmarkResults loaded_results;
+        log::print("Loading local benchmark results from: {}", path);
+
+        std::unordered_map<std::string, std::vector<BenchmarkPlotData>> loaded_plot_data = load_results_from_file(path, ImportMapKey::BenchmarkLabel);
+
+        if (loaded_plot_data.empty()) {
+            log::print(LogFlags::Warn, "No benchmark results found in file: {}", path);
+            return;
+        }
+
+        // Currently only supporting one benchmark label at a time
+        loaded_results.benchmark_label = loaded_plot_data.begin()->first;
+        loaded_results.local_results = loaded_plot_data[loaded_results.benchmark_label];
+
+        // Add reference results if available
+        load_reference_benchmark_results(loaded_results.benchmark_label, loaded_results);
+
+        // Add to the displayed results vector
+        displayed_benchmark_results.push_back(loaded_results);
     }
 
-    void load_benchmark_plot_data() {
-        current_benchmark_plot_data = load_benchmark_plot_data("benchmark_results.txt");
-		current_benchmark_plot_data_map = load_results_from_file("benchmark_results.txt");
-
-        if (current_benchmark_plot_data_map.empty()) ImGui::Text("No benchmark map loaded.");
-        if (current_benchmark_plot_data.empty()) ImGui::Text("No benchmark data loaded.");
-    }
 
 
+    /// Old below here, needs to be updated to use the new data structure
     static std::vector<std::string> labelStorage;
     static std::vector<const char*> labels;
 
@@ -89,6 +169,11 @@ namespace nostalgia::visualiser {
         }
     }
 
+    void draw_benchmark_results_view(size_t index) {
+        draw_benchmark_plot(displayed_benchmark_results[index].local_results);
+    }
+
+    // Old Window Draw - Rework
     void draw_benchmark_plot() {
         if (!current_benchmark_plot_data_map.empty()) {
             draw_benchmark_plot(current_benchmark_plot_data_map);

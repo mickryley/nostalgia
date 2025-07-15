@@ -13,14 +13,20 @@ using json = nlohmann::json;
 namespace nostalgia::benchmarking::exporting {
 
 	namespace {
-		std::vector<BenchmarkResult> m_currentBenchmarkResults;
+
+		std::string file_extension = ".json";
+		std::string current_benchmark_filename = "current_benchmark_results";
+
+		std::vector<BenchmarkResult> current_benchmark_results;
+
 	}
 
-	void exportResultsToFile(const std::vector<BenchmarkResult>& results, const std::string& filename){
+	void exportResultsToFile(const std::vector<BenchmarkResult>& results, const std::string& filename, std::string& source_label){
 		json j;
 		for (const auto& result : results) {
 			j.push_back({
 				{ "benchmark_label", benchmark::atlas.at(result.benchmark_id).label },
+				{ "results_source", source_label },
 				{ "results", {
 					// Implementation Details
 					{"total_time", result.total_time},
@@ -56,16 +62,28 @@ namespace nostalgia::benchmarking::exporting {
 	}
 
 
-	void add_benchmark_result(const BenchmarkResult& result) {
-		m_currentBenchmarkResults.push_back(result);
+	void clear_current_benchmark_results() {
+		current_benchmark_results.clear();
 	}
 
-	/*
-	void exportBenchmark(BenchmarkResult results) {
-
-	}*/
-
-	void export_current_benchmarks() {
-		exportResultsToFile(m_currentBenchmarkResults, "benchmark_results.txt");
+	void add_current_benchmark_result(const BenchmarkResult& result) {
+		current_benchmark_results.push_back(result);
 	}
+
+	std::string export_current_benchmarks() {
+		std::string export_filename = get_next_benchmark_filename(current_benchmark_filename);
+		exportResultsToFile(current_benchmark_results, export_filename);
+		return export_filename;
+	}
+
+	std::string get_next_benchmark_filename(std::string& filename) {
+		int index = 0;
+		std::string full_filename;
+		do {
+			full_filename = std::format("{}_{}{}", filename, index, file_extension);
+			index++;
+		} while	 (std::filesystem::exists(full_filename));
+		return full_filename;
+	}
+
 }

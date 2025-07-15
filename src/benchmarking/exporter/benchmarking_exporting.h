@@ -9,6 +9,10 @@
 
 namespace nostalgia::benchmarking::exporting {
 
+	namespace {
+		std::string local_source_label = "Local Results";
+	}
+
 	struct BenchmarkResult {
 		double total_time;
 		double allocate_time;
@@ -19,8 +23,10 @@ namespace nostalgia::benchmarking::exporting {
 		nostalgia::BenchmarkID benchmark_id;
 	};
 
-	void add_benchmark_result(const BenchmarkResult& result);
+	std::string get_next_benchmark_filename(std::string& filename);
+	void clear_current_benchmark_results();
+	void add_current_benchmark_result(const BenchmarkResult& result);
 	void exportBenchmark(BenchmarkResult results);
-	void export_current_benchmarks();
-	void exportResultsToFile(const std::vector<BenchmarkResult>& results, const std::string& filename);
+	std::string export_current_benchmarks();
+	void exportResultsToFile(const std::vector<BenchmarkResult>& results, const std::string& filename, std::string& source_label = local_source_label);
 }

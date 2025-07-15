@@ -7,5 +7,6 @@ namespace nostalgia {
         InitGuiError = 2,
 		InitGuiSDL3Error = 3,
 		InitGuiVulkanError = 4,
+		ImportError = 5,
 	};
 }

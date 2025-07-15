@@ -1,9 +1,11 @@
 #include "benchmarking/dispatcher/benchmark_loader.h"
 #include "benchmarking/info/benchmark_atlas.h"
+#include "benchmarking/exporter/benchmarking_exporting.h"
 
 #include "allocators/info/allocator_atlas.h"
 
 #include "implementations/info/implementation_atlas.h"
+#include "benchmarking/visualiser/benchmark_visualiser.h"
 
 #include "ui/gui/gui.h"
 
@@ -62,7 +64,6 @@ namespace nostalgia::benchmarking::loader {
 		selected_allocators.clear();
         selected_implementations.clear();
 
-        // Prefill with compatible allocators
         for (const auto& [aID, aType] : nostalgia::allocator::atlas) {
             if (aType.is_compatible_with(get_allocator_flags()))
 				selected_allocators.insert(aID);
@@ -82,9 +83,13 @@ namespace nostalgia::benchmarking::loader {
     }
 
       void dispatch_benchmark(const nostalgia::BenchmarkID id) {
+        exporting::clear_current_benchmark_results();
+
         const auto& benchmark_type = nostalgia::benchmark::atlas.at(id);
-        if (benchmark_type.dispatcher) {
-            benchmark_type.dispatcher();
-        }
+        if (benchmark_type.dispatcher) benchmark_type.dispatcher();
+
+        std::string local_path = exporting::export_current_benchmarks();
+        visualiser::load_local_benchmark_results(local_path);
+        //visualiser::load_benchmark_plot_data();
     }
 }

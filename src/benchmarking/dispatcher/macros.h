@@ -56,5 +56,5 @@
 										.implementation = implementation_details, \
 										.benchmark_id = benchmark_id, \
 									}; \
-									exporting::add_benchmark_result(result);
+									exporting::add_current_benchmark_result(result);
 #pragma endregion

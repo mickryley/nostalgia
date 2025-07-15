@@ -6,9 +6,15 @@
 
 namespace nostalgia::visualiser {
 
-	
+    enum class ImportMapKey {
+        NONE,
+        BenchmarkLabel,
+        ResultsSource
+    };
+
 	struct BenchmarkPlotData {
 		// Can change this to use the ID lookup but just using the string for now
+		std::string results_source;
 		std::string benchmark_label;
 		std::string benchmark_description; 
 		std::string allocator_label;
@@ -23,23 +29,28 @@ namespace nostalgia::visualiser {
 		size_t passes;
 	};
 
-	namespace {
-		std::vector<BenchmarkPlotData> current_benchmark_plot_data;
-		std::unordered_map<std::string, std::vector<BenchmarkPlotData>> current_benchmark_plot_data_map;
-		int current_hovered_index;
-		BenchmarkPlotData* current_hovered_data = nullptr;
-	}
+	struct BenchmarkResults {
+		std::string benchmark_label;
+		std::vector<BenchmarkPlotData> local_results; 
+		std::unordered_map<std::string, std::vector<BenchmarkPlotData>> reference_results; // Key is a source, Value are ALL matching results
+	};
 
-	// Key is a Benchmark Label, Value are all results matching that label
-	std::unordered_map<std::string, std::vector<BenchmarkPlotData>> load_results_from_file(const std::string& path);
+	// Key is a Benchmark Label, Value are ALL matching results
+	std::unordered_map<std::string, std::vector<BenchmarkPlotData>> load_results_from_file(
+		const std::string& path, 
+		ImportMapKey map_key, 
+		ImportMapKey import_filter_for = ImportMapKey::NONE,
+		std::string benchmark_filter = "");
 
-	// Only blindly loads all results - need to filter by allocator and test type later
-	std::vector<BenchmarkPlotData> load_benchmark_plot_data(const std::string& path);
-
-	void load_benchmark_plot_data();
-
+	// void load_benchmark_plot_data();
+	void load_reference_benchmark_results(std::string benchmark_label);
+	void load_local_benchmark_results(std::string path);
 	void draw_benchmark_hover_details();
 
+	void draw_benchmark_results_view(size_t index);
 	void draw_benchmark_plot();
 	void draw_benchmark_plot(const std::vector<BenchmarkPlotData>& data);
+
+	size_t get_total_displayed_benchmark_results();
+	std::string get_benchmark_label(size_t index);
 }

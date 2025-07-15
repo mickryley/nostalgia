@@ -1,10 +1,13 @@
 #include "style.h"
+#include <format>
 
 namespace nostalgia::gui::style {
 	bool draw_tab_button(const char* label, bool selected, ImVec2 size) {
-		ImGui::PushID(label);
+		std::string label_string = std::format("##__{}", label);
+		ImGui::PushID(label_string.c_str());
+
 		if (!selected) ImGui::SetCursorPosY(ImGui::GetCursorPosY() + size.y * 0.1f); // Offset for selected tab
-		bool pressed = ImGui::InvisibleButton("##tab", (selected ? ImVec2(size.x, size.y * 1.1f) : size));
+		bool pressed = ImGui::InvisibleButton(label_string.c_str(), (selected ? ImVec2(size.x, size.y * 1.1f) : size));
 
 		ImVec2 min = ImGui::GetItemRectMin();
 		ImVec2 max = ImGui::GetItemRectMax();

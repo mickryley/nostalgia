@@ -193,16 +193,34 @@ namespace nostalgia::gui{
 			ImGui::SameLine();
 			if (style::draw_tab_button("New", (current_result_tab == new_benchmark_tab_index), tab_button_max_size)) 
 				current_result_tab = new_benchmark_tab_index;
-			ImGui::SameLine();
-			//ImGui::BeginDisabled();
-			if (style::draw_tab_button("Results ", (current_result_tab == 1), tab_button_max_size)) current_result_tab = 1;
-			//ImGui::EndDisabled();
+			//ImGui::SameLine();
+
+			size_t total_displayed_results = visualiser::get_total_displayed_benchmark_results();
+
+			if (total_displayed_results > 0) {
+				for (size_t i = 0; i < total_displayed_results; ++i) {
+					ImGui::PushID(static_cast<int>(i));
+					ImGui::SameLine();
+					std::string label = visualiser::get_benchmark_label(i);
+					if (style::draw_tab_button(label.c_str(), (current_result_tab == static_cast<int>(i)), tab_button_max_size)) 
+						current_result_tab = static_cast<int>(i);
+					ImGui::PopID();
+				}
+			}
+			else{
+				ImGui::SameLine();
+				ImGui::BeginDisabled();
+				style::draw_tab_button("Results ", false, tab_button_max_size);
+				ImGui::EndDisabled();
+			}
+
 			ImGui::PopStyleVar();
 
 			// === Main Input and/or Results Page ===
 			style::with_child_wrapper("Main Page Content", ImVec2(main_page_usable_width, expandable_value), []() {
 				if (current_result_tab == new_benchmark_tab_index) draw_new_benchmark();
-				else visualiser::draw_benchmark_plot();
+				else visualiser::draw_benchmark_results_view(static_cast<size_t>(current_result_tab));
+				//else visualiser::draw_benchmark_plot();
 			}, style::BorderStyle::LINE, style::SpacingStyle::NONE);
 			ImGui::SameLine();
 
@@ -318,8 +336,6 @@ namespace nostalgia::gui{
 						
 						if (ImGui::Button("Run Benchmark", ImGui::GetContentRegionAvail())) {
 							nostalgia::benchmarking::loader::dispatch_benchmark(nostalgia::benchmarking::loader::get_benchmark_id());
-							nostalgia::benchmarking::exporting::export_current_benchmarks();
-							nostalgia::visualiser::load_benchmark_plot_data();
 						}
 						if (ImGui::IsItemHovered()) {
 							hovered_state = HoverDetailState::Run;
