@@ -1,10 +1,10 @@
 #pragma once
 
-#include <cstddef> // For size_t, std::max_align_t
-#include <new>     // For std::bad_alloc
-#include <memory>  // For alignof
+#include <cstddef>
+#include <new>    
+#include <memory> 
 #include <cassert>
-#include <memory_resource> // For pmr
+#include <memory_resource>
 
 namespace nostalgia::stack::scoped {
 

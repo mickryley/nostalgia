@@ -356,7 +356,7 @@ namespace nostalgia::gui{
 						// ~~~ Scrollable Display of ALL allocators ~~~
 						for (const auto& [a_id, a_Type] : nostalgia::allocator::atlas) {
 							nostalgia::AllocatorFlags benchmark_allocator_flags = nostalgia::benchmarking::loader::get_allocator_flags();
-							bool allocator_is_compatible = a_Type.is_compatible_with(benchmark_allocator_flags);
+							bool allocator_is_compatible = a_Type.is_compatible_with_benchmark(benchmark_allocator_flags);
 							bool allocator_is_included = nostalgia::benchmarking::loader::is_allocator_in_benchmark(a_id);
 
 							if (!allocator_is_compatible) ImGui::BeginDisabled();

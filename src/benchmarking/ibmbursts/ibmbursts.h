@@ -12,16 +12,24 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 	// The actual logic is written in the matching .inl
 
+	namespace {
+		size_t iterations_default = 1000;
+		size_t passes_default = 5000;
+	}
+
+	namespace default_malloc {
+		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations = iterations_default, size_t passes = passes_default);
+	}
 	namespace linear {
-		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations = 1000, size_t passes = 5000);
+		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations = iterations_default, size_t passes = passes_default);
 	}
 	namespace stack {
-		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations = 1000, size_t passes = 5000);
+		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations = iterations_default, size_t passes = passes_default);
 	}
 	namespace pool{
-		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations = 1000, size_t passes = 5000);
+		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations = iterations_default, size_t passes = passes_default);
 	}
 	namespace freelist{
-		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations = 1000, size_t passes = 5000);
+		void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations = iterations_default, size_t passes = passes_default);
 	}
 }

@@ -65,7 +65,7 @@ namespace nostalgia::benchmarking::loader {
         selected_implementations.clear();
 
         for (const auto& [aID, aType] : nostalgia::allocator::atlas) {
-            if (aType.is_compatible_with(get_allocator_flags()))
+            if (aType.is_compatible_with_benchmark(get_allocator_flags()))
 				selected_allocators.insert(aID);
         }
 

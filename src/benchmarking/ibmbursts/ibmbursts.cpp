@@ -20,6 +20,7 @@
 // Therefore details of the benchmark function should be drawn from another INC file that is consistent 
 // within the benchmarking namespace.
 
+#include "allocators/concrete/default_malloc/allocator_default.h"
 #include "allocators/concrete/linear_bump/allocator_linear.h"
 #include "allocators/concrete/stack_lifo/allocator_stack.h"
 #include "allocators/concrete/pool_slab/allocator_pool.h"
@@ -47,6 +48,11 @@ struct ImplementationDetails {
 };
 
 namespace nostalgia::benchmarking::IBMBursts {
+
+	namespace default_malloc{
+#include "allocators/defines/malloc_defines.inl"
+#include "benchmarking/ibmbursts/ibmbursts.inl"
+	}
 
 	namespace linear {
 #include "allocators/defines/linear_defines.inl"

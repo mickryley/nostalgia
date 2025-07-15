@@ -24,7 +24,7 @@ namespace nostalgia::implementation {
 			{ nostalgia::ImplementationID::NoAllocator_Malloc_PointerContainer_ForwardDeallocation, nostalgia::ImplementationType{
 				"Default Allocator Malloc Pointer Container Forward Deallocation",
 				"Default Allocator Malloc [Containers of Pointers] [Forward Deallocation]",
-				AllocatorFlags::DEALLOC_FORWARD
+				AllocatorFlags::DEFAULT_MALLOC | AllocatorFlags::DEALLOC_FORWARD
 				}
 			}
 		}

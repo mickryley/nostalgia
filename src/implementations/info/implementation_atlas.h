@@ -11,7 +11,7 @@ namespace nostalgia::implementation {
 	inline bool is_compatible_with_allocator(nostalgia::ImplementationID id, nostalgia::AllocatorType allocator) {
 		auto it = atlas.find(id);
 		if (it != atlas.end()) {
-			return it->second.is_compatible_with(allocator.required_flags);
+			return it->second.is_compatible_with(allocator.compatible_flags);
 		}
 		return false;
 	}

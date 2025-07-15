@@ -173,13 +173,6 @@ namespace nostalgia::visualiser {
         draw_benchmark_plot(displayed_benchmark_results[index].local_results);
     }
 
-    // Old Window Draw - Rework
-    void draw_benchmark_plot() {
-        if (!current_benchmark_plot_data_map.empty()) {
-            draw_benchmark_plot(current_benchmark_plot_data_map);
-        }
-    }
-
     void display_hover_details(int index) {
         current_hovered_index = index;
     }

@@ -4,6 +4,7 @@
 switch (allocator.id) {
 #define DISPATCH(id, ns) case id: RUN_BENCHMARK(ns); break;
         
+        DISPATCH(AllocatorID::NONE, default_malloc) 
 	DISPATCH(AllocatorID::Linear, linear) 
         DISPATCH(AllocatorID::Stack, stack)
         DISPATCH(AllocatorID::Pool, pool)

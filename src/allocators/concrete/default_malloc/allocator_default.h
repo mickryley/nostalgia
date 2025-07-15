@@ -6,16 +6,11 @@
 #include <cassert>
 #include <memory_resource> 
 
-namespace nostalgia::pool {
+namespace nostalgia::default_malloc {
 
-	namespace {
-		constexpr size_t bufferSize = 1024 * 1024; // 1 MB
-		char* buffer = new char[bufferSize]; // Mallocate a buffer of 1 MB
-	}
-
-	class PoolAllocator {
+	class DefaultAllocator {
 	public:
-		PoolAllocator(std::byte* buf, size_t objectSize, size_t objectCount);
+		DefaultAllocator() = default;
 		void* allocate();
 		void deallocate(std::byte* ptr);
 		inline void rewind() noexcept {} // no-op for pool allocator
@@ -31,5 +26,5 @@ namespace nostalgia::pool {
 		//size_t m_peakOffset = 0;
 	};
 
-	static PoolAllocator s_poolAllocator{ reinterpret_cast<std::byte*>(buffer), 16, bufferSize / 16 };
+	static DefaultAllocator s_default_allocator{};
 }
