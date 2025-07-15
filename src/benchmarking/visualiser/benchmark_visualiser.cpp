@@ -6,6 +6,8 @@
 
 #include <imgui.h>
 
+#include "ui/system/style.h"
+
 #include "utils/implot_wrapped.h"
 
 #include "utils/log.h"
@@ -18,14 +20,40 @@ namespace nostalgia::visualiser {
 	namespace {
 		std::vector<BenchmarkPlotData> current_benchmark_plot_data;
         std::unordered_map<std::string, std::vector<BenchmarkPlotData>> current_benchmark_plot_data_map;
+        std::string reference_benchmark_path = "reference_benchmark_results.json";
 
 		int current_hovered_index;
 		BenchmarkPlotData* current_hovered_data = nullptr;
-
-        // New Storage for displayed benchmark results
         std::vector<BenchmarkResults> displayed_benchmark_results;
 
-        std::string reference_benchmark_path = "reference_benchmark_results.json";
+        enum class ResultsHoverTab {
+            Overview = 0,
+            Details = 1,
+            View = 2,
+            Export = 3,
+            COUNT = 4
+        };
+
+        constexpr std::size_t tab_count = static_cast<std::size_t>(ResultsHoverTab::COUNT);
+        constexpr std::array<const char*, tab_count> results_hover_tab_names = {
+            "Overview",
+            "Details",
+            "View",
+            "Export"
+        };
+        static_assert(results_hover_tab_names.size() == tab_count,
+            "ResultsHoverTab enum size does not match names array size.");
+
+		ResultsHoverTab current_hovered_tab = ResultsHoverTab::Overview;
+
+		constexpr float     hover_tab_max_width_perc        = 1.0f / static_cast<float>(tab_count);
+		constexpr float     hover_tab_height                = 30.0f;
+        constexpr ImVec2 	expandable_size                 = ImVec2(0.0f, 0.0f);
+        constexpr float 	expandable_value                = 0.0f;
+
+		// Visible Graph data storage
+        std::vector<std::string> labelStorage;
+        std::vector<const char*> labels;
 	}
 
     size_t get_total_displayed_benchmark_results() {
@@ -127,7 +155,6 @@ namespace nostalgia::visualiser {
         return ReturnCode::Success;
     }
         
-
     void load_local_benchmark_results(std::string path) {
         
         BenchmarkResults loaded_results;
@@ -151,12 +178,6 @@ namespace nostalgia::visualiser {
         displayed_benchmark_results.push_back(loaded_results);
     }
 
-
-
-    /// Old below here, needs to be updated to use the new data structure
-    static std::vector<std::string> labelStorage;
-    static std::vector<const char*> labels;
-
     void draw_benchmark_plot(std::unordered_map<std::string, std::vector<BenchmarkPlotData>>&data) {
         if (ImGui::BeginTabBar("BenchmarkTabs")) {
             for (auto& [benchmark_label, entries] : data) {
@@ -177,9 +198,108 @@ namespace nostalgia::visualiser {
         current_hovered_index = index;
     }
 
-    void draw_benchmark_hover_details() {
-        // ImGui::Text("Benchmark:");
+    void draw_benchmark_results_hover_overview() {
+        ImGui::Text("Benchmark Results Overview");
+        ImGui::Separator();
+        if (current_hovered_data) {
+            ImGui::Text("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
+            ImGui::Text("Allocator: %s", current_hovered_data->allocator_label.c_str());
+            ImGui::Text("Implementation: %s", current_hovered_data->implementation_label.c_str());
+            ImGui::Text("Total Time: %.3f ms", current_hovered_data->total_time);
+            ImGui::Text("Allocation Time: %.3f ms", current_hovered_data->allocate_time);
+            ImGui::Text("Deallocation Time: %.3f ms", current_hovered_data->deallocate_time);
 
+            // Parameter Info
+            
+
+            // Top 3 Local Allocators
+
+
+            // Top 3 Reference Allocators
+
+
+            // Top 3 Implementations
+
+
+			// Top 3 Reference Implementations
+
+
+			// Overall Performance Summary
+            // Allocation  / Total Time Ratio
+            // Deallocation  / Total Time Ratio
+
+            // Gains from worst to best
+            // Gains from average to best
+
+
+        } else {
+            ImGui::Text("No benchmark data hovered.");
+        }
+	}
+
+    void draw_benchmark_results_hover_details() {
+        ImGui::Text("Benchmark Details");
+        ImGui::Separator();
+        if (current_hovered_data) {
+            ImGui::Text("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
+            ImGui::Text("Description: %s", current_hovered_data->benchmark_description.c_str());
+            ImGui::Text("Parameters: %d Passes, %d Iterations", static_cast<int>(current_hovered_data->passes), static_cast<int>(current_hovered_data->iterations));
+            ImGui::Text("Allocator: %s", current_hovered_data->allocator_label.c_str());
+            ImGui::Text("Allocator Details: %s", current_hovered_data->allocator_description.c_str());
+            ImGui::Text("Implementation: %s", current_hovered_data->implementation_label.c_str());
+            ImGui::Text("Implementation Details: %s", current_hovered_data->implementation_description.c_str());
+            ImGui::Text("Implementation Parameters: %s", current_hovered_data->implementation_parameters.c_str());
+        } else {
+            ImGui::Text("No benchmark data hovered.");
+		}
+    }
+
+    void draw_benchmark_results_hover_view() {
+
+    }
+
+    void draw_benchmark_results_hover_export() {
+
+    }
+
+    void draw_benchmark_results_hover() {
+
+        // ~~~ Tabs ~~~
+        //ImGui::Dummy(ImVec2(hover_tab_button_max_size.x * hover_tab_offset_x_perc, expandable_value));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, expandable_size);
+		float available_width = ImGui::GetContentRegionAvail().x;
+		float hover_tab_button_width = available_width * hover_tab_max_width_perc - ImGui::GetStyle().ItemSpacing.x * (tab_count - 1);
+        for (size_t i = 0; i < tab_count; ++i) {
+			ImGui::PushID(static_cast<int>(i));
+            ImGui::SameLine();
+            if (nostalgia::gui::style::draw_tab_button(results_hover_tab_names[i], (current_hovered_tab == static_cast<ResultsHoverTab>(i)), ImVec2(hover_tab_button_width, hover_tab_height))) {
+                current_hovered_tab = static_cast<ResultsHoverTab>(i);
+			}
+            ImGui::PopID();
+		}
+        ImGui::PopStyleVar();
+
+		//ImGui::Text("Current Tab is : %s", results_hover_tab_names[static_cast<size_t>(current_hovered_tab)]);
+        ImGui::Spacing();
+
+        switch (current_hovered_tab) {
+            case ResultsHoverTab::Overview:
+                draw_benchmark_results_hover_overview();
+                break;
+            case ResultsHoverTab::Details:
+                draw_benchmark_results_hover_details();
+                break;
+            case ResultsHoverTab::View:
+                draw_benchmark_results_hover_view();
+                break;
+            case ResultsHoverTab::Export:
+                draw_benchmark_results_hover_export();
+                break;
+            default:
+                ImGui::Text("Unknown tab selected.");
+                break;
+		}
+        /*
         if (current_hovered_data)  ImGui::TextWrapped("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
 
         ImGui::Text("Benchmark Details:");
@@ -221,6 +341,7 @@ namespace nostalgia::visualiser {
         if (current_hovered_data)  ImGui::Text("Total Time: %.3f ms", current_hovered_data->total_time);
         if (current_hovered_data)  ImGui::Text("Allocation Time: %.3f ms", current_hovered_data->allocate_time);
         if (current_hovered_data)  ImGui::Text("Deallocation Time: %.3f ms", current_hovered_data->deallocate_time);
+        */
     }
 
     void draw_benchmark_plot(const std::vector<BenchmarkPlotData>& data) {
@@ -228,8 +349,6 @@ namespace nostalgia::visualiser {
         if (ImPlot::BeginPlot("Benchmark Results Grouped By Allocator Type", ImVec2(-1, -1), ImPlotFlags_NoMouseText)) {
 
             // UI Storage for labels
-            //std::vector<std::string> labelStorage;
-            //std::vector<const char*> labels;
             std::vector<std::string> hoverStorage;
 			std::vector<int> hoveredRealIndices; 
 

@@ -6,10 +6,7 @@ namespace nostalgia::allocator {
 	extern std::unordered_map<nostalgia::AllocatorID, nostalgia::AllocatorType> atlas;
 
 	inline std::string get_label(nostalgia::AllocatorID id) {
-		auto it = atlas.find(id);
-		if (it != atlas.end()) {
-			return it->second.label;
-		}
+		if (atlas.contains(id)) return atlas.at(id).label;
 		return "Unknown Allocator";
 	};
 }

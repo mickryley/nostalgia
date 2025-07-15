@@ -7,7 +7,7 @@ namespace nostalgia::benchmarking::loader {
 
     nostalgia::BenchmarkID get_benchmark_id();
     nostalgia::BenchmarkParams& get_parameters();
-    nostalgia::AllocatorFlags get_allocator_flags();
+    nostalgia::AllocatorFlags get_benchmark_required_flags();
 
 	void add_allocator_to_benchmark(const nostalgia::AllocatorID id);
     void remove_allocator_from_benchmark(const nostalgia::AllocatorID id);

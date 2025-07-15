@@ -18,7 +18,7 @@ namespace nostalgia::gui::style {
 		// ImVec4 a = ImGui::GetStyle().Colors[ImGuiCol_ButtonActive];
 
 		ImU32 bgColor = ImGui::GetColorU32(
-			selected ? ImGuiCol_ButtonHovered :
+			selected ? ImGuiCol_TabActive :
 			ImGui::IsItemHovered() ? ImGuiCol_TabHovered :
 			ImGuiCol_Button
 		);

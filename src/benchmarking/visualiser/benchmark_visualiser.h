@@ -45,7 +45,7 @@ namespace nostalgia::visualiser {
 	// void load_benchmark_plot_data();
 	void load_reference_benchmark_results(std::string benchmark_label);
 	void load_local_benchmark_results(std::string path);
-	void draw_benchmark_hover_details();
+	void draw_benchmark_results_hover();
 
 	void draw_benchmark_results_view(size_t index);
 	void draw_benchmark_plot();

@@ -23,15 +23,6 @@ namespace nostalgia {
 		const char* desc;
 
 		const AllocatorFlags compatible_flags;
-
-		bool compatible(AllocatorFlags flags) const {
-			return (compatible_flags & flags) == flags;
-		};
-
-		bool is_compatible_with(AllocatorFlags flags) const{
-			// return false;
-			return (compatible_flags & flags) == compatible_flags;
-		};
 	};
 
 	struct ImplementationDetails {

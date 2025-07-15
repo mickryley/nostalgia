@@ -10,7 +10,7 @@
 		.run = nullptr \
     }; \
 
-#define CHECK_ALLOCATOR_COMPATABILITY()      	if (!nostalgia::implementation::is_compatible_with_allocator(i_id, allocator)) { \
+#define CHECK_ALLOCATOR_COMPATABILITY()      	if (!nostalgia::implementation::is_compatible_with_allocator(i_id, allocator.id)) { \
 												log::print("Failed Implementation Compatability Check. [{} - {} - {}]", \
 												nostalgia::allocator::get_label(implementation_details.allocator), \
 												nostalgia::implementation::get_label(implementation_details.id), \

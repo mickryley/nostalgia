@@ -19,7 +19,7 @@ namespace nostalgia {
         const std::string label;
         const std::string label_long;
 		const std::string description;
-        const AllocatorFlags compatible_flags;
+        const AllocatorFlags required_flags;
 
         bool disabled = false;
 
@@ -27,8 +27,8 @@ namespace nostalgia {
         const std::function<void()> loader; // Unused for now - remove
         const std::vector<BenchmarkParamSpec> paramSpecs;
 
-        bool compatible(AllocatorFlags flags) const {
+        /*bool compatible(AllocatorFlags flags) const {
             return (compatible_flags & flags) == flags;
-        };
+        };*/
     };
 }

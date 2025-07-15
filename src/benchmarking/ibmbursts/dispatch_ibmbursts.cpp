@@ -23,9 +23,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		log::print("\n==========================================================\n");
         nostalgia::log::print(nostalgia::LogFlags::Debug, "Dispatching IBM Bursts benchmark for allocator type [{}].", allocator.label);
 
-		nostalgia::AllocatorFlags m_compatible_flags = nostalgia::benchmark::get_compatible_flags(m_benchmark_id);
-
-        if (!allocator.is_compatible_with_benchmark(m_compatible_flags)) {
+        if (!allocator.is_compatible_with_benchmark(nostalgia::benchmark::get_required_flags(m_benchmark_id))) {
             log::print(LogFlags::Warn, "Allocator type [{}] is not compatible with IBM Bursts benchmark.", allocator.label);
             return;
         }
@@ -51,7 +49,7 @@ namespace nostalgia::benchmarking::IBMBursts {
         for (const auto& [allocatorID, allocator] : nostalgia::allocator::atlas) {
 
             if (nostalgia::benchmarking::loader::is_allocator_in_benchmark(allocatorID)) {
-                if (allocator.is_compatible_with_benchmark(nostalgia::benchmark::get_compatible_flags(m_benchmark_id))) {
+                if (allocator.is_compatible_with_benchmark(nostalgia::benchmark::get_required_flags(m_benchmark_id))) {
                     dispatch(allocator);
                 }
                 else {

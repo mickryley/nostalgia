@@ -31,10 +31,10 @@ namespace nostalgia::gui{
 		constexpr int 		new_benchmark_tab_index 				= -1;
 		constexpr float 	browser_panel_max_width 				= 300.0f; 
 		constexpr float 	browser_panel_min_width_perc	 		= 0.2f; 
-		constexpr float 	browser_button_max_height 				= 30.0f;
+		constexpr float 	browser_button_max_height 				= 50.0f;
 		constexpr float 	header_bar_max_height 					= 300.0f; 
 		constexpr float 	header_bar_min_height_perc 				= 0.3f; 
-		constexpr float 	hover_panel_max_width 					= 400.0f;
+		constexpr float 	hover_panel_max_width 					= 500.0f;
 		constexpr float 	hover_panel_min_width_perc 				= 0.3f;
 		constexpr float 	new_benchmark_param_box_height_perc 	= 0.4f; 
 		constexpr float 	new_benchmark_button_box_width_perc 	= 0.3f;
@@ -218,17 +218,16 @@ namespace nostalgia::gui{
 
 			// === Main Input and/or Results Page ===
 			style::with_child_wrapper("Main Page Content", ImVec2(main_page_usable_width, expandable_value), []() {
-				if (current_result_tab == new_benchmark_tab_index) draw_new_benchmark();
+				if (current_result_tab == new_benchmark_tab_index) draw_setup_new_benchmark();
 				else visualiser::draw_benchmark_results_view(static_cast<size_t>(current_result_tab));
-				//else visualiser::draw_benchmark_plot();
 			}, style::BorderStyle::LINE, style::SpacingStyle::NONE);
 			ImGui::SameLine();
 
 			// === Hover Details Panel ===
 			style::with_child_wrapper("Hover Details Panel", expandable_size, []() {
-				style::draw_text_centered("[Mouse-over data for more details here]");
+				// style::draw_text_centered("[Mouse-over data for more details here]");
 				if (current_result_tab == new_benchmark_tab_index) draw_hover_details();
-				else visualiser::draw_benchmark_hover_details();
+				else visualiser::draw_benchmark_results_hover();
 			});
 		}, style::BorderStyle::NONE, style::SpacingStyle::NONE);
     }
@@ -267,7 +266,7 @@ namespace nostalgia::gui{
 
 
 	// === Benchmark Controls (Parameters and Launch Buttons) ===
-	void draw_new_benchmark() {
+	void draw_setup_new_benchmark() {
 		if (current_param_specs && current_parameters) { 
 			style::with_child_wrapper("Benchmark Controls", expandable_size, []() {
 				ImVec2 new_benchmark_available_size = ImGui::GetContentRegionAvail();
@@ -355,7 +354,7 @@ namespace nostalgia::gui{
 
 						// ~~~ Scrollable Display of ALL allocators ~~~
 						for (const auto& [a_id, a_Type] : nostalgia::allocator::atlas) {
-							nostalgia::AllocatorFlags benchmark_allocator_flags = nostalgia::benchmarking::loader::get_allocator_flags();
+							nostalgia::AllocatorFlags benchmark_allocator_flags = nostalgia::benchmarking::loader::get_benchmark_required_flags();
 							bool allocator_is_compatible = a_Type.is_compatible_with_benchmark(benchmark_allocator_flags);
 							bool allocator_is_included = nostalgia::benchmarking::loader::is_allocator_in_benchmark(a_id);
 

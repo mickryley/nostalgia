@@ -25,8 +25,8 @@ namespace nostalgia::benchmarking::loader {
         return loaded_benchmark_id;
     }
 
-    nostalgia::AllocatorFlags get_allocator_flags() {
-		return nostalgia::benchmark::atlas.at(loaded_benchmark_id).compatible_flags;
+    nostalgia::AllocatorFlags get_benchmark_required_flags() {
+		return nostalgia::benchmark::atlas.at(loaded_benchmark_id).required_flags;
     }
 
     void add_allocator_to_benchmark(const nostalgia::AllocatorID id) {
@@ -64,15 +64,14 @@ namespace nostalgia::benchmarking::loader {
 		selected_allocators.clear();
         selected_implementations.clear();
 
-        for (const auto& [aID, aType] : nostalgia::allocator::atlas) {
-            if (aType.is_compatible_with_benchmark(get_allocator_flags()))
-				selected_allocators.insert(aID);
+        for (const auto& [a_id, a_type] : nostalgia::allocator::atlas) {
+            if (a_type.is_compatible_with_benchmark(get_benchmark_required_flags()))
+				selected_allocators.insert(a_id);
         }
 
         // Prefill with ALL implementations
         // Room to add filter for benchmark + selected allocators in future.
         for (const auto& [i_id, i_Type] : nostalgia::implementation::atlas) {
-            //if (i_Type.is_compatible_with(get_allocator_flags()))
                 selected_implementations.insert(i_id);
         }
 

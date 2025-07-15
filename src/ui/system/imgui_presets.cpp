@@ -126,7 +126,8 @@ namespace nostalgia::gui::style {
         // == Tabs ==
         colors[ImGuiCol_Tab]                 = ImVec4(0.21f, 0.15f, 0.10f, 0.80f); // Soft brown
         colors[ImGuiCol_TabHovered]          = ImVec4(1.00f, 0.85f, 0.22f, 0.97f); // Yellow highlight
-        colors[ImGuiCol_TabActive]           = ImVec4(0.96f, 0.82f, 0.32f, 1.00f); // Light yellow
+        colors[ImGuiCol_TabActive]           = ImVec4(0.80f, 0.68f, 0.18f, 0.95f);
+
         colors[ImGuiCol_TabUnfocused]        = ImVec4(0.13f, 0.11f, 0.08f, 0.58f);
         colors[ImGuiCol_TabUnfocusedActive]  = ImVec4(0.29f, 0.21f, 0.14f, 1.00f);
 
@@ -218,7 +219,10 @@ namespace nostalgia::gui::style {
         // == Tabs ==
         colors[ImGuiCol_Tab]                 = ImVec4(0.12f, 0.14f, 0.18f, 0.85f);
         colors[ImGuiCol_TabHovered]          = ImVec4(1.00f, 0.85f, 0.15f, 0.96f);
-        colors[ImGuiCol_TabActive]           = ImVec4(1.00f, 0.93f, 0.33f, 1.00f);
+        colors[ImGuiCol_TabActive]           = ImVec4(0.80f, 0.68f, 0.18f, 0.95f); 
+
+
+
         colors[ImGuiCol_TabUnfocused]        = ImVec4(0.10f, 0.11f, 0.17f, 0.55f);
         colors[ImGuiCol_TabUnfocusedActive]  = ImVec4(0.19f, 0.21f, 0.29f, 1.00f);
 

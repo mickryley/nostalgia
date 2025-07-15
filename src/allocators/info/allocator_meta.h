@@ -32,25 +32,32 @@ namespace nostalgia {
         const AllocatorFlags compatible_flags;
         const AllocatorFlags required_flags;
 
+        AllocatorType(
+            AllocatorID id_,
+            std::string label_,
+            std::string description_,
+            AllocatorFlags compatible_flags_,
+            AllocatorFlags required_flags_)
+            : id(id_)
+            , label(std::move(label_))
+            , description(std::move(description_))
+            , compatible_flags(compatible_flags_)
+            , required_flags(required_flags_) {
+        }
+
+
         bool has(AllocatorFlags flag) const {
             return hasFlag(compatible_flags, flag);
         }
 
         bool is_compatible_with_benchmark(AllocatorFlags flags) const {
-            // All flags must be compatible
-            return flags == AllocatorFlags::NONE ||
-        (flags & ~compatible_flags) == AllocatorFlags::NONE;
-    }
+			return hasOnlyCompatibleFlags(flags, compatible_flags);
+        }
 
-        // Need to unify these into one location
         bool is_compatible_with_implementation(AllocatorFlags flags) const {
-            // All required flags must be present
-            bool passes_required = (required_flags == AllocatorFlags::NONE ||
-                 ((flags & required_flags) == required_flags));
-            // All flags must be compatible
-            bool passes_compatible = (flags == AllocatorFlags::NONE) ||
-        ((flags & ~compatible_flags) == AllocatorFlags::NONE);
-            return (passes_required && passes_compatible);
+            bool passes_required = hasAllRequiredFlags(flags, required_flags);
+            bool passes_compatible = hasOnlyCompatibleFlags(flags, compatible_flags | required_flags);
+			return (passes_required && passes_compatible);
 		}
     };
 }
