@@ -538,10 +538,10 @@ void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iteratio
 			run_objectOverride_cachedSingletonAccess_pointerContainer_rewindDealloc<OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS_VECTOR2D>(
 				allocator, iterations, passes, object_id_index,
 				nostalgia::ImplementationID::ObjectOverride_CachedSingletonAccess_PointerContainer_RewindDeallocation);
-			run_objectOverride_singletonAccess_pointerVector_rewindDealloc<OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS_VECTOR2D>(
+			run_objectOverride_singletonAccess_pointerVector_rewindDealloc<OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS_VECTOR2D>(
 				allocator, iterations, passes, object_id_index,
 				nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerVector_RewindDeallocation);
-			run_objectOverride_cachedSingletonAccess_pointerVector_rewindDealloc<OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS_VECTOR2D>(
+			run_objectOverride_cachedSingletonAccess_pointerVector_rewindDealloc<OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS_VECTOR2D>(
 				allocator, iterations, passes, object_id_index,
 				nostalgia::ImplementationID::ObjectOverride_CachedSingletonAccess_PointerVector_RewindDeallocation);
 
@@ -596,10 +596,10 @@ void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iteratio
 			run_objectOverride_cachedSingletonAccess_pointerContainer_rewindDealloc<OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS_VECTOR3D>(
 				allocator, iterations, passes, object_id_index,
 				nostalgia::ImplementationID::ObjectOverride_CachedSingletonAccess_PointerContainer_RewindDeallocation);
-			run_objectOverride_singletonAccess_pointerVector_rewindDealloc<OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS_VECTOR3D>(
+			run_objectOverride_singletonAccess_pointerVector_rewindDealloc<OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS_VECTOR3D>(
 				allocator, iterations, passes, object_id_index,
 				nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerVector_RewindDeallocation);
-			run_objectOverride_cachedSingletonAccess_pointerVector_rewindDealloc<OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS_VECTOR3D>(
+			run_objectOverride_cachedSingletonAccess_pointerVector_rewindDealloc<OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS_VECTOR3D>(
 				allocator, iterations, passes, object_id_index,
 				nostalgia::ImplementationID::ObjectOverride_CachedSingletonAccess_PointerVector_RewindDeallocation);
 
