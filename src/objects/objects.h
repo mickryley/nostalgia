@@ -5,7 +5,6 @@ namespace nostalgia::objects {
 	struct Vector2D {
 		float x, y;
 		Vector2D() : x(0), y(0) {}
-		// Vector2D(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
 		Vector2D(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y) {
 			(void)z; 
 		}Vector2D operator+(const Vector2D& other) const {
@@ -34,3 +33,5 @@ namespace nostalgia::objects {
 		}
 	};
 }
+
+static_assert(true, "End of objects header");

@@ -11,8 +11,9 @@ namespace nostalgia::default_malloc {
 	class DefaultAllocator {
 	public:
 		DefaultAllocator() = default;
-		void*			allocate();
-		void			deallocate(std::byte* ptr);
+		void*			allocate() { return nullptr; }
+		void*			allocate(size_t bytes) { (void)bytes; return allocate(); }
+		void			deallocate(std::byte* ptr) { (void)ptr; }
 		inline void		rewind() noexcept {} 
 
 	private:

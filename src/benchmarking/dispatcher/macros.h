@@ -17,6 +17,10 @@
 												implementation_details.parameters); \
 												return; } 
 
+#define PRINT_ALLOCATOR_COMPATABILITY()			log::print("Passed Implementation Compatability Check. [{} - {} - {}]", \
+												nostalgia::allocator::get_label(implementation_details.allocator), \
+												nostalgia::implementation::get_label(implementation_details.id), \
+												implementation_details.parameters);
 
 #pragma endregion
 

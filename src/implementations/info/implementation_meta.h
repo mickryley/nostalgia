@@ -12,10 +12,24 @@ namespace nostalgia {
 
 	enum class ImplementationID {
 		NONE,
-		ObjectOverride_StaticAccess_PointerContainer_ForwardDeallocation,
-		ObjectOverride_StaticAccess_PointerContainer_ReverseDeallocation,
-		ObjectOverride_StaticAccess_PointerContainer_RewindDeallocation,
-		NoAllocator_Malloc_PointerContainer_ForwardDeallocation
+		ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation,
+		ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation,
+
+		ObjectOverride_GlobalAccess_PointerContainer_RewindDeallocation,
+		ObjectOverride_GlobalAccess_PointerVector_RewindDeallocation,
+
+
+		ObjectOverride_SingletonAccess_PointerContainer_ForwardDeallocation,
+		ObjectOverride_SingletonAccess_PointerContainer_ReverseDeallocation,
+
+		ObjectOverride_SingletonAccess_PointerContainer_RewindDeallocation,
+		ObjectOverride_CachedSingletonAccess_PointerContainer_RewindDeallocation,
+		ObjectOverride_SingletonAccess_PointerVector_RewindDeallocation,
+		ObjectOverride_CachedSingletonAccess_PointerVector_RewindDeallocation,
+
+		NoAllocator_Malloc_PointerContainer_ForwardDeallocation,
+		NoAllocator_Malloc_PointerContainer_ReverseDeallocation,
+		NoAllocator_Malloc_PointerVector_ReverseDeallocation
 	};
 
 	struct ImplementationType{

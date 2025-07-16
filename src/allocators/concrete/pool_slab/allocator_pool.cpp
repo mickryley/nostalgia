@@ -9,7 +9,7 @@ namespace nostalgia::pool {
 	namespace {
 		// Launch Buffer
 		constexpr size_t buffer_size = 1024 * 1024;				// 1 MB
-		size_t fixed_object_size = sizeof(std::max_align_t);	// Use max_align_t for alignment
+		size_t fixed_object_size = sizeof(std::max_align_t) * 2;	// Use max_align_t for alignment
 		std::byte* buffer = new std::byte[buffer_size];			// Mallocate a buffer of 1 MB
 	}
 
@@ -47,6 +47,14 @@ namespace nostalgia::pool {
 		std::byte* slot = m_head;
 		m_head = *reinterpret_cast<std::byte**>(m_head);
 		return slot;
+	}
+
+	void* PoolAllocator::allocate(size_t bytes) {
+		if (bytes > fixed_object_size) {
+			log::print(LogFlags::Error, "PoolAllocator: Requested size [{}] exceeds fixed object size [{}]. Allocation failed.", bytes, fixed_object_size);
+			return nullptr;
+		}
+		return allocate();
 	}
 
 	void PoolAllocator::deallocate(std::byte* ptr) {

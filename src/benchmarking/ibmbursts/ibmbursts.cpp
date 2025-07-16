@@ -53,16 +53,13 @@ namespace nostalgia::benchmarking::IBMBursts {
 #include "allocators/defines/malloc_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts.inl"
 	}
-
 	namespace linear {
 #include "allocators/defines/linear_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts.inl"
-
 	}
 	namespace stack {
 #include "allocators/defines/stack_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts.inl"
-
 	}
 	namespace pool {
 #include "allocators/defines/pool_defines.inl"

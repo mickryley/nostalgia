@@ -198,6 +198,8 @@ namespace nostalgia::visualiser {
         loaded_results.benchmark_label = loaded_plot_data.begin()->first;
         loaded_results.local_results = loaded_plot_data[loaded_results.benchmark_label];
 
+        current_hovered_data = nullptr;
+
         // Add reference results if available
         load_reference_benchmark_results(loaded_results.benchmark_label, loaded_results);
 
@@ -230,12 +232,12 @@ namespace nostalgia::visualiser {
         ImGui::Text("Benchmark Results Overview");
         ImGui::Separator();
         if (current_hovered_data) {
-            ImGui::Text("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
-            ImGui::Text("Allocator: %s", current_hovered_data->allocator_label.c_str()); 
-            ImGui::Text("Implementation: %s", current_hovered_data->implementation_label.c_str());
-            ImGui::Text("Total Time: %.3f ms", current_hovered_data->total_time);
-            ImGui::Text("Allocation Time: %.3f ms", current_hovered_data->allocate_time);
-            ImGui::Text("Deallocation Time: %.3f ms", current_hovered_data->deallocate_time);
+            ImGui::TextWrapped("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
+            ImGui::TextWrapped("Allocator: %s", current_hovered_data->allocator_label.c_str());
+            ImGui::TextWrapped("Implementation: %s", current_hovered_data->implementation_label.c_str());
+            ImGui::TextWrapped("Total Time: %.3f ms", current_hovered_data->total_time);
+            ImGui::TextWrapped("Allocation Time: %.3f ms", current_hovered_data->allocate_time);
+            ImGui::TextWrapped("Deallocation Time: %.3f ms", current_hovered_data->deallocate_time);
 
             // Parameter Info
             

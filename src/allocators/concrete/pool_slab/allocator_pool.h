@@ -14,6 +14,7 @@ namespace nostalgia::pool {
 		PoolAllocator(std::byte* buf, size_t object_size, size_t object_count, const char* caller = "Unknown");
 
 		void*			allocate();
+		void*			allocate(size_t bytes);
 		void			deallocate(std::byte* ptr);
 		void			format(size_t object_size, size_t object_count);
 		inline void		rewind() noexcept {} // no-op for pool allocator
@@ -30,6 +31,4 @@ namespace nostalgia::pool {
 	struct SingletonPoolAllocator {
 		static PoolAllocator& get_instance();
 	};
-
-	//static PoolAllocator g_pool_allocator{ reinterpret_cast<std::byte*>(buffer), 16, buffer_size / 16 };
 }
