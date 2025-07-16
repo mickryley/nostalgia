@@ -39,6 +39,7 @@
 #include "implementations/info/implementation_atlas.h"
 #include "benchmarking/info/benchmark_atlas.h"
 
+#include "benchmarking/dispatcher/benchmark_loader.h"
 #include "benchmarking/dispatcher/macros.h"
 
 struct ImplementationDetails {

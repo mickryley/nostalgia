@@ -48,6 +48,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
         for (const auto& [allocatorID, allocator] : nostalgia::allocator::atlas) {
 
+            // Filter for selected allocators
             if (nostalgia::benchmarking::loader::is_allocator_in_benchmark(allocatorID)) {
                 if (allocator.is_compatible_with_benchmark(nostalgia::benchmark::get_required_flags(m_benchmark_id))) {
                     dispatch(allocator);

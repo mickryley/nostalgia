@@ -15,7 +15,14 @@
 												nostalgia::allocator::get_label(implementation_details.allocator), \
 												nostalgia::implementation::get_label(implementation_details.id), \
 												implementation_details.parameters); \
-												return; } 
+												return; } \
+												if (!nostalgia::benchmarking::loader::is_implementation_in_benchmark(i_id)) { \
+												log::print("Implementation Not Selected for Benchmark. [{} - {} - {}]", \
+												nostalgia::allocator::get_label(implementation_details.allocator), \
+												nostalgia::implementation::get_label(implementation_details.id), \
+												implementation_details.parameters); \
+												return; }
+
 
 #define PRINT_ALLOCATOR_COMPATABILITY()			log::print("Passed Implementation Compatability Check. [{} - {} - {}]", \
 												nostalgia::allocator::get_label(implementation_details.allocator), \
