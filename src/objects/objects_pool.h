@@ -9,7 +9,9 @@ namespace nostalgia::pool::objects {
 		float x;
 		float y;
 		Vector2D_LocalOverride_StaticAccess(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
-		
+		Vector2D_LocalOverride_StaticAccess(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y) {
+			(void)z; 
+		}
 		void* operator new(size_t size) {
 			(void)size; // Fixed size, suppress warning while remaining compatible with C++ standards
 			return s_poolAllocator.allocate();

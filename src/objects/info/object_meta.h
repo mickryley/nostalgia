@@ -27,6 +27,7 @@ namespace nostalgia {
     constexpr std::string object_id_to_string(ObjectID id) {
         return object_id_names[static_cast<std::size_t>(id)];
     }
+
     struct ObjectType {
         const ObjectID id;
         const std::string label;

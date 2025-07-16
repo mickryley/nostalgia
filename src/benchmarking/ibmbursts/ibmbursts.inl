@@ -3,13 +3,13 @@
 
 nostalgia::BenchmarkID benchmark_id = nostalgia::BenchmarkID::IBM_Bursts;
 
-void run_static_v2d_contPointer(nostalgia::AllocatorType allocator, size_t iterations, size_t passes) {
+template <typename object_type>
+void run_static_contPointer(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index) {
 	nostalgia::ImplementationID i_id = nostalgia::ImplementationID::ObjectOverride_StaticAccess_PointerContainer_ReverseDeallocation;
 
-	// Parameterise the object being passed.
-	// set the locally used object
+	// This must be templated to the specific object type used in the benchmark
 
-	IMPLEMENTATION_DETAILS(std::format("{}x ({}x alloc + {}x free)", passes, iterations, iterations).c_str());
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
 	BEGIN_ALL_TIMERS();
 
@@ -17,10 +17,10 @@ void run_static_v2d_contPointer(nostalgia::AllocatorType allocator, size_t itera
 	{
 		START_ALLOC_TIMERS();
 
-		auto** vec = new OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS * [iterations]; // [ALLOC SPECIFIC]
+		auto** vec = new object_type * [iterations]; // [ALLOC SPECIFIC]
 
 		for (size_t j = 0; j < iterations; j++) {
-			vec[j] = new OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS(1.0f, 2.0f);    // [ALLOC SPECIFIC]
+			vec[j] = new object_type(CONSTRUCTOR_PARAMETERS);    // [ALLOC SPECIFIC]
 		}
 
 		PAUSE_ALLOC_TIMERS();
@@ -39,12 +39,12 @@ void run_static_v2d_contPointer(nostalgia::AllocatorType allocator, size_t itera
 	PRINT_ALL_TIMERS();
 	EXPORT_BENCHMARK_RESULTS();
 }
-
-void run_static_v2d_contPointer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes) {
+template <typename object_type>
+void run_static_contPointer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index) {
 
 	nostalgia::ImplementationID i_id = nostalgia::ImplementationID::ObjectOverride_StaticAccess_PointerContainer_RewindDeallocation;
 
-	IMPLEMENTATION_DETAILS(std::format("{}x ({}x alloc + {}x free)", passes, iterations, iterations).c_str());
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	//log::print("Checking Compatability of Rewind");
 	CHECK_ALLOCATOR_COMPATABILITY();
 	BEGIN_ALL_TIMERS();
@@ -53,10 +53,10 @@ void run_static_v2d_contPointer_rewindDealloc(nostalgia::AllocatorType allocator
 	{
 		START_ALLOC_TIMERS();
 
-		auto** vec = new OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS * [iterations]; // [ALLOC SPECIFIC]
+		auto** vec = new object_type * [iterations]; // [ALLOC SPECIFIC]
 
 		for (size_t j = 0; j < iterations; j++) {
-			vec[j] = new OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS(1.0f, 2.0f);    // [ALLOC SPECIFIC]
+			vec[j] = new object_type(CONSTRUCTOR_PARAMETERS);    // [ALLOC SPECIFIC]
 		}
 
 		PAUSE_ALLOC_TIMERS();
@@ -72,12 +72,12 @@ void run_static_v2d_contPointer_rewindDealloc(nostalgia::AllocatorType allocator
 	PRINT_ALL_TIMERS();
 	EXPORT_BENCHMARK_RESULTS();
 }
-
-void run_static_v2d_contPointer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes) {
+template <typename object_type>
+void run_static_contPointer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index) {
 
         nostalgia::ImplementationID i_id = nostalgia::ImplementationID::ObjectOverride_StaticAccess_PointerContainer_ForwardDeallocation; 
 
-        IMPLEMENTATION_DETAILS(std::format("{}x ({}x alloc + {}x free)", passes, iterations, iterations).c_str());
+        IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
         CHECK_ALLOCATOR_COMPATABILITY();
         BEGIN_ALL_TIMERS();
 
@@ -85,10 +85,10 @@ void run_static_v2d_contPointer_forwardDealloc(nostalgia::AllocatorType allocato
         {
                 START_ALLOC_TIMERS();
 
-                auto** vec = new OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS * [iterations]; // [ALLOC SPECIFIC]
+                auto** vec = new object_type * [iterations]; // [ALLOC SPECIFIC]
 
                 for (size_t j = 0; j < iterations; j++) {
-                        vec[j] = new OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS(1.0f, 2.0f);    // [ALLOC SPECIFIC]
+                        vec[j] = new object_type(CONSTRUCTOR_PARAMETERS);    // [ALLOC SPECIFIC]
                 }
 
                 PAUSE_ALLOC_TIMERS();
@@ -107,36 +107,36 @@ void run_static_v2d_contPointer_forwardDealloc(nostalgia::AllocatorType allocato
         PRINT_ALL_TIMERS();
         EXPORT_BENCHMARK_RESULTS();
 }
+template <typename object_type>
+void run_malloc_contPointer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index) {
 
-void run_malloc_v2d_contPointer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes) {
-
+	// {Implementation Specific}
 	nostalgia::ImplementationID i_id = nostalgia::ImplementationID::NoAllocator_Malloc_PointerContainer_ForwardDeallocation; 
 
-	IMPLEMENTATION_DETAILS(std::format("{}x ({}x alloc + {}x free)", passes, iterations, iterations).c_str());
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
 	BEGIN_ALL_TIMERS();
 
-	for (size_t i = 0; i < passes; i++)
+	for (size_t i = 0; i < passes; i++)					// (Benchmarking) - 1 - Passes
 	{
 		START_ALLOC_TIMERS();
 
-		auto** vec = new OBJECT_BASIC_VECTOR2D * [iterations]; // [ALLOC SPECIFIC]
+		auto** vec = new object_type * [iterations]; 	// [ALLOC SPECIFIC] {Implementation Specific}
 
-		for (size_t j = 0; j < iterations; j++) {
-			void* ptr = malloc(sizeof(OBJECT_BASIC_VECTOR2D));  // [ALLOC SPECIFIC]
-			if (!ptr) throw std::bad_alloc(); // Safety check
-			vec[j] = new (ptr) OBJECT_BASIC_VECTOR2D(1.0f, 2.0f);
+		for (size_t j = 0; j < iterations; j++) {		// (Benchmarking) - 2 - Iterations - Allocations
+			void* ptr = malloc(sizeof(object_type));  	// [ALLOC SPECIFIC] {Implementation Specific}
+			if (!ptr) throw std::bad_alloc(); 			// {Implementation Specific}
+			vec[j] = new (ptr) object_type(CONSTRUCTOR_PARAMETERS);  // {Implementation Specific}
 		}
 
 		PAUSE_ALLOC_TIMERS();
 		START_DEALLOC_TIMERS();
 
-		for (size_t k = 0; k < iterations; k++) {
-			vec[k]->~Vector2D(); // Call destructor
-			std::free(vec[k]); // Free memory
+		for (size_t k = 0; k < iterations; k++) {		// (Benchmarking) - 3 - Iterations - Deallocations
+			vec[k]->~object_type(); 					// [ALLOC SPECIFIC] {Implementation Specific}
+			std::free(vec[k]); 							// [ALLOC SPECIFIC] {Implementation Specific}
 		}
-
-		delete[] vec;
+		delete[] vec;									// [ALLOC SPECIFIC] {Implementation Specific}
 
 		PAUSE_DEALLOC_TIMERS();
 	}
@@ -146,13 +146,28 @@ void run_malloc_v2d_contPointer_forwardDealloc(nostalgia::AllocatorType allocato
 	EXPORT_BENCHMARK_RESULTS();
 }
 
-void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations, size_t passes) {
-	log::print("Running IBM Bursts benchmark with allocator: {} and parameters: iterations={}, passes={}",
-		allocator.label, iterations, passes);
-	run_static_v2d_contPointer(allocator, iterations, passes);
-	run_static_v2d_contPointer_forwardDealloc(allocator, iterations, passes);
-	run_static_v2d_contPointer_rewindDealloc(allocator, iterations, passes);
-	run_malloc_v2d_contPointer_forwardDealloc(allocator, iterations, passes);
+void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index) {
+	log::print("Running IBM Bursts benchmark with allocator: {} and parameters: iterations={}, passes={}, object_id_index={}",
+		allocator.label, iterations, passes, object_id_index);
+
+	// ObjectID index is used to select the object type for the benchmark
+	switch(static_cast<nostalgia::ObjectID>(object_id_index)) {
+		case nostalgia::ObjectID::Vector2D:
+			run_static_contPointer<OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS_VECTOR2D>(allocator, iterations, passes, object_id_index);
+			run_static_contPointer_rewindDealloc<OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS_VECTOR2D>(allocator, iterations, passes, object_id_index);
+			run_static_contPointer_forwardDealloc<OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS_VECTOR2D>(allocator, iterations, passes, object_id_index);
+			run_malloc_contPointer_forwardDealloc<OBJECT_BASIC_VECTOR2D>(allocator, iterations, passes, object_id_index);
+			break;
+		case nostalgia::ObjectID::Vector3D:
+			run_static_contPointer<OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS_VECTOR3D>(allocator, iterations, passes, object_id_index);
+			run_static_contPointer_rewindDealloc<OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS_VECTOR3D>(allocator, iterations, passes, object_id_index);
+			run_static_contPointer_forwardDealloc<OBJECT_LOCAL_OVERRIDE_STATIC_ACCESS_VECTOR3D>(allocator, iterations, passes, object_id_index);
+			run_malloc_contPointer_forwardDealloc<OBJECT_BASIC_VECTOR3D>(allocator, iterations, passes, object_id_index);
+			break;
+		default:
+			log::print(LogFlags::Error, "Invalid ObjectID index: {}", object_id_index);
+			return;
+	}
 }
 
 #include "allocators/defines/_clear_defines.inl"

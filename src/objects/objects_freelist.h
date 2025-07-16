@@ -9,7 +9,10 @@ namespace nostalgia::freelist::objects {
 		float x;
 		float y;
 		Vector2D_LocalOverride_StaticAccess(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
-		
+		Vector2D_LocalOverride_StaticAccess(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y) {
+			(void)z; 
+		}
+
 		void* operator new(size_t size) {
 			return s_freeAllocator.allocate(size);
 		}

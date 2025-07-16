@@ -26,9 +26,5 @@ namespace nostalgia {
         const std::function<void()> dispatcher;
         const std::function<void()> loader; // Unused for now - remove
         const std::vector<BenchmarkParamSpec> paramSpecs;
-
-        /*bool compatible(AllocatorFlags flags) const {
-            return (compatible_flags & flags) == flags;
-        };*/
     };
 }
