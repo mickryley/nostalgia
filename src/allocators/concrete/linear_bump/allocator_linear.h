@@ -30,8 +30,7 @@ namespace nostalgia::linear {
         static LinearAllocator& get_instance();
 	};
         
-    // Template Allocator Implementation (Pointer Container Variant)
-    // Uses global static allocator internally
+    // === Template Allocator ===
     template <typename T>
     class LinearAllocatorTemplate {
     public:

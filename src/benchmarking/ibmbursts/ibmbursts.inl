@@ -1,5 +1,101 @@
 nostalgia::BenchmarkID benchmark_id = nostalgia::BenchmarkID::IBM_Bursts;
 
+// === Templated ===
+template <typename object_type>
+void run_templated_globalAccess_pointerBlock_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id) {
+
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
+	CHECK_ALLOCATOR_COMPATABILITY();
+	BEGIN_ALL_TIMERS();
+
+	ALLOCATOR_TEMPLATE_GLOBAL_ACCESS<object_type> allocator_template;
+
+	for (size_t i = 0; i < passes; i++)
+	{
+		START_ALLOC_TIMERS();
+
+		object_type* vec = allocator_template.allocate(iterations); 
+		for (size_t j = 0; j < iterations; j++) {
+			new (&vec[j]) object_type(CONSTRUCTOR_PARAMETERS); 
+		}
+
+		PAUSE_ALLOC_TIMERS();
+		START_DEALLOC_TIMERS();
+
+		allocator_template.rewind();
+		PAUSE_DEALLOC_TIMERS();
+	}
+
+	STOP_ALL_TIMERS();
+	PRINT_ALL_TIMERS();
+	EXPORT_BENCHMARK_RESULTS();
+}
+template <typename object_type>
+void run_templated_globalAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id) {
+
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
+	CHECK_ALLOCATOR_COMPATABILITY();
+	BEGIN_ALL_TIMERS();
+
+	ALLOCATOR_TEMPLATE_GLOBAL_ACCESS<object_type> allocator_template;
+
+	for (size_t i = 0; i < passes; i++)
+	{
+		START_ALLOC_TIMERS();
+
+		object_type** vec = new object_type * [iterations];
+
+		for (size_t j = 0; j < iterations; j++) {
+			vec[j] = allocator_template.create(CONSTRUCTOR_PARAMETERS);
+		}
+
+		PAUSE_ALLOC_TIMERS();
+		START_DEALLOC_TIMERS();
+
+		allocator_template.rewind();
+		delete[] vec;
+		PAUSE_DEALLOC_TIMERS();
+	}
+
+	STOP_ALL_TIMERS();
+	PRINT_ALL_TIMERS();
+	EXPORT_BENCHMARK_RESULTS();
+}
+template <typename object_type>
+void run_templated_globalAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id) {
+
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
+	CHECK_ALLOCATOR_COMPATABILITY();
+	BEGIN_ALL_TIMERS();
+
+	ALLOCATOR_TEMPLATE_GLOBAL_ACCESS<object_type> allocator_template;
+
+	for (size_t i = 0; i < passes; i++)
+	{
+		START_ALLOC_TIMERS();
+
+		std::vector<object_type*> vec;
+		vec.reserve(iterations);
+
+		for (size_t j = 0; j < iterations; j++) {
+			vec.emplace_back(allocator_template.create(CONSTRUCTOR_PARAMETERS));
+		}
+
+		PAUSE_ALLOC_TIMERS();
+		START_DEALLOC_TIMERS();
+
+		allocator_template.rewind();
+		vec.clear();
+		PAUSE_DEALLOC_TIMERS();
+	}
+
+	STOP_ALL_TIMERS();
+	PRINT_ALL_TIMERS();
+	EXPORT_BENCHMARK_RESULTS();
+}
 
 // === Object Override (Compatible with Global Static and Singleton) ===
 template <typename object_type>
@@ -48,10 +144,10 @@ void run_objectOverride_pointerContainer_reverseDealloc(nostalgia::AllocatorType
 	{
 		START_ALLOC_TIMERS();
 
-		auto** vec = new object_type * [iterations]; // [ALLOC SPECIFIC]
+		object_type** vec = new object_type * [iterations]; 
 
 		for (size_t j = 0; j < iterations; j++) {
-			vec[j] = new object_type(CONSTRUCTOR_PARAMETERS);    // [ALLOC SPECIFIC]
+			vec[j] = new object_type(CONSTRUCTOR_PARAMETERS);   
 		}
 
 		PAUSE_ALLOC_TIMERS();
@@ -396,6 +492,19 @@ void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iteratio
 	// ObjectID index is used to select the object type for the benchmark
 	switch(static_cast<nostalgia::ObjectID>(object_id_index)) {
 		case nostalgia::ObjectID::Vector2D:
+			// Templated
+				// ~ Reverse Deallocation
+			run_templated_globalAccess_pointerContainer_rewindDealloc<OBJECT_BASIC_VECTOR2D>(
+				allocator, iterations, passes, object_id_index,
+				nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_RewindDeallocation);
+			run_templated_globalAccess_pointerBlock_rewindDealloc<OBJECT_BASIC_VECTOR2D>(
+				allocator, iterations, passes, object_id_index,
+				nostalgia::ImplementationID::Templated_GlobalAccess_PointerBlock_RewindDeallocation);
+			run_templated_globalAccess_pointerVector_rewindDealloc<OBJECT_BASIC_VECTOR2D>(
+				allocator, iterations, passes, object_id_index,
+				nostalgia::ImplementationID::Templated_GlobalAccess_PointerVector_RewindDeallocation);
+
+			
 			// Global access
 				// ~ Forward Deallocation
 			run_objectOverride_pointerContainer_forwardDealloc<OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS_VECTOR2D>(
@@ -442,6 +551,18 @@ void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iteratio
 			run_malloc_pointerVector_reverseDealloc<OBJECT_BASIC_VECTOR2D>(allocator, iterations, passes, object_id_index);
 			break;
 		case nostalgia::ObjectID::Vector3D:
+			// Templated
+				// ~ Reverse Deallocation
+			run_templated_globalAccess_pointerContainer_rewindDealloc<OBJECT_BASIC_VECTOR3D>(
+				allocator, iterations, passes, object_id_index,
+				nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_RewindDeallocation);
+			run_templated_globalAccess_pointerBlock_rewindDealloc<OBJECT_BASIC_VECTOR3D>(
+				allocator, iterations, passes, object_id_index,
+				nostalgia::ImplementationID::Templated_GlobalAccess_PointerBlock_RewindDeallocation);
+			run_templated_globalAccess_pointerVector_rewindDealloc<OBJECT_BASIC_VECTOR3D>(
+				allocator, iterations, passes, object_id_index,
+				nostalgia::ImplementationID::Templated_GlobalAccess_PointerVector_RewindDeallocation);
+
 			// Global access
 				// ~ Forward Deallocation
 			run_objectOverride_pointerContainer_forwardDealloc<OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS_VECTOR3D>(

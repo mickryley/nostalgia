@@ -12,6 +12,12 @@ namespace nostalgia {
 
 	enum class ImplementationID {
 		NONE,
+
+		Templated_GlobalAccess_PointerBlock_RewindDeallocation,
+		Templated_GlobalAccess_PointerContainer_RewindDeallocation,
+		Templated_GlobalAccess_PointerVector_RewindDeallocation,
+
+
 		ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation,
 		ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation,
 
