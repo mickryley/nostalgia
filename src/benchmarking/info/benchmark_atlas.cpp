@@ -22,7 +22,7 @@ std::unordered_map<nostalgia::BenchmarkID, nostalgia::benchmark_type> atlas{
                 .paramSpecs = {
 					{"passes", "int", "How many passes of the benchmark to run.", true, "5000"},
 					{"iterations", "int", "How many allocations + dealloactions to run.", true, "1000"},
-					{"object", "int", "Which Object to use for Allocation", false, "0"},
+					{"object", "object", "Which Object to use for Allocation", false, "1"},
 				}
             }
         }

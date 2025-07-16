@@ -16,6 +16,8 @@
 
 #include "implementations/info/implementation_atlas.h"
 
+#include "objects/info/object_meta.h"
+
 #include <iostream>
 #include <unordered_map>
 #include <string>
@@ -58,6 +60,7 @@ namespace nostalgia::gui{
 		nostalgia::BenchmarkParams* 						current_parameters		 	= nullptr;
 		std::unordered_map<std::string, std::string> 		param_input_strings;
 		std::unordered_map<std::string, int> 				param_input_ints;
+		std::unordered_map<std::string, int> 				param_input_objects;
 		std::unordered_map<std::string, bool> 				param_input_bools;
 
 		// Hover Details
@@ -291,6 +294,13 @@ namespace nostalgia::gui{
 								if (ImGui::InputInt("##hiddenIntInput", &value, input_int_button_step_size, input_int_button_alt_step_size))
 									current_parameters->set<int>(key, value);
 							}
+							else if (type == "object") {
+								int& selected_index = param_input_objects[key];
+
+								if (ImGui::Combo("Object", &selected_index, nostalgia::object_id_names.data(), nostalgia::object_id_names.size())) {
+									current_parameters->set<int>(key, selected_index);
+								}
+							}
 							else if (type == "string") {
 								std::string& buf = param_input_strings[key];
 								if (buf.empty() && spec.default_value) buf = *spec.default_value;
@@ -456,7 +466,10 @@ namespace nostalgia::gui{
 		for (const BenchmarkParamSpec& spec : specs) {
 			if (spec.type == "int") {
 				param_input_ints[spec.key] = spec.default_value ? std::stoi(*spec.default_value) : 0;
-			} else if (spec.type == "string") {
+			} else if (spec.type == "object") {
+				param_input_objects[spec.key] = spec.default_value ? std::stoi(*spec.default_value) : 0;
+			}
+			else if (spec.type == "string") {
 				param_input_strings[spec.key] = spec.default_value ? *spec.default_value : "";
 			} else if (spec.type == "bool") {
 				param_input_bools[spec.key] = spec.default_value ? (*spec.default_value == "true") : false;

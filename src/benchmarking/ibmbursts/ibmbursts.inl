@@ -6,6 +6,9 @@ nostalgia::BenchmarkID benchmark_id = nostalgia::BenchmarkID::IBM_Bursts;
 void run_static_v2d_contPointer(nostalgia::AllocatorType allocator, size_t iterations, size_t passes) {
 	nostalgia::ImplementationID i_id = nostalgia::ImplementationID::ObjectOverride_StaticAccess_PointerContainer_ReverseDeallocation;
 
+	// Parameterise the object being passed.
+	// set the locally used object
+
 	IMPLEMENTATION_DETAILS(std::format("{}x ({}x alloc + {}x free)", passes, iterations, iterations).c_str());
 	CHECK_ALLOCATOR_COMPATABILITY();
 	BEGIN_ALL_TIMERS();

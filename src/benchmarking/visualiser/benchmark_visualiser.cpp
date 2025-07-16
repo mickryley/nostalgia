@@ -51,7 +51,7 @@ namespace nostalgia::visualiser {
 		constexpr float     hover_tab_max_width_perc        = 1.0f / static_cast<float>(tab_count);
 		constexpr float     hover_tab_height                = 30.0f;
         constexpr ImVec2 	expandable_size                 = ImVec2(0.0f, 0.0f);
-        constexpr float 	expandable_value                = 0.0f;
+        // constexpr float 	expandable_value                = 0.0f;
 
 		// Visible Graph data storage
         std::vector<std::string> labelStorage;
@@ -445,11 +445,11 @@ namespace nostalgia::visualiser {
             labelPtrs.reserve(labelStorage.size());
             for (const auto& s : labelStorage)
                 labelPtrs.push_back(s.c_str());
-            int count = (int)allocs.size();
+            size_t count = allocs.size();
 
             ImPlot::SetupAxes(nullptr, "Time (ms)", ImPlotAxisFlags_AutoFit, ImPlotAxisFlags_AutoFit);
             //ImPlot::SetupAxisTicks(ImAxis_X1, 0, count - 1, count, labelStorage.data());
-            ImPlot::SetupAxisTicks(ImAxis_X1, 0, count - 1, count, labelPtrs.data());
+            ImPlot::SetupAxisTicks(ImAxis_X1, 0, count - 1, static_cast<int>(count), labelPtrs.data());
 
             for (size_t i = 0; i < count; ++i) {
 
