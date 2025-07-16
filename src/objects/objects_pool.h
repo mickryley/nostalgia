@@ -14,13 +14,13 @@ namespace nostalgia::pool::objects {
 		}
 		void* operator new(size_t size) {
 			(void)size; // Fixed size, suppress warning while remaining compatible with C++ standards
-			return s_poolAllocator.allocate();
+			return g_pool_allocator.allocate();
 		}
 
 		inline void* operator new(size_t, void* ptr) noexcept { return ptr; }
 
 		void operator delete(void* ptr) noexcept {
-			s_poolAllocator.deallocate(reinterpret_cast<std::byte*>(ptr));
+			g_pool_allocator.deallocate(reinterpret_cast<std::byte*>(ptr));
 		}
 	};
 
@@ -32,10 +32,10 @@ namespace nostalgia::pool::objects {
 		Vector3D_LocalOverride_StaticAccess(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
 		void* operator new(size_t size) {
 			(void)size; // Fixed size, suppress warning while remaining compatible with C++ standards
-			return s_poolAllocator.allocate();
+			return g_pool_allocator.allocate();
 		}
 		void operator delete(void* ptr) noexcept {
-			s_poolAllocator.deallocate(reinterpret_cast<std::byte*>(ptr));
+			g_pool_allocator.deallocate(reinterpret_cast<std::byte*>(ptr));
 		}
 	};
 	/*
@@ -45,7 +45,7 @@ namespace nostalgia::pool::objects {
 		Vector2D_LocalOverride_SingletonAccess(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
 
 		void* operator new(size_t size) {
-			return linear::SingletonLinearAllocator::getInstance().allocate(size);
+			return linear::SingletonLinearAllocator::get_instance().allocate(size);
 		}
 
 		inline void* operator new(size_t, void* ptr) noexcept { return ptr; }
@@ -61,7 +61,7 @@ namespace nostalgia::pool::objects {
 		float x, y, z;
 		Vector3D_LocalOverride_SingletonAccess(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
 		void* operator new(size_t size) {
-			return linear::SingletonLinearAllocator::getInstance().allocate(size);
+			return linear::SingletonLinearAllocator::get_instance().allocate(size);
 		}
 		void operator delete(void* ptr) noexcept {
 			//::operator delete(ptr);

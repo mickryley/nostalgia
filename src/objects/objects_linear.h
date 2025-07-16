@@ -13,7 +13,7 @@ namespace nostalgia::linear::objects {
 			(void)z; 
 		}
 		void* operator new(size_t size) {
-			return s_linearAllocator.allocate(size);
+			return g_linear_allocator.allocate(size);
 		}
 
 		inline void* operator new(size_t, void* ptr) noexcept { return ptr; }
@@ -28,7 +28,7 @@ namespace nostalgia::linear::objects {
 		float z;
 		Vector3D_LocalOverride_StaticAccess(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
 		void* operator new(size_t size) {
-			return s_linearAllocator.allocate(size);
+			return g_linear_allocator.allocate(size);
 		}
 		void operator delete(void* ptr) noexcept { (void)ptr; };
 	};
@@ -39,7 +39,7 @@ namespace nostalgia::linear::objects {
 		Vector2D_LocalOverride_SingletonAccess(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
 
 		void* operator new(size_t size) {
-			return linear::SingletonLinearAllocator::getInstance().allocate(size);
+			return linear::SingletonLinearAllocator::get_instance().allocate(size);
 		}
 
 		inline void* operator new(size_t, void* ptr) noexcept { return ptr; }
@@ -52,7 +52,7 @@ namespace nostalgia::linear::objects {
 		float x, y, z;
 		Vector3D_LocalOverride_SingletonAccess(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
 		void* operator new(size_t size) {
-			return linear::SingletonLinearAllocator::getInstance().allocate(size);
+			return linear::SingletonLinearAllocator::get_instance().allocate(size);
 		}
 		void operator delete(void* ptr) noexcept { (void)ptr; };
 	};

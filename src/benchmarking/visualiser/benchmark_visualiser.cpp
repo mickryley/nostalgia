@@ -286,8 +286,11 @@ namespace nostalgia::visualiser {
 
         ImGui::Spacing();
         ImGui::Text("Color by...");
+        if (ImGui::Button("None")) current_color_by = ColorBy::NONE;
         if (ImGui::Button("Allocator Type")) current_color_by = ColorBy::AllocatorType;
+        ImGui::BeginDisabled();
         if (ImGui::Button("Implementation Type")) current_color_by = ColorBy::ImplementationType;
+        ImGui::EndDisabled();
     }
 
     void draw_benchmark_results_hover_export() {
@@ -449,7 +452,7 @@ namespace nostalgia::visualiser {
 
             ImPlot::SetupAxes(nullptr, "Time (ms)", ImPlotAxisFlags_AutoFit, ImPlotAxisFlags_AutoFit);
             //ImPlot::SetupAxisTicks(ImAxis_X1, 0, count - 1, count, labelStorage.data());
-            ImPlot::SetupAxisTicks(ImAxis_X1, 0, count - 1, static_cast<int>(count), labelPtrs.data());
+            ImPlot::SetupAxisTicks(ImAxis_X1, 0, static_cast<double>(count - 1), static_cast<int>(count), labelPtrs.data());
 
             for (size_t i = 0; i < count; ++i) {
 

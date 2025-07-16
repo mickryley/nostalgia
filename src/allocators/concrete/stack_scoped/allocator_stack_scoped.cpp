@@ -13,12 +13,32 @@
 #include "utils/log.h"
 
 namespace nostalgia::stack::scoped {
-    
-    
-    StackAllocator::StackAllocator(char* buf, size_t cap)
+
+    struct StackBlockHeader {
+        uint32_t size; // True size / offset including the header
+    };
+
+    namespace {
+        // Launch Buffer
+        constexpr size_t buffer_size = 1024 * 1024;     // 1 MB
+        std::byte* buffer = new std::byte[buffer_size]; // Mallocate a buffer of 1 MB
+    }
+
+    // === Global Static Allocator ===
+    StackAllocator g_stack_allocator(buffer, buffer_size, "Global");
+
+    // === Singleton Static Allocator ===
+    StackAllocator& SingletonStackAllocator::get_instance() {
+        static StackAllocator s_stack_allocator(buffer, buffer_size, "Singleton Static");
+        return s_stack_allocator;
+    }
+
+    // === Base Class Constructors ===
+    StackAllocator::StackAllocator(std::byte* buf, size_t cap, const char* caller)
         : m_buffer(buf), m_capacity(cap), m_offset(0), m_peakCapacity(0) {
-        log::print("StackAllocator: Initialised from location [{}] with a capacity of [{}] bytes", (void*)m_buffer, m_capacity);
-        }
+        log::print("[{}] Scoped Stack Allocator: Initialised from location [{}] with a capacity of [{}] bytes", caller, (void*)m_buffer, m_capacity);
+    }
+
 
     // Alignment-first allocation method
     void* StackAllocator::allocate(size_t bytes){

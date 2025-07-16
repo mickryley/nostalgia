@@ -5,85 +5,64 @@
 #include "utils/log.h"
 
 namespace nostalgia::freelist {
+		
+	namespace {											// Launch Buffer
+		constexpr size_t buffer_size = 1024 * 1024;     // 1 MB
+		std::byte* buffer = new std::byte[buffer_size]; // Mallocate a buffer of 1 MB
+	}
 
+	// === Global Static Allocator ===
+	FreeAllocator g_free_allocator(buffer, buffer_size, "Global");
 
-/*#define WSIZE					8
-#define DSIZE					16
+	// === Singleton Static Allocator ===
+	FreeAllocator& SingletonFreeAllocator::get_instance() {
+		static FreeAllocator s_free_allocator(buffer, buffer_size, "Singleton Static");
+		return s_free_allocator;
+	}
 
-
-#define PACK(size, alloc)		((size) | (alloc))		// Pack alloc flag into unused bits
-#define GET_SIZE(pack)			(pack & ~0x7)
-#define GET_ALLOC(pack)			(pack & 0x1)
-
-#define HEADER(block)			(block - WSIZE)
-#define FOOTER(block)			(block + GET_SIZE(HEADER(block)) - DSIZE)
-
-#define NEXT_BLOCK(block)		(block + GET_SIZE(block - WSIZE));
-#define PREV_BLOCK(block)		(block - GET_SIZE(block - DSIZE));
-*/
-
+	// === Utilities ===
 #pragma region Utils
-	constexpr size_t WSIZE = 8;
-	constexpr size_t DSIZE = 16;
+	constexpr size_t	WSIZE									= 8;
+	constexpr size_t	DSIZE									= 16;
 
-	constexpr size_t pack(size_t size, bool alloc) {
-		return size | static_cast<size_t>(alloc);
-	}
+	constexpr size_t	pack(size_t size, bool alloc) {			return size | static_cast<size_t>(alloc);			}
 
-	inline size_t get(const std::byte* ptr) {
-		return *reinterpret_cast<const std::size_t*>(ptr);
-	}
+	inline size_t		get(const std::byte* ptr) {				return *reinterpret_cast<const std::size_t*>(ptr);	}
+	inline void			put(std::byte* ptr, size_t value) {		*reinterpret_cast<std::size_t*>(ptr) = value;		}
 
-	inline void put(std::byte* ptr, size_t value) {
-		*reinterpret_cast<std::size_t*>(ptr) = value;
-	}
+	inline size_t		get_size(const std::byte* ptr) {		return get(ptr) & ~static_cast<size_t>(0x7);		}
+	inline bool			get_alloc(const std::byte* ptr) {		return get(ptr) & 0x1;								}
 
-	inline size_t get_size(const std::byte* ptr) {
-		return get(ptr) & ~static_cast<size_t>(0x7);
-	}
+	inline std::byte*	header(std::byte* block) {				return block - WSIZE;								}
+	inline std::byte*	footer(std::byte* block) {				return block + get_size((header(block))) - DSIZE;	}
 
-	inline bool get_alloc(const std::byte* ptr) {
-		return get(ptr) & 0x1;
-	}
-
-	inline std::byte* header(std::byte* block) {
-		return block - WSIZE;
-	}
-
-	inline std::byte* footer(std::byte* block) {
-		return block + get_size((header(block))) - DSIZE;
-	}
-
-	inline std::byte* next_block(std::byte* block) {
-		return block + get_size((header(block)));
-	}
-
-	inline std::byte* prev_block(std::byte* block) {
-		return block - get_size(block - DSIZE);
-	}
+	inline std::byte*	next_block(std::byte* block) {			return block + get_size((header(block)));			}
+	inline std::byte*	prev_block(std::byte* block) {			return block - get_size(block - DSIZE);				}
 #pragma endregion
 
-	// 
-	FreeAllocator::FreeAllocator(std::byte* buf, size_t cap) {
-
-		// Align 
-		std::byte* _alignedBuffer = reinterpret_cast<std::byte*>(
+	// === Base Class Constructors ===
+	FreeAllocator::FreeAllocator(std::byte* buf, size_t cap, const char* caller) {
+		
+		// Align
+		std::byte* aligned_buffer = reinterpret_cast<std::byte*>(
 			(reinterpret_cast<std::uintptr_t>(buf) + (DSIZE - 1)) & ~(DSIZE - 1));
-		// Should never be negative, but a defensive check can be used here
-		size_t aligned_capacity = cap - static_cast<size_t>(_alignedBuffer - buf);
+		
+		size_t aligned_capacity = cap - static_cast<size_t>(aligned_buffer - buf);
 
 		// Sentinel
-		put(_alignedBuffer, pack(DSIZE, true));
-		put(_alignedBuffer + WSIZE, pack(DSIZE, true));
+		put(aligned_buffer, pack(DSIZE, true));
+		put(aligned_buffer + WSIZE, pack(DSIZE, true));
 
-		m_buffer = _alignedBuffer + DSIZE + WSIZE;
-		m_cap = aligned_capacity > DSIZE + WSIZE ? aligned_capacity - DSIZE - WSIZE : 0;
+		m_buffer = aligned_buffer + DSIZE + WSIZE;
+		m_capacity = aligned_capacity > DSIZE + WSIZE ? aligned_capacity - DSIZE - WSIZE : 0;
 
-		put(header(m_buffer), pack(m_cap, false));
-		put(footer(m_buffer), pack(m_cap, false));
+		put(header(m_buffer), pack(m_capacity, false));
+		put(footer(m_buffer), pack(m_capacity, false));
 
-		put(m_buffer + m_cap, pack(0, true));
+		put(m_buffer + m_capacity, pack(0, true));
 		m_head = m_buffer;
+
+		log::print("[{}] Free List Allocator: Initialised from location [{}] with an aligned capacity of [{}] bytes", caller, (void*)m_buffer, m_capacity);
 	};
 
 	std::byte* FreeAllocator::findFirstFit(size_t size) {
@@ -98,7 +77,7 @@ namespace nostalgia::freelist {
 	}
 
 	std::byte* FreeAllocator::findNextFit(size_t size) {
-		if (m_head == nullptr || m_head >= (m_buffer + m_cap)) m_head = m_buffer;
+		if (m_head == nullptr || m_head >= (m_buffer + m_capacity)) m_head = m_buffer;
 
 		std::byte* search = m_head;
 		std::byte* found = nullptr;
@@ -129,8 +108,6 @@ namespace nostalgia::freelist {
 
 		return found;
 	}
-
-
 
 	void* FreeAllocator::allocate(size_t size) {
 		//if (!m_head || size == 0) return nullptr;

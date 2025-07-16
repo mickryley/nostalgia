@@ -7,53 +7,29 @@
 #include <memory_resource> 
 
 namespace nostalgia::linear {
-
-    namespace {
-        constexpr size_t bufferSize = 1024 * 1024; // 1 MB
-        char* buffer = new char[bufferSize]; // Mallocate a buffer of 1 MB
-    }
-
+    
+    // === Base Class ===
     class LinearAllocator {
     public: 
-        LinearAllocator(char* buf, size_t cap);
-        void* allocate(size_t bytes, size_t alignment = alignof(std::max_align_t));
-        // No deallocate, rewind only.
-        void rewind();
+        LinearAllocator(std::byte* buf, size_t cap, const char* caller = "Unknown");
+        void*       allocate(size_t bytes, size_t alignment = alignof(std::max_align_t));
+        void        rewind();
     private:
-        char* m_buffer;            // Pointer to the start of the memory chunk
-        size_t m_capacity;         // Total size of the memory chunk
-        size_t m_offset = 0;           // Current position for the next allocation
+        std::byte*  m_buffer;               
+        size_t      m_capacity;             
+        size_t      m_offset = 0;           
 
-        // Logging tools - remove on minimal / benchmarked version
-        size_t m_peakCapacity = 0; // Peak capacity used during allocations 
+        size_t      m_peakCapacity = 0; 
     };
-/*
-    class LinearMemoryResource : public std::pmr::memory_resource {
-    private:
-        char* m_buffer;
-        size_t m_offset = 0;
-        size_t m_capacity;
-    public:
-        LinearMemoryResource(void* buf, std::size_t cap);
-    protected:
-        void* do_allocate(std::size_t bytes, std::size_t alignment) override;
-        // No-op in linear
-        void do_deallocate(void*, std::size_t, std::size_t) override;
-        
-        bool do_is_equal(const memory_resource& other) const noexcept override;
-    };
-*/
-	// Static / Global Instance of LinearAllocator
-    static LinearAllocator s_linearAllocator(buffer, bufferSize); // Global instance of LinearAllocator
+	
+	// === Global Static Allocator ===
+    extern LinearAllocator g_linear_allocator;
 
-	// Singleton Pattern for LinearAllocator
+	// === Singleton Static Allocator ===
     struct SingletonLinearAllocator {
-        static LinearAllocator& getInstance() {
-            static LinearAllocator _singleton_linearAllocator(buffer, bufferSize);
-            return _singleton_linearAllocator;
-        }
+        static LinearAllocator& get_instance();
 	};
-
+        
     // Template Allocator Implementation (Pointer Container Variant)
     // Uses global static allocator internally
     template <typename T>
@@ -65,7 +41,7 @@ namespace nostalgia::linear {
         LinearAllocatorTemplate(const LinearAllocatorTemplate<U>&) {}
 
         T* allocate(std::size_t n) {
-            return static_cast<T*>(s_linearAllocator.allocate(n * sizeof(T), alignof(T)));
+            return static_cast<T*>(g_linear_allocator.allocate(n * sizeof(T), alignof(T)));
         }
 
         template<typename... Args>
@@ -79,7 +55,7 @@ namespace nostalgia::linear {
         }
 
         void rewind() {
-            s_linearAllocator.rewind();
+            g_linear_allocator.rewind();
 		}
     };
 
@@ -105,7 +81,7 @@ namespace nostalgia::linear {
 
         // STL Requried Allocate
         T* allocate(std::size_t n) {
-            return static_cast<T*>(s_linearAllocator.allocate(n * sizeof(T), alignof(T)));
+            return static_cast<T*>(g_linear_allocator.allocate(n * sizeof(T), alignof(T)));
         }
 
         template<typename... Args>
@@ -123,7 +99,7 @@ namespace nostalgia::linear {
         bool operator!=(const LinearAllocatorStlTemplate&) const noexcept { return false; }
 
         void rewind() {
-            s_linearAllocator.rewind();
+            g_linear_allocator.rewind();
         }
     };
 
@@ -252,6 +228,22 @@ namespace nostalgia::linear {
         size_t m_capacity = 0;
     };
 
+    /*
+        class LinearMemoryResource : public std::pmr::memory_resource {
+        private:
+            char* m_buffer;
+            size_t m_offset = 0;
+            size_t m_capacity;
+        public:
+            LinearMemoryResource(void* buf, std::size_t cap);
+        protected:
+            void* do_allocate(std::size_t bytes, std::size_t alignment) override;
+            // No-op in linear
+            void do_deallocate(void*, std::size_t, std::size_t) override;
+
+            bool do_is_equal(const memory_resource& other) const noexcept override;
+        };
+    */
 
 
     // PMR Conformed Static Allocator
@@ -278,4 +270,6 @@ namespace nostalgia::linear {
     - PMR Container
 
     */
+
+
 }

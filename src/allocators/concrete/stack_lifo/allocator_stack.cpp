@@ -13,12 +13,30 @@
 #include "utils/log.h"
 
 namespace nostalgia::stack {
-    
-    
-    StackAllocator::StackAllocator(char* buf, size_t cap)
+
+    struct StackBlockHeader {
+        uint32_t size; // True size / offset including the header
+    };
+
+    namespace {
+        // Launch Buffer
+        constexpr size_t buffer_size = 1024 * 1024;     // 1 MB
+        std::byte* buffer = new std::byte[buffer_size]; // Mallocate a buffer of 1 MB
+    }
+    // === Global Static Allocator ===
+    StackAllocator g_stack_allocator(buffer, buffer_size, "Global");
+
+    // === Singleton Static Allocator ===
+    StackAllocator& SingletonStackAllocator::get_instance() {
+        static StackAllocator s_stack_allocator(buffer, buffer_size, "Singleton Static");
+        return s_stack_allocator;
+    }
+
+    // === Base Class Constructors ===
+    StackAllocator::StackAllocator(std::byte* buf, size_t cap, const char* caller)
         : m_buffer(buf), m_capacity(cap), m_offset(0), m_peakCapacity(0) {
-        log::print("StackAllocator: Initialised from location [{}] with a capacity of [{}] bytes", (void*)m_buffer, m_capacity);
-        }
+        log::print("[{}] Stack Allocator: Initialised from location [{}] with a capacity of [{}] bytes", caller, (void*)m_buffer, m_capacity);
+    }
 
     // Alignment-first allocation method
     void* StackAllocator::allocate(size_t bytes){
@@ -82,7 +100,7 @@ namespace nostalgia::stack {
 
         // Check if the block is at the top of the stack
         // Change from char to byte
-        if (static_cast<char*>(_ptr) + blockSize != m_buffer + m_offset) {
+        if (static_cast<std::byte*>(_ptr) + blockSize != m_buffer + m_offset) {
             log::print(LogFlags::Error, "StackAllocator: Attempted to free a pointer that is not at the top of the stack, m_offset is [{}]", m_offset);
 			log::print(LogFlags::Error, "Comparison Left half is [{} + {}] and Right half is [{} + {}]", (void*)_ptr, blockSize, (void*)m_buffer, m_offset);
             

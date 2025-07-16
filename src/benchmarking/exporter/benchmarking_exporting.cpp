@@ -5,6 +5,7 @@
 #include "implementations/info/implementation_atlas.h"
 
 #include <fstream>
+#include <format>
 
 #include "utils/json_wrapped.h"
 
@@ -21,12 +22,14 @@ namespace nostalgia::benchmarking::exporting {
 
 	}
 
-	void exportResultsToFile(const std::vector<BenchmarkResult>& results, const std::string& filename, std::string& source_label){
+	void export_results_to_file(const std::vector<BenchmarkResult>& results, const std::string& filename, std::string& source_label){
 		json j;
 		for (const auto& result : results) {
 			j.push_back({
 				{ "benchmark_label", benchmark::atlas.at(result.benchmark_id).label },
 				{ "results_source", source_label },
+				{"compiler", get_compiler_name()},
+				{"compiler_info", get_compiler_info()},
 				{ "results", {
 					// Implementation Details
 					{"total_time", result.total_time},
@@ -47,6 +50,7 @@ namespace nostalgia::benchmarking::exporting {
 					// Becnhmark Type from Benchmark ID
 					//{"benchmark_label", benchmark::atlas.at(result.benchmark_id).label},
 					{"benchmark_description", benchmark::atlas.at(result.benchmark_id).description},
+
 				}}
 			});
 		}
@@ -62,6 +66,7 @@ namespace nostalgia::benchmarking::exporting {
 	}
 
 
+
 	void clear_current_benchmark_results() {
 		current_benchmark_results.clear();
 	}
@@ -72,7 +77,7 @@ namespace nostalgia::benchmarking::exporting {
 
 	std::string export_current_benchmarks() {
 		std::string export_filename = get_next_benchmark_filename(current_benchmark_filename);
-		exportResultsToFile(current_benchmark_results, export_filename);
+		export_results_to_file(current_benchmark_results, export_filename);
 		return export_filename;
 	}
 
@@ -84,6 +89,26 @@ namespace nostalgia::benchmarking::exporting {
 			index++;
 		} while	 (std::filesystem::exists(full_filename));
 		return full_filename;
+	}
+
+	std::string get_compiler_name() {
+#if defined(__clang__)
+		return "Clang " __clang_version__;
+#elif defined(__GNUC__)
+		return "GCC " __VERSION__;
+#elif defined(_MSC_VER)
+		return "MSVC " + std::to_string(_MSC_VER);
+#else
+		return "Unknown Compiler";
+#endif
+	}
+
+	std::string get_compiler_info() {
+#if defined(COMPILER_INFO)
+		return std::format("Compiler: {}", COMPILER_INFO);
+#else
+	return "Compiler info not available.";
+#endif
 	}
 
 }

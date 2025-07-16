@@ -300,7 +300,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 
 		// Extra code required for cached singleton
-		auto& _allocator = linear::SingletonLinearAllocator::getInstance();
+		auto& _allocator = linear::SingletonLinearAllocator::get_instance();
 
 		_timer.start();
 		// Alloc + Dealloc Passes
@@ -736,9 +736,9 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 	void benchmark_IBMBursts(int iterations = 1000, int passes = 5000, int size = 8) {
 
-		constexpr size_t bufferSize = 1024 * 1024; // 1 MB
-		char* buffer = new char[bufferSize]; // Mallocate a buffer of 1 MB
-		nostalgia::linear::LinearAllocator _allocator(buffer, bufferSize);
+		constexpr size_t buffer_size = 1024 * 1024; // 1 MB
+		char* buffer = new char[buffer_size]; // Mallocate a buffer of 1 MB
+		nostalgia::linear::LinearAllocator _allocator(buffer, buffer_size);
 
 
 
@@ -983,9 +983,9 @@ namespace nostalgia::benchmarking::IBMBursts {
 
 	void benchmark_IBMBursts_Stack(int iterations = 1000, int passes = 5000, int size = 8) {
 
-		constexpr size_t bufferSize = 1024 * 1024; // 1 MB
-		char* buffer = new char[bufferSize]; // Mallocate a buffer of 1 MB
-		nostalgia::stack::StackAllocator _allocator(buffer, bufferSize);
+		constexpr size_t buffer_size = 1024 * 1024; // 1 MB
+		char* buffer = new char[buffer_size]; // Mallocate a buffer of 1 MB
+		nostalgia::stack::StackAllocator _allocator(buffer, buffer_size);
 
 		// Initialise Main Timers
 		timer::Timer allocate_timer = timer::Timer("Allocate Timer");
@@ -1282,7 +1282,7 @@ namespace nostalgia::benchmarking::IBMBursts {
 		}
 	}
 
-	void benchmark_IBMBursts_poolAllocators() {
+	void benchmark_IBMBurstg_pool_allocators() {
 
 		// Run all requested benchmarks
 		for (const auto& benchmark : poolBenchmarks) {

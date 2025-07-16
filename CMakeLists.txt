@@ -80,6 +80,10 @@ target_compile_options(project_obj PRIVATE
         /W4 /WX /permissive-
     >
 )
+target_compile_definitions(project_obj PRIVATE
+COMPILER_INFO="${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}"
+
+)
 target_include_directories(project_obj
     PRIVATE
         "${CMAKE_SOURCE_DIR}/src"
@@ -133,11 +137,12 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_SOURCE_DIR}/src"
 )
 
-# === Debug Flag Support ===
+# === Debug Flag Support & Inject Compiler Info ===
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     $<$<CONFIG:Debug>:BUILD_DEBUG>
     $<$<CONFIG:RelWithDebInfo>:BUILD_DEV>
     $<$<CONFIG:Release>:BUILD_RELEASE>
+    COMPILER_INFO="\"${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}\""
 )
 
 # === Windows-Specific Compiler Flags ===

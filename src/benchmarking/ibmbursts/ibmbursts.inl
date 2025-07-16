@@ -62,7 +62,7 @@ void run_static_contPointer_rewindDealloc(nostalgia::AllocatorType allocator, si
 		PAUSE_ALLOC_TIMERS();
 		START_DEALLOC_TIMERS();
 
-		ALLOCATOR_STATIC_ACCESS.rewind();
+		ALLOCATOR_GLOBAL_ACCESS.rewind();
 		delete[] vec;
 
 		PAUSE_DEALLOC_TIMERS();

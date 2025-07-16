@@ -297,7 +297,7 @@ namespace nostalgia::gui{
 							else if (type == "object") {
 								int& selected_index = param_input_objects[key];
 
-								if (ImGui::Combo("Object", &selected_index, nostalgia::object_id_names.data(), nostalgia::object_id_names.size())) {
+								if (ImGui::Combo("Object", &selected_index, nostalgia::object_id_names.data(), static_cast<int>(nostalgia::object_id_names.size()))) {
 									current_parameters->set<int>(key, selected_index);
 								}
 							}

@@ -11,20 +11,14 @@ namespace nostalgia::default_malloc {
 	class DefaultAllocator {
 	public:
 		DefaultAllocator() = default;
-		void* allocate();
-		void deallocate(std::byte* ptr);
-		inline void rewind() noexcept {} // no-op for pool allocator
+		void*			allocate();
+		void			deallocate(std::byte* ptr);
+		inline void		rewind() noexcept {} 
 
 	private:
-		std::byte* m_buffer;
-		std::byte* m_head;
-		//size_t m_objectSize;
-		//size_t m_objectCount;
-		//size_t m_offset = 0;
-
-		//size_t m_peakCapacity = 0;
-		//size_t m_peakOffset = 0;
+		std::byte*		m_buffer;
+		std::byte*		m_head;
 	};
 
-	static DefaultAllocator s_default_allocator{};
+	static DefaultAllocator g_default_allocator{};
 }

@@ -14,13 +14,13 @@ namespace nostalgia::stack::objects {
 		}
 		
 		void* operator new(size_t size) {
-			return s_stackAllocator.allocate(size);
+			return g_stack_allocator.allocate(size);
 		}
 
 		inline void* operator new(size_t, void* ptr) noexcept { return ptr; }
 
 		void operator delete(void* ptr) noexcept {
-			s_stackAllocator.free(ptr);
+			g_stack_allocator.free(ptr);
 		}
 	};
 
@@ -31,10 +31,10 @@ namespace nostalgia::stack::objects {
 		float z;
 		Vector3D_LocalOverride_StaticAccess(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
 		void* operator new(size_t size) {
-			return s_stackAllocator.allocate(size);
+			return g_stack_allocator.allocate(size);
 		}
 		void operator delete(void* ptr) noexcept {
-			s_stackAllocator.free(ptr);
+			g_stack_allocator.free(ptr);
 		}
 	};
 }

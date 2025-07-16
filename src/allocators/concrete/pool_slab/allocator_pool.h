@@ -8,28 +8,28 @@
 
 namespace nostalgia::pool {
 
-	namespace {
-		constexpr size_t bufferSize = 1024 * 1024; // 1 MB
-		char* buffer = new char[bufferSize]; // Mallocate a buffer of 1 MB
-	}
-
+	// === Base Class ===
 	class PoolAllocator {
 	public:
-		PoolAllocator(std::byte* buf, size_t objectSize, size_t objectCount);
-		void* allocate();
-		void deallocate(std::byte* ptr);
-		inline void rewind() noexcept {} // no-op for pool allocator
+		PoolAllocator(std::byte* buf, size_t object_size, size_t object_count, const char* caller = "Unknown");
+
+		void*			allocate();
+		void			deallocate(std::byte* ptr);
+		void			format(size_t object_size, size_t object_count);
+		inline void		rewind() noexcept {} // no-op for pool allocator
 
 	private:
-		std::byte* m_buffer;
-		std::byte* m_head;
-		//size_t m_objectSize;
-		//size_t m_objectCount;
-		//size_t m_offset = 0;
-
-		//size_t m_peakCapacity = 0;
-		//size_t m_peakOffset = 0;
+		std::byte*		m_buffer;
+		std::byte*		m_head;
 	};
 
-	static PoolAllocator s_poolAllocator{ reinterpret_cast<std::byte*>(buffer), 16, bufferSize / 16 };
+	// === Global Static Allocator ===
+	extern PoolAllocator g_pool_allocator;
+
+	// === Singleton Static Allocator ===
+	struct SingletonPoolAllocator {
+		static PoolAllocator& get_instance();
+	};
+
+	//static PoolAllocator g_pool_allocator{ reinterpret_cast<std::byte*>(buffer), 16, buffer_size / 16 };
 }
