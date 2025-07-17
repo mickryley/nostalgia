@@ -17,6 +17,39 @@ namespace nostalgia::benchmarking::IBMBursts {
 
     namespace {
         constexpr BenchmarkID m_benchmark_id = nostalgia::BenchmarkID::IBM_Bursts;
+
+        // Temporarily hardcoding limits, actual maximum is 1MB / sizeof(Object)
+        // Currently IBM takes V2D or V3D so 8 bytes or 12 bytes 
+        // However the Pool implementation is fixed size at 16 bytes so ~65'000 iterations
+        // And the Freelist has headers and footers of 8 bytes each so ~ 32'000 iterations max
+        int max_iterations = 30000;
+        int max_passes = 100000;
+    }
+
+    void sanitise_parameters(){
+        nostalgia::BenchmarkParams* params = &nostalgia::benchmarking::loader::get_parameters();
+
+        // Clamp Parameters 
+        if (!params->contains("iterations")) {
+            log::print(LogFlags::Warn, "No iterations parameter found. Setting to default value of 1000.");
+            params->set<int>("iterations", 1000);
+        } else if (params->get<int>("iterations").value() <= 0) {
+            log::print(LogFlags::Error, "Invalid iterations value: {}. Must be greater than 0.", params->get<int>("iterations").value());
+            return;
+        } else if (params->get<int>("iterations").value() > max_iterations) {
+            log::print(LogFlags::Warn, "Iterations value {} is too high. Setting to {}.", params->get<int>("iterations").value(), max_iterations);
+            params->set<int>("iterations", max_iterations);
+        }
+        if (!params->contains("passes")) {
+            log::print(LogFlags::Warn, "No passes parameter found. Setting to default value of 5000.");
+            params->set<int>("passes", 5000);
+        } else if (params->get<int>("passes").value() <= 0) {
+            log::print(LogFlags::Error, "Invalid passes value: {}. Must be greater than 0.", params->get<int>("passes").value());
+            return;
+        } else if (params->get<int>("passes").value() > max_passes) {
+            log::print(LogFlags::Warn, "Passes value {} is too high. Setting to {}.", params->get<int>("passes").value(), max_passes);
+            params->set<int>("passes", max_passes);
+        }
     }
 
     void dispatch(nostalgia::AllocatorType allocator){
@@ -27,7 +60,8 @@ namespace nostalgia::benchmarking::IBMBursts {
             log::print(LogFlags::Warn, "Allocator type [{}] is not compatible with IBM Bursts benchmark.", allocator.label);
             return;
         }
-        
+
+        sanitise_parameters();
         nostalgia::BenchmarkParams* params = &nostalgia::benchmarking::loader::get_parameters();
         
 		// Passes the allocator to ibmbursts.h for routed dispatching with selective implementation compatabilitiy

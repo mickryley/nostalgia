@@ -11,12 +11,41 @@ namespace nostalgia::visualiser {
         std::array<size_t, 3> fastest_local_indices = { 0, 0, 0 };
         std::array<size_t, 3> fastest_local_allocator_indices = { 0, 0, 0 };
         std::array<size_t, 3> fastest_local_implementation_indices = { 0, 0, 0 };
+
+        size_t fastest_local_index = 0;
+        size_t slowest_local_index = 0;
     }
 
 	void reset_all_indices() {
 		fastest_local_allocator_indices.fill(0);
 		fastest_local_implementation_indices.fill(0);
+        fastest_local_indices.fill(0);
+        fastest_local_index = 0;
+        slowest_local_index = 0;
 	}
+
+    void refresh_all_analysis(BenchmarkResults& results){
+        reset_all_indices();
+
+        find_fastest_local(results);
+        find_fastest_local_allocator(results);
+        find_fastest_local_implementation(results);
+        fastest_local_index = fastest_local_indices[0];
+    }
+
+
+    size_t get_fastest_local_index() {
+        if (fastest_local_index == SIZE_MAX) {
+            return SIZE_MAX;
+        }
+        return fastest_local_index;
+    }
+    size_t get_slowest_local_index() {
+        if (slowest_local_index == SIZE_MAX) {
+            return SIZE_MAX;
+        }
+        return slowest_local_index;
+    }
 
     std::array<size_t, 3>  get_fastest_local_indices(){
         return fastest_local_indices;
@@ -28,6 +57,21 @@ namespace nostalgia::visualiser {
 
     std::array<size_t, 3>  get_fastest_local_implementation_indices(){
         return fastest_local_implementation_indices;
+    }
+
+    // Results are unsorted
+    void find_slowest_local(BenchmarkResults& results) {
+        if (results.local_results.empty()) {
+            slowest_local_index = SIZE_MAX;
+            return;
+        }
+        
+        slowest_local_index = 0;
+        for (size_t i = 1; i < results.local_results.size(); ++i) {
+            if (results.local_results[i].total_time > results.local_results[slowest_local_index].total_time) {
+                slowest_local_index = i;
+            }
+        }
     }
 
     void find_fastest_local(BenchmarkResults& results) {

@@ -89,9 +89,7 @@ namespace nostalgia::visualiser {
 
     void prepare_result_tab(size_t index){
         // Run Analysis
-        find_fastest_local(displayed_benchmark_results[index]);
-        find_fastest_local_allocator(displayed_benchmark_results[index]);
-        find_fastest_local_implementation(displayed_benchmark_results[index]);
+        refresh_all_analysis(displayed_benchmark_results[index]);
 
 
         current_displayed_benchmark_result_index = index;
@@ -321,6 +319,32 @@ namespace nostalgia::visualiser {
             ImGui::Separator();
 			// Top 3 Reference Implementations
 
+            // Slowest += Improvement Potential
+            ImGui::TextWrapped("Performance In Perspective");
+            {
+                size_t slowest_index = get_slowest_local_index();
+                size_t fastest_index = get_fastest_local_index();
+                if (slowest_index == SIZE_MAX || fastest_index == SIZE_MAX) {
+                    ImGui::TextWrapped("No valid fastest vs. slowest result.");
+                } else {
+                    auto& slowest_result = displayed_benchmark_results[current_displayed_benchmark_result_index].local_results[slowest_index];
+                    auto& fastest_result = displayed_benchmark_results[current_displayed_benchmark_result_index].local_results[fastest_index];
+
+                    std::string slow_label = std::format("Slowest: {:.3f} ms - {} - {}", 
+                        slowest_result.total_time, slowest_result.allocator_label, slowest_result.implementation_label);
+                    ImGui::TextWrapped("%s", slow_label.c_str());
+
+                    std::string fast_label = std::format("This is {:.3f} ms slower than the fastest ({:.3f} ms) - {}.", 
+                        (slowest_result.total_time - fastest_result.total_time), fastest_result.total_time, fastest_result.allocator_label);
+                    ImGui::TextWrapped("%s", fast_label.c_str());
+
+                    std::string improvement_potential = std::format("That is a {:.0f}x increase in performance, or a {:.2f}% improvement potential.", 
+                        slowest_result.total_time / fastest_result.total_time, 
+                        (slowest_result.total_time - fastest_result.total_time) / slowest_result.total_time * 100.0);
+
+                    ImGui::TextWrapped("%s", improvement_potential.c_str());
+                }
+            }
 
 			// Overall Performance Summary
             // Allocation  / Total Time Ratio
