@@ -17,8 +17,8 @@ namespace nostalgia::default_malloc {
 		inline void		rewind() noexcept {} 
 
 	private:
-		std::byte*		m_buffer;
-		std::byte*		m_head;
+		// std::byte*		m_buffer;
+		// std::byte*		m_head;
 	};
 
 	static DefaultAllocator g_default_allocator{};

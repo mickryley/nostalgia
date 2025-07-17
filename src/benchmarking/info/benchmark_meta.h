@@ -4,6 +4,8 @@
 #include "benchmark_params.h"
 
 #include "utils/log.h"
+#include "utils/return_codes.h"
+#include "utils/json_wrapped.h"
 
 #include <string>
 #include <functional>
@@ -14,6 +16,11 @@ namespace nostalgia {
         NONE,
         IBM_Bursts
     };
+
+    NLOHMANN_JSON_SERIALIZE_ENUM(BenchmarkID, {
+        { BenchmarkID::NONE, "NONE" },
+        { BenchmarkID::IBM_Bursts, "IBM_Bursts" }
+    });
 
     struct benchmark_type {
         const std::string label;

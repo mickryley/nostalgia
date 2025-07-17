@@ -206,7 +206,10 @@ namespace nostalgia::gui{
 					ImGui::SameLine();
 					std::string label = visualiser::get_benchmark_label(i);
 					if (style::draw_tab_button(label.c_str(), (current_result_tab == static_cast<int>(i)), tab_button_max_size)) 
-						current_result_tab = static_cast<int>(i);
+						{
+							visualiser::prepare_result_tab(i);
+							current_result_tab = static_cast<int>(i);
+						}
 					ImGui::PopID();
 				}
 			}

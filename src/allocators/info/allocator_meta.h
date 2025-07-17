@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utils/json_wrapped.h"
+
 #include "utils/log.h"
 
 namespace nostalgia {
@@ -10,6 +12,15 @@ namespace nostalgia {
         Pool,
         Freelist
     };
+
+    NLOHMANN_JSON_SERIALIZE_ENUM(AllocatorID, {
+        { AllocatorID::NONE, "NONE" },
+        { AllocatorID::Linear, "Linear" },
+        { AllocatorID::Stack, "Stack" },
+        { AllocatorID::Pool, "Pool" },
+        { AllocatorID::Freelist, "Freelist" }
+    
+    });
 
     enum class AllocatorFlags : uint32_t {
         NONE = 0,

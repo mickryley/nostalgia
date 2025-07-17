@@ -1,5 +1,7 @@
 #include "benchmark_visualiser.h"
 
+#include "benchmark_analysis.h"
+
 //#include <nlohmann/json.hpp>
 #include "utils/json_wrapped.h"
 #include <fstream>
@@ -26,7 +28,9 @@ namespace nostalgia::visualiser {
 
 		int current_hovered_index;
 		BenchmarkPlotData* current_hovered_data = nullptr;
+
         std::vector<BenchmarkResults> displayed_benchmark_results;
+        size_t current_displayed_benchmark_result_index = 0; // Replace with get current tab
 
         enum class ResultsHoverTab {
             Overview = 0,
@@ -83,6 +87,16 @@ namespace nostalgia::visualiser {
 		};
 	}
 
+    void prepare_result_tab(size_t index){
+        // Run Analysis
+        find_fastest_local(displayed_benchmark_results[index]);
+        find_fastest_local_allocator(displayed_benchmark_results[index]);
+        find_fastest_local_implementation(displayed_benchmark_results[index]);
+
+
+        current_displayed_benchmark_result_index = index;
+    }
+
     size_t get_total_displayed_benchmark_results() {
 		return displayed_benchmark_results.size();
 	}
@@ -131,11 +145,15 @@ namespace nostalgia::visualiser {
 
             BenchmarkPlotData d;
 
+            d.benchmark_id = entry["benchmark_id"];
 			d.benchmark_label = benchmark_label;
             d.results_source = results_source;
 
+            d.allocator_id = res["allocator_id"];            
             d.allocator_label = res["allocator_label"];
             d.allocator_description = res["allocator_description"];
+
+            d.implementation_id = res["implementation_id"];
             d.implementation_label = res["implementation_label"];
             d.implementation_description = res["implementation_description"];
             d.implementation_parameters = res["implementation_parameters"];
@@ -220,6 +238,10 @@ namespace nostalgia::visualiser {
     }
 
     void draw_benchmark_results_view(size_t index) {
+        if (index != current_displayed_benchmark_result_index) {
+            log::print(LogFlags::Error, "Unprepared Tab Draw Called");
+            prepare_result_tab(index);
+        }
         draw_benchmark_plot(displayed_benchmark_results[index].local_results);
 
     }
@@ -232,25 +254,71 @@ namespace nostalgia::visualiser {
         ImGui::Text("Benchmark Results Overview");
         ImGui::Separator();
         if (current_hovered_data) {
-            ImGui::TextWrapped("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
-            ImGui::TextWrapped("Allocator: %s", current_hovered_data->allocator_label.c_str());
-            ImGui::TextWrapped("Implementation: %s", current_hovered_data->implementation_label.c_str());
-            ImGui::TextWrapped("Total Time: %.3f ms", current_hovered_data->total_time);
-            ImGui::TextWrapped("Allocation Time: %.3f ms", current_hovered_data->allocate_time);
-            ImGui::TextWrapped("Deallocation Time: %.3f ms", current_hovered_data->deallocate_time);
+            ImGui::TextWrapped("%s", displayed_benchmark_results[current_displayed_benchmark_result_index].benchmark_label.c_str());
+            ImGui::Separator();
 
-            // Parameter Info
+            // Top 3 Overall Results
+            ImGui::TextWrapped("Top 3 Overall Results:");
+            {
+                std::array<size_t, 3>  top_allocator_indices = get_fastest_local_indices();
+
+                for (size_t i = 0; i < top_allocator_indices.size(); ++i) {
+                    size_t top_index = top_allocator_indices[i];
+                    if (top_index == SIZE_MAX) {
+                        ImGui::TextWrapped("%zu. No valid result", i + 1);
+                        continue;
+                    }
+
+                    auto& top_result = displayed_benchmark_results[current_displayed_benchmark_result_index].local_results[top_index];
+                    std::string top_label = std::format("{}. {:.3f} ms - {} - {}", 
+                        i+ 1, top_result.total_time, top_result.allocator_label, top_result.implementation_label);
+                    ImGui::TextWrapped("%s", top_label.c_str());
+                }
+            }
+            ImGui::Separator();
             
-
             // Top 3 Local Allocators
+            ImGui::TextWrapped("Top 3 Local Allocators:");
+            {
+                std::array<size_t, 3>  top_allocator_indices = get_fastest_local_allocator_indices();
 
+                for (size_t i = 0; i < top_allocator_indices.size(); ++i) {
+                    size_t top_index = top_allocator_indices[i];
+                    if (top_index == SIZE_MAX) {
+                        ImGui::TextWrapped("%zu. No valid result", i + 1);
+                        continue;
+                    }
 
-            // Top 3 Reference Allocators
+                    auto& top_result = displayed_benchmark_results[current_displayed_benchmark_result_index].local_results[top_index];
+                    std::string top_label = std::format("{}. {} - {:.3f} ms - {}", 
+                        i+ 1, top_result.allocator_label, top_result.total_time, top_result.implementation_label);
+                    ImGui::TextWrapped("%s", top_label.c_str());
+                }
+            }
+            // [TODO] Top 3 Reference Allocators
 
+            ImGui::Separator();
 
-            // Top 3 Implementations
+            // Top 3 Local Implementations
+            ImGui::TextWrapped("Top 3 Local Implementations:");
+            {
+                std::array<size_t, 3>  top_implementations_indices = get_fastest_local_implementation_indices();
 
+                for (size_t i = 0; i < top_implementations_indices.size(); ++i) {
+                    size_t top_index = top_implementations_indices[i];
+                    if (top_index == SIZE_MAX) {
+                        ImGui::TextWrapped("%zu. No valid result", i + 1);
+                        continue;
+                    }
 
+                    auto& top_result = displayed_benchmark_results[current_displayed_benchmark_result_index].local_results[top_index];
+                    std::string top_label = std::format("{}. {} - {:.3f} ms - {}", 
+                        i+ 1, top_result.implementation_label, top_result.total_time, top_result.allocator_label);
+                    ImGui::TextWrapped("%s", top_label.c_str());
+                }
+            }
+
+            ImGui::Separator();
 			// Top 3 Reference Implementations
 
 
@@ -271,14 +339,14 @@ namespace nostalgia::visualiser {
         ImGui::Text("Benchmark Details");
         ImGui::Separator();
         if (current_hovered_data) {
-            ImGui::Text("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
-            ImGui::Text("Description: %s", current_hovered_data->benchmark_description.c_str());
-            ImGui::Text("Parameters: %d Passes, %d Iterations", static_cast<int>(current_hovered_data->passes), static_cast<int>(current_hovered_data->iterations));
-            ImGui::Text("Allocator: %s", current_hovered_data->allocator_label.c_str());
-            ImGui::Text("Allocator Details: %s", current_hovered_data->allocator_description.c_str());
-            ImGui::Text("Implementation: %s", current_hovered_data->implementation_label.c_str());
-            ImGui::Text("Implementation Details: %s", current_hovered_data->implementation_description.c_str());
-            ImGui::Text("Implementation Parameters: %s", current_hovered_data->implementation_parameters.c_str());
+            ImGui::TextWrapped("Benchmark: %s", current_hovered_data->benchmark_label.c_str());
+            ImGui::TextWrapped("Description: %s", current_hovered_data->benchmark_description.c_str());
+            ImGui::TextWrapped("Parameters: %d Passes, %d Iterations", static_cast<int>(current_hovered_data->passes), static_cast<int>(current_hovered_data->iterations));
+            ImGui::TextWrapped("Allocator: %s", current_hovered_data->allocator_label.c_str());
+            ImGui::TextWrapped("Allocator Details: %s", current_hovered_data->allocator_description.c_str());
+            ImGui::TextWrapped("Implementation: %s", current_hovered_data->implementation_label.c_str());
+            ImGui::TextWrapped("Implementation Details: %s", current_hovered_data->implementation_description.c_str());
+            ImGui::TextWrapped("Implementation Parameters: %s", current_hovered_data->implementation_parameters.c_str());
         } else {
             ImGui::Text("No benchmark data hovered.");
 		}
@@ -317,23 +385,25 @@ namespace nostalgia::visualiser {
 
         ImGui::Spacing();
 
-        switch (current_hovered_tab) {
-            case ResultsHoverTab::Overview:
-                draw_benchmark_results_hover_overview();
-                break;
-            case ResultsHoverTab::Details:
-                draw_benchmark_results_hover_details();
-                break;
-            case ResultsHoverTab::View:
-                draw_benchmark_results_hover_view();
-                break;
-            case ResultsHoverTab::Export:
-                draw_benchmark_results_hover_export();
-                break;
-            default:
-                ImGui::Text("Unknown tab selected.");
-                break;
-		}
+        gui::style::with_child_wrapper("Scrollable Result Details", expandable_size, []() {
+            switch (current_hovered_tab) {
+                case ResultsHoverTab::Overview:
+                    draw_benchmark_results_hover_overview();
+                    break;
+                case ResultsHoverTab::Details:
+                    draw_benchmark_results_hover_details();
+                    break;
+                case ResultsHoverTab::View:
+                    draw_benchmark_results_hover_view();
+                    break;
+                case ResultsHoverTab::Export:
+                    draw_benchmark_results_hover_export();
+                    break;
+                default:
+                    ImGui::Text("Unknown tab selected.");
+                    break;
+            }
+        }, gui::style::BorderStyle::NONE, gui::style::SpacingStyle::NONE);
     }
 
     ImVec4 color_mix(const ImVec4& a, const ImVec4& b, float factor = 0.5f, float brightness = 1.0f) {

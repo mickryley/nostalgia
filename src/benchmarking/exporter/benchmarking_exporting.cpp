@@ -26,6 +26,7 @@ namespace nostalgia::benchmarking::exporting {
 		json j;
 		for (const auto& result : results) {
 			j.push_back({
+				{ "benchmark_id", result.benchmark_id },
 				{ "benchmark_label", benchmark::atlas.at(result.benchmark_id).label },
 				{ "results_source", source_label },
 				{"compiler", get_compiler_name()},
@@ -40,15 +41,19 @@ namespace nostalgia::benchmarking::exporting {
 					{"implementation_parameters", result.implementation.parameters},
 
 					// Implementation Type from Implementation Details ID
+					{"implementation_id", result.implementation.id},
 					{"implementation_label", implementation::atlas.at(result.implementation.id).label},
 					{"implementation_description", implementation::atlas.at(result.implementation.id).desc},
 
 					// Allocator Type from Implementation Details ID
+					{"allocator_id", allocator::atlas.at(result.implementation.allocator).id},
+					{"allocator_description", allocator::atlas.at(result.implementation.allocator).description},
 					{"allocator_label", allocator::atlas.at(result.implementation.allocator).label},
 					{"allocator_description", allocator::atlas.at(result.implementation.allocator).description},
 
 					// Becnhmark Type from Benchmark ID
 					//{"benchmark_label", benchmark::atlas.at(result.benchmark_id).label},
+
 					{"benchmark_description", benchmark::atlas.at(result.benchmark_id).description},
 
 				}}

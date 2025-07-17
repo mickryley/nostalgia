@@ -4,6 +4,10 @@
 #include <unordered_map>
 #include <string>
 
+#include "allocators/info/allocator_meta.h"
+#include "implementations/info/implementation_meta.h"
+#include "benchmarking/info/benchmark_meta.h"
+
 namespace nostalgia::visualiser {
 
     enum class ImportMapKey {
@@ -16,11 +20,15 @@ namespace nostalgia::visualiser {
 		// Can change this to use the ID lookup but just using the string for now
 		std::string results_source;
 
+		nostalgia::BenchmarkID benchmark_id;
 		std::string benchmark_label;
 		std::string benchmark_description; 
-		//AllocatorID allocator_id;
+
+		nostalgia::AllocatorID allocator_id;
 		std::string allocator_label;
 		std::string allocator_description;
+
+		nostalgia::ImplementationID implementation_id;
 		std::string implementation_label;
 		std::string implementation_description;
 		std::string implementation_parameters;
@@ -48,6 +56,8 @@ namespace nostalgia::visualiser {
 	void load_reference_benchmark_results(std::string benchmark_label);
 	void load_local_benchmark_results(std::string path);
 	void draw_benchmark_results_hover();
+
+	void prepare_result_tab(size_t index);
 
 	void draw_benchmark_results_view(size_t index);
 	void draw_benchmark_plot();
