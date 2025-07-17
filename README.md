@@ -15,7 +15,11 @@ I assure you the reality is a lot easier to wrangle, and a spoonful of Nostalgia
 
 ## Quick Start & Roadmap
 
-- Windows (MSVC) and MacOS (Clang) Releases are available. 
+- Precompiled Windows (MSVC) and MacOS (Clang) Releases are available.
+  >
+[![Windows](https://img.shields.io/badge/Windows-v0.0.1-0078D6?logo=windows&logoColor=white&style=for-the-badge)](https://github.com/mickryley/nostalgia/releases/download/v0.0.1/nostalgia-windows-v0.0.1.zip)
+[![macOS](https://img.shields.io/badge/macOS-v0.0.1-000000?logo=apple&logoColor=white&style=for-the-badge)](https://github.com/mickryley/nostalgia/releases/download/v0.0.1/nostalgia-mac-v0.0.1.zip)
+
 
 <details><summary>Compiling Instructions</summary>
 
@@ -41,7 +45,7 @@ I assure you the reality is a lot easier to wrangle, and a spoonful of Nostalgia
 
 nostalgia is an ongoing side project I’m constantly expanding, for the full scope of what is included and what’s coming next you can check the Notion roadmap.
 
-[![View Roadmap](https://img.shields.io/badge/View-Roadmap-yellow?style=for-the-badge)](https://www.mickryley.com/nostalgia)
+[![View Roadmap](https://img.shields.io/badge/Roadmap-View-yellow?style=for-the-badge&logo=notion)](https://www.mickryley.com/nostalgia)
 
 
 What started as a library of custom allocator methods, I started rewriting into a benchmark tool for more thorough comparison and communication of the subtleties between implementations. 
