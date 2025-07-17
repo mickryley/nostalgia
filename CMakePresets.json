@@ -26,6 +26,9 @@
       "environment": {
         "CC": "/opt/homebrew/opt/llvm/bin/clang",
         "CXX": "/opt/homebrew/opt/llvm/bin/clang++"
+      },
+      "cacheVariables": {
+        "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${sourceDir}/build/${presetName}/Release"
       }
     },
 

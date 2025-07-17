@@ -36,18 +36,23 @@ jobs:
           brew update
           brew install llvm
           echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
-
-      - name: Show Vulkan SDK env (Windows)
-        if: runner.os == 'Windows'
-        run: |
-            echo "VULKAN_SDK = $Env:VULKAN_SDK"
-            if (Test-Path $Env:VULKAN_SDK) { ls $Env:VULKAN_SDK }
-            echo "VULKAN_SDK=$Env:VULKAN_SDK" >> $GITHUB_ENV
-
+          
       - name: Install Vulkan SDK (macOS)
         if: runner.os == 'macOS'
         run: |
           brew install vulkan-headers vulkan-loader molten-vk
+
+      - name: Find Vulkan SDK (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if (Test-Path "C:\VulkanSDK") {
+            $dir = Get-ChildItem -Directory "C:\VulkanSDK" | Sort-Object Name -Descending | Select-Object -First 1
+            echo "Found VulkanSDK: $($dir.FullName)"
+            echo "VULKAN_SDK=$($dir.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          } else {
+            Write-Host "No VulkanSDK found!"
+          }
 
       - name: Build using CMake preset
         run: |
