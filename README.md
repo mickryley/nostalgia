@@ -57,6 +57,8 @@ I intend to eventually bundle nostalgia with realtime visualisation tools, as pe
 
 Memory Allocation is often focused on in isolation as a discussion of allocator types and their use-cases, which is vitally important, but the allocation / allocator types themselves are only one of three pillars we need to become fluent in to make the right decisions for memory allocation in any individual system.
 
+![Screenshot](.github/assets/v0.0.1_ResultsOverview.png)
+
 ### Memory Allocation 201
 
 To provide some common ground understanding, here is a simplified visualisation of how memory allocation works from the hardware up.
@@ -146,6 +148,8 @@ Furthermore the realities of container allocation must also be considered, a cus
 Comparing allocator types isn’t purely a battle of performance, its a question of feature set. 
 For example an allocator that allocates in a stack, and only ever deallocates the entire stack in one go will intuitively perform much better than a mixed-size allocator for objects of varying lifetimes that require constant coalescing. That classic semi-trailer vs F1 car problem.
 
+![Screenshot](.github/assets/v0.0.1_ResultsByAllocator.png)
+
 > Nostalgia prioritises the following allocator types…
 > 
 
@@ -171,6 +175,8 @@ It is, of course, worth mentioning that there are always subtleties within the d
 The third pillar of Custom Memory Allocator design is considering how your team is realistically going to use the thing!
 
 If you’re working on a solo project or in a small team from day 1 this mightn’t be an immediate concern, but with pre-existing codebases or larger / siloed departments the fact is that your choice of implementation will severely impact what is required of everyone else working on your codebase.
+
+![Screenshot](.github/assets/v0.0.1_ParameterInputOnly.png)
 
 ### Realistically Required Rewriting (Preexisting Code)
 
