@@ -13,6 +13,42 @@ I assure you the reality is a lot easier to wrangle, and a spoonful of Nostalgia
 
 ---
 
+## Quick Start & Roadmap
+
+- Windows (MSVC) and MacOS (Clang) Releases are available. 
+
+<details><summary>Compiling Instructions</summary>
+
+- Requirements: Vulkan SDK
+- CMake will fetch Dear ImGui, ImPlot, and json (nlohman) - while SDL3 comes included with nostalgia.
+- Debug presets are included but benchmarking should always be run in release mode.
+- Windows CMake Preset:
+    
+    ```cpp
+    cmake --preset windows-msvc
+    cmake --build --preset build-release-msvc
+    ```
+    
+- MacOs CMake Preset:
+    
+    ```cpp
+    cmake --preset macos-clang
+    cmake --build --preset build-release-macos
+    ```
+    
+
+</details>
+
+nostalgia is an ongoing side project I’m constantly expanding, for the full scope of what is included and what’s coming next you can check the Notion roadmap.
+
+[![View Roadmap](https://img.shields.io/badge/View-Roadmap-yellow?style=for-the-badge)](https://www.mickryley.com/nostalgia)
+
+
+What started as a library of custom allocator methods, I started rewriting into a benchmark tool for more thorough comparison and communication of the subtleties between implementations. 
+I intend to eventually bundle nostalgia with realtime visualisation tools, as per the roadmap.
+
+---
+
 ## Implementation VS Allocation…
 
 Memory Allocation is often focused on in isolation as a discussion of allocator types and their use-cases, which is vitally important, but the allocation / allocator types themselves are only one of three pillars we need to become fluent in to make the right decisions for memory allocation in any individual system.
