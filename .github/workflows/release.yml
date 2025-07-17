@@ -1,0 +1,68 @@
+name: Build and Release on Tag
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - 'release-latest'
+
+jobs:
+  build-release:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            preset: build-release-msvc
+            zipname: nostalgia-win
+          - os: macos-latest
+            preset: build-release-macos
+            zipname: nostalgia-mac
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up CMake
+        uses: lukka/get-cmake@v3
+        
+      - name: Install Homebrew LLVM (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install llvm
+          echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
+          
+      - name: Install Vulkan SDK (Windows)
+        if: runner.os == 'Windows'
+        run: choco install vulkan-sdk
+
+      - name: Install Vulkan SDK (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install vulkan-headers vulkan-loader molten-vk
+
+      - name: Build using CMake preset
+        run: |
+          cmake --preset ${{ matrix.preset }}
+          cmake --build --preset ${{ matrix.preset }}
+
+      - name: Zip build output
+        run: |
+          cd build/${{ matrix.preset }}
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            powershell Compress-Archive -Path * -DestinationPath ../../${{ matrix.zipname }}-${{ github.ref_name }}.zip
+          else
+            zip -r ../../${{ matrix.zipname }}-${{ github.ref_name }}.zip .
+          fi
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            build/${{ matrix.zipname }}-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
