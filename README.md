@@ -47,11 +47,30 @@ nostalgia is an ongoing side project I’m constantly expanding, for the full sc
 
 [![View Roadmap](https://img.shields.io/badge/Roadmap-View-yellow?style=for-the-badge&logo=notion)](https://www.mickryley.com/nostalgia)
 
+<details><summary>⚠️ Note on Code Structure</summary>
+
+<br>
+
+> This project makes **heavy use of macros and `.inl` includes** to reduce boilerplate and enforce consistency across a wide set of allocator implementations.  
+>
+> While this can reduce conventional readability, it's intentional - designed to facilitate **accurate benchmarking of different templating, override strategies, and polymorphic implementations** without duplicating logic or introducing structural bias.
+>
+> In short: the code structure serves the benchmarks, not the other way around.
+
+</details>
 
 What started as a library of custom allocator methods, I started rewriting into a benchmark tool for more thorough comparison and communication of the subtleties between implementations. 
 I intend to eventually bundle nostalgia with realtime visualisation tools, as per the roadmap.
 
 ---
+
+## 🧠 The Three Pillars of Memory Allocation
+
+1. **Allocator Type** - how memory is managed internally (linear, pool, stack…)
+2. **Implementation** - how the allocator is exposed and accessed in code (override, template…)
+3. **Usability** - how easily others can use it, migrate to it, or avoid misusing it
+
+Nostalgia explores all three — not just as abstract ideas, but through measurable, profiled, and documented examples.
 
 ## Implementation VS Allocation…
 
@@ -89,7 +108,7 @@ We therefore need to understand the “Virtual Memory” that our code *actually
 So now you can probably deduce what a page fault is, it’s not an error, its a necessary step in memory management that occurs when the data we wish to access isn’t already cached in physical memory. 
 When we try to access that data through the Virtual Table, it returns a cache miss (a page fault exception), and we must then take the time to load it into the RAM.
 
-Why this is a very slow problem is that these operations are actually handled by the **kernel**, which necessitates switching the CPU from user mode into kernel mode **every tim**e we need to swap pages. The details *why* aren’t particularly worth elaborating on here - suffice to say the Virtual Memory system is actually translated by a physical MMU the CPU communicates through, and there’s no getting away from that on a hardware level. 
+Why this is a costly problem is that these operations are actually handled by the **kernel**, which necessitates switching the CPU from user mode into kernel mode **every tim**e we need to swap pages. The details *why* aren’t particularly worth elaborating on here - suffice to say the Virtual Memory system is actually translated by a physical MMU the CPU communicates through, and there’s no getting away from that on a hardware level. 
 
 </details>
 <details><summary>The Custom Solution!</summary>
@@ -274,7 +293,7 @@ So we will need to build our own memory profiling tools, the benefits here are n
 
 ### Fail Gracefully
 
-Importantly, when messing with memory, hope for the best and expect the worse.
+Importantly, when messing with memory, hope for the best and expect the worst.
 
 The default allocators will always be slower because they can handle anything that is thrown at them.
 Therefore your custom allocator should always be checking (preferably asserting) that it is receiving exactly what it expects, and if it doesn’t - then it will always be safe to fail-forward to the defaults. This is actually a key built-in feature of the std::pmr allocators that help make them such a great starting point for anyone looking to start mastering memory.
