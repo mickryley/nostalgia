@@ -50,14 +50,20 @@ jobs:
           cmake --preset ${{ matrix.config_preset }}
           cmake --build --preset ${{ matrix.build_preset }}
 
-      - name: Zip build output
+      - name: Zip build output (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cd build/${{ matrix.config_preset }}\Release
+          Compress-Archive -Path * -DestinationPath ../../${{ matrix.zipname }}-${{ github.ref_name }}.zip
+
+      - name: Zip build output (macOS/Linux)
+        if: runner.os != 'Windows'
+        shell: bash
         run: |
           cd build/${{ matrix.config_preset }}/Release
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            powershell Compress-Archive -Path * -DestinationPath ../../${{ matrix.zipname }}-${{ github.ref_name }}.zip
-          else
-            zip -r ../../${{ matrix.zipname }}-${{ github.ref_name }}.zip .
-          fi
+          zip -r ../../${{ matrix.zipname }}-${{ github.ref_name }}.zip .
+
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
