@@ -35,9 +35,9 @@ jobs:
           brew install llvm
           echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
           
-      - name: Install Vulkan SDK (Windows)
-        if: runner.os == 'Windows'
-        run: choco install vulkan-sdk
+      #- name: Install Vulkan SDK (Windows)
+      #  if: runner.os == 'Windows'
+      #  run: choco install vulkan-sdk
 
       - name: Install Vulkan SDK (macOS)
         if: runner.os == 'macOS'
