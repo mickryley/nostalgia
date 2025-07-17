@@ -43,7 +43,7 @@ jobs:
           brew install vulkan-headers vulkan-loader molten-vk
 
       - name: Install Vulkan SDK
-        uses: nazar-pc/install-vulkan-sdk@v1
+        uses: jakoch/install-vulkan-sdk-action@v1
 
       - name: Build using CMake preset
         run: |
