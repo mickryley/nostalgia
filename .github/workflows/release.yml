@@ -12,10 +12,12 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            preset: build-release-msvc
+            config_preset: windows-msvc
+            build_preset: build-release-msvc
             zipname: nostalgia-win
           - os: macos-latest
-            preset: build-release-macos
+            config_preset: macos-clang
+            build_preset: build-release-macos
             zipname: nostalgia-mac
       fail-fast: false
 
@@ -46,12 +48,12 @@ jobs:
 
       - name: Build using CMake preset
         run: |
-          cmake --preset ${{ matrix.preset }}
-          cmake --build --preset ${{ matrix.preset }}
+          cmake --preset ${{ matrix.config_preset }}
+          cmake --build --preset ${{ matrix.build_preset }}
 
       - name: Zip build output
         run: |
-          cd build/${{ matrix.preset }}
+          cd build/${{ matrix.config_preset }}/Release
           if [ "${{ runner.os }}" = "Windows" ]; then
             powershell Compress-Archive -Path * -DestinationPath ../../${{ matrix.zipname }}-${{ github.ref_name }}.zip
           else
