@@ -42,17 +42,8 @@ jobs:
         run: |
           brew install vulkan-headers vulkan-loader molten-vk
 
-      - name: Find Vulkan SDK (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          if (Test-Path "C:\VulkanSDK") {
-            $dir = Get-ChildItem -Directory "C:\VulkanSDK" | Sort-Object Name -Descending | Select-Object -First 1
-            echo "Found VulkanSDK: $($dir.FullName)"
-            echo "VULKAN_SDK=$($dir.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          } else {
-            Write-Host "No VulkanSDK found!"
-          }
+      - name: Install Vulkan SDK
+        uses: nazar-pc/install-vulkan-sdk@v1
 
       - name: Build using CMake preset
         run: |
