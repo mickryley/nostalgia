@@ -1,4 +1,4 @@
-#include "ibmbursts.h" 
+#include "ibmbursts_entry_point.h" 
 #include "utils/shared_benchmark_includes.inl"
 
 struct ImplementationDetails {
@@ -13,30 +13,30 @@ namespace nostalgia::benchmarking::IBMBursts {
 #include "benchmarking/ibmbursts/ibmbursts_forward_dec.inl"
 #include "allocators/defines/malloc_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts_object_switch.inl"
-#include "benchmarking/ibmbursts/ibmbursts.inl"
+#include "benchmarking/ibmbursts/ibmbursts_concrete.inl"
 	}
 	namespace linear {
 #include "benchmarking/ibmbursts/ibmbursts_forward_dec.inl"
 #include "allocators/defines/linear_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts_object_switch.inl"
-#include "benchmarking/ibmbursts/ibmbursts.inl"
+#include "benchmarking/ibmbursts/ibmbursts_concrete.inl"
 	}
 	namespace stack {
 #include "benchmarking/ibmbursts/ibmbursts_forward_dec.inl"
 #include "allocators/defines/stack_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts_object_switch.inl"
-#include "benchmarking/ibmbursts/ibmbursts.inl"
+#include "benchmarking/ibmbursts/ibmbursts_concrete.inl"
 	}
 	namespace pool {
 #include "benchmarking/ibmbursts/ibmbursts_forward_dec.inl"
 #include "allocators/defines/pool_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts_object_switch.inl"
-#include "benchmarking/ibmbursts/ibmbursts.inl"
+#include "benchmarking/ibmbursts/ibmbursts_concrete.inl"
 	}
 	namespace freelist {
 #include "benchmarking/ibmbursts/ibmbursts_forward_dec.inl"
 #include "allocators/defines/freelist_defines.inl"
 #include "benchmarking/ibmbursts/ibmbursts_object_switch.inl"
-#include "benchmarking/ibmbursts/ibmbursts.inl"
+#include "benchmarking/ibmbursts/ibmbursts_concrete.inl"
 	}
 }

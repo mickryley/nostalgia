@@ -8,7 +8,7 @@
 #include "allocators/info/allocator_atlas.h"
 
 #include "implementations/info/implementation_atlas.h"
-#include "ibmbursts.h"
+#include "ibmbursts_entry_point.h"
 
 
 #include "utils/log.h"
