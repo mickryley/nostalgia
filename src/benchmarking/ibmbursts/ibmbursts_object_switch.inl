@@ -1,58 +1,33 @@
 
-// Templated
-    // ~ Reverse Deallocation
-run_templated_globalAccess_pointerContainer_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_RewindDeallocation);
-run_templated_globalAccess_pointerBlock_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::Templated_GlobalAccess_PointerBlock_RewindDeallocation);
-run_templated_globalAccess_pointerVector_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::Templated_GlobalAccess_PointerVector_RewindDeallocation);
+// Define the object types and their parameters
+void run_ibmbursts_benchmark(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index) {
+	log::print("Running IBM Bursts benchmark with allocator: {} and parameters: iterations={}, passes={}, object_id_index={}",
+		allocator.label, iterations, passes, object_id_index);
 
+	// ObjectID index is used to select the object type for the benchmark
+	switch(static_cast<nostalgia::ObjectID>(object_id_index)) {
+		case nostalgia::ObjectID::Vector2D:
+#define PARAMETERISED_OBJECT_BASIC OBJECT_BASIC_VECTOR2D
+#define PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS_VECTOR2D
+#define PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS_VECTOR2D
+#define CONSTRUCTOR_PARAMETERS 1.0f, 2.0f
 
-// Global access
-    // ~ Forward Deallocation
-run_objectOverride_pointerContainer_forwardDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation);
-    // ~ Reverse Deallocation
-run_objectOverride_pointerContainer_reverseDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation);
-    // ~~ Rewind
-run_objectOverride_globalAccess_pointerContainer_rewindDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_RewindDeallocation);
-run_objectOverride_globalAccess_pointerVector_rewindDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerVector_RewindDeallocation);
+#include "ibmbursts_object_pass.inl"
+#include "benchmarking/defines/_clear_object_switch.inl"
+			break;
+		case nostalgia::ObjectID::Vector3D:
+#define PARAMETERISED_OBJECT_BASIC OBJECT_BASIC_VECTOR3D
+#define PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS_VECTOR3D
+#define PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS_VECTOR3D
+#define CONSTRUCTOR_PARAMETERS 1.0f, 2.0f, 3.0f
 
-// Singleton access
-    // ~ Forward Deallocation
-run_objectOverride_pointerContainer_forwardDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerContainer_ForwardDeallocation);
-    // ~ Reverse Deallocation
-run_objectOverride_pointerContainer_reverseDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerContainer_ReverseDeallocation);
-    // ~~ Rewind
-run_objectOverride_singletonAccess_pointerContainer_rewindDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerContainer_RewindDeallocation);
-run_objectOverride_cachedSingletonAccess_pointerContainer_rewindDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::ObjectOverride_CachedSingletonAccess_PointerContainer_RewindDeallocation);
-run_objectOverride_singletonAccess_pointerVector_rewindDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerVector_RewindDeallocation);
-run_objectOverride_cachedSingletonAccess_pointerVector_rewindDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::ObjectOverride_CachedSingletonAccess_PointerVector_RewindDeallocation);
-
-// Malloc
-run_malloc_pointerContainer_forwardDealloc<PARAMETERISED_OBJECT_BASIC>(allocator, iterations, passes, object_id_index);
-run_malloc_pointerContainer_reverseDealloc<PARAMETERISED_OBJECT_BASIC>(allocator, iterations, passes, object_id_index);
-run_malloc_pointerVector_reverseDealloc<PARAMETERISED_OBJECT_BASIC>(allocator, iterations, passes, object_id_index);
+#include "ibmbursts_object_pass.inl"
+#include "benchmarking/defines/_clear_object_switch.inl"
+			break;
+		default:
+		// Unused, but needed to avoid compilation errors
+#define CONSTRUCTOR_PARAMETERS 
+			log::print(LogFlags::Error, "Invalid ObjectID index: {}", object_id_index);
+			return;
+	}
+}
