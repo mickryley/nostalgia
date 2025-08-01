@@ -10,13 +10,25 @@ namespace nostalgia::implementation {
 				AllocatorFlags::DEALLOC_REWIND
 				}
 			},
+			{ nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_ForwardDeallocation, nostalgia::ImplementationType{
+				"Templated Global Access Pointer Container Forward Deallocation",
+				"Templated (Global Referencing to Allocator) [Containers of Pointers] [Forward Deallocation]",
+				AllocatorFlags::DEALLOC_FORWARD
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_ReverseDeallocation, nostalgia::ImplementationType{
+				"Templated Global Access Pointer Container Reverse Deallocation",
+				"Templated (Global Referencing to Allocator) [Containers of Pointers] [Reverse Deallocation]",
+				AllocatorFlags::DEALLOC_REVERSE
+				}
+			},
 			{ nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_RewindDeallocation, nostalgia::ImplementationType{
 				"Templated Global Access Pointer Container Rewind Deallocation",
 				"Templated (Global Referencing to Allocator) [Containers of Pointers] [Rewind Deallocation]",
 				AllocatorFlags::DEALLOC_REWIND
 				}
 			},
-			
+
 			{ nostalgia::ImplementationID::Templated_GlobalAccess_PointerVector_ForwardDeallocation, nostalgia::ImplementationType{
 				"Templated Global Access Pointer Vector Forward Deallocation",
 				"Templated (Global Referencing to Allocator) [std Vector of Pointers] [Forward Deallocation]",

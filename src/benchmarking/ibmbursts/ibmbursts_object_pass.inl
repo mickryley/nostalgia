@@ -1,12 +1,20 @@
 
 // Templated
     // ~ Reverse Deallocation
-run_templated_globalAccess_pointerContainer_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
-    allocator, iterations, passes, object_id_index,
-    nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_RewindDeallocation);
 run_templated_globalAccess_pointerBlock_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::Templated_GlobalAccess_PointerBlock_RewindDeallocation);
+
+run_templated_globalAccess_pointerContainer_forwardDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_ForwardDeallocation);
+run_templated_globalAccess_pointerContainer_reverseDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_ReverseDeallocation);
+run_templated_globalAccess_pointerContainer_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_RewindDeallocation);
+
 
 run_templated_globalAccess_pointerVector_forwardDealloc<PARAMETERISED_OBJECT_BASIC>(
     allocator, iterations, passes, object_id_index,

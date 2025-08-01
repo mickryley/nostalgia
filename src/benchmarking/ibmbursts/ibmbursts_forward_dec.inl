@@ -3,6 +3,14 @@ template <typename object_type>
 void run_templated_globalAccess_pointerBlock_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id);
 
 template <typename object_type>
+void run_templated_globalAccess_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id);
+
+template <typename object_type>
+void run_templated_globalAccess_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id);
+	
+template <typename object_type>
 void run_templated_globalAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id);
 
 template <typename object_type>
