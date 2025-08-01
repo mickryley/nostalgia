@@ -14,6 +14,14 @@ void run_objectOverride_pointerContainer_forwardDealloc(nostalgia::AllocatorType
 
 template <typename object_type>
 void run_objectOverride_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id);
+
+template <typename object_type>
+void run_objectOverride_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id);
+
+template <typename object_type>
+void run_objectOverride_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id);
                                                              
 // === Object Override (Global Access Only) ===
 template <typename object_type>

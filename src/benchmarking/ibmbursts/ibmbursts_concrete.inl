@@ -167,6 +167,78 @@ void run_objectOverride_pointerContainer_reverseDealloc(nostalgia::AllocatorType
 	EXPORT_BENCHMARK_RESULTS();
 }
 
+template <typename object_type>
+void run_objectOverride_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id) {
+
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
+	CHECK_ALLOCATOR_COMPATABILITY();
+	PRINT_ALLOCATOR_COMPATABILITY();
+	BEGIN_ALL_TIMERS();
+
+	for (size_t i = 0; i < passes; i++)
+	{
+		START_ALLOC_TIMERS();
+
+		std::vector<object_type*> vec;
+		vec.reserve(iterations);
+
+		for (size_t j = 0; j < iterations; j++) {
+			vec.emplace_back(new object_type(CONSTRUCTOR_PARAMETERS)); // [ALLOC SPECIFIC]
+		}
+
+		PAUSE_ALLOC_TIMERS();
+		START_DEALLOC_TIMERS();
+
+		for (size_t k = 0; k < iterations; k++) {
+			delete vec[k];
+		}
+
+		vec.clear();
+
+		PAUSE_DEALLOC_TIMERS();
+	}
+
+	STOP_ALL_TIMERS();
+	PRINT_ALL_TIMERS();
+	EXPORT_BENCHMARK_RESULTS();
+}
+template <typename object_type>
+void run_objectOverride_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id) {
+
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
+	CHECK_ALLOCATOR_COMPATABILITY();
+	PRINT_ALLOCATOR_COMPATABILITY();
+	BEGIN_ALL_TIMERS();
+
+	for (size_t i = 0; i < passes; i++)
+	{
+		START_ALLOC_TIMERS();
+
+		std::vector<object_type*> vec;
+		vec.reserve(iterations);
+
+		for (size_t j = 0; j < iterations; j++) {
+			vec.emplace_back(new object_type(CONSTRUCTOR_PARAMETERS)); // [ALLOC SPECIFIC]
+		}
+
+		PAUSE_ALLOC_TIMERS();
+		START_DEALLOC_TIMERS();
+
+		for (size_t k = iterations; k-- > 0;) {
+			delete vec[k];
+		}
+		
+		vec.clear();
+		PAUSE_DEALLOC_TIMERS();
+	}
+
+	STOP_ALL_TIMERS();
+	PRINT_ALL_TIMERS();
+	EXPORT_BENCHMARK_RESULTS();
+}
+
 // === Object Override (Global Access Only) ===
 template <typename object_type>
 void run_objectOverride_globalAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,

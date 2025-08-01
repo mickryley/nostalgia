@@ -18,20 +18,25 @@ namespace nostalgia {
 		Templated_GlobalAccess_PointerContainer_RewindDeallocation,
 		Templated_GlobalAccess_PointerVector_RewindDeallocation,
 
-
 		ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation,
 		ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation,
+
+		ObjectOverride_GlobalAccess_PointerVector_ForwardDeallocation,
+		ObjectOverride_GlobalAccess_PointerVector_ReverseDeallocation,
 
 		ObjectOverride_GlobalAccess_PointerContainer_RewindDeallocation,
 		ObjectOverride_GlobalAccess_PointerVector_RewindDeallocation,
 
-
 		ObjectOverride_SingletonAccess_PointerContainer_ForwardDeallocation,
 		ObjectOverride_SingletonAccess_PointerContainer_ReverseDeallocation,
-
 		ObjectOverride_SingletonAccess_PointerContainer_RewindDeallocation,
+
 		ObjectOverride_CachedSingletonAccess_PointerContainer_RewindDeallocation,
+
+		ObjectOverride_SingletonAccess_PointerVector_ForwardDeallocation, // In Progress
+		ObjectOverride_SingletonAccess_PointerVector_ReverseDeallocation, // In Progress
 		ObjectOverride_SingletonAccess_PointerVector_RewindDeallocation,
+
 		ObjectOverride_CachedSingletonAccess_PointerVector_RewindDeallocation,
 
 		NoAllocator_Malloc_PointerContainer_ForwardDeallocation,
@@ -48,15 +53,22 @@ namespace nostalgia {
 		{ ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation, "ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation" },
 		{ ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation, "ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation" },
 
+		{ ImplementationID::ObjectOverride_GlobalAccess_PointerVector_ForwardDeallocation, "ObjectOverride_GlobalAccess_PointerVector_ForwardDeallocation" },
+		{ ImplementationID::ObjectOverride_GlobalAccess_PointerVector_ReverseDeallocation, "ObjectOverride_GlobalAccess_PointerVector_ReverseDeallocation" },
+
 		{ ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_RewindDeallocation, "ObjectOverride_GlobalAccess_PointerContainer_RewindDeallocation" },
 		{ ImplementationID::ObjectOverride_GlobalAccess_PointerVector_RewindDeallocation, "ObjectOverride_GlobalAccess_PointerVector_RewindDeallocation" },
 
 		{ ImplementationID::ObjectOverride_SingletonAccess_PointerContainer_ForwardDeallocation, "ObjectOverride_SingletonAccess_PointerContainer_ForwardDeallocation" },
 		{ ImplementationID::ObjectOverride_SingletonAccess_PointerContainer_ReverseDeallocation, "ObjectOverride_SingletonAccess_PointerContainer_ReverseDeallocation" },
-
 		{ ImplementationID::ObjectOverride_SingletonAccess_PointerContainer_RewindDeallocation, "ObjectOverride_SingletonAccess_PointerContainer_RewindDeallocation" },
+
 		{ ImplementationID::ObjectOverride_CachedSingletonAccess_PointerContainer_RewindDeallocation, "ObjectOverride_CachedSingletonAccess_PointerContainer_RewindDeallocation" },
+		
+		{ ImplementationID::ObjectOverride_SingletonAccess_PointerVector_ForwardDeallocation, "ObjectOverride_SingletonAccess_PointerVector_ForwardDeallocation" },
+		{ ImplementationID::ObjectOverride_SingletonAccess_PointerVector_ReverseDeallocation, "ObjectOverride_SingletonAccess_PointerVector_ReverseDeallocation" },
 		{ ImplementationID::ObjectOverride_SingletonAccess_PointerVector_RewindDeallocation, "ObjectOverride_SingletonAccess_PointerVector_RewindDeallocation" },
+		
 		{ ImplementationID::ObjectOverride_CachedSingletonAccess_PointerVector_RewindDeallocation, "ObjectOverride_CachedSingletonAccess_PointerVector_RewindDeallocation" },
 
 		{ ImplementationID::NoAllocator_Malloc_PointerContainer_ForwardDeallocation, "NoAllocator_Malloc_PointerContainer_ForwardDeallocation" },
