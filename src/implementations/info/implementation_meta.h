@@ -16,6 +16,9 @@ namespace nostalgia {
 
 		Templated_GlobalAccess_PointerBlock_RewindDeallocation,
 		Templated_GlobalAccess_PointerContainer_RewindDeallocation,
+
+		Templated_GlobalAccess_PointerVector_ForwardDeallocation,
+		Templated_GlobalAccess_PointerVector_ReverseDeallocation,
 		Templated_GlobalAccess_PointerVector_RewindDeallocation,
 
 		ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation,
@@ -48,6 +51,9 @@ namespace nostalgia {
 		{ ImplementationID::NONE, "NONE" },
 		{ ImplementationID::Templated_GlobalAccess_PointerBlock_RewindDeallocation, "Templated_GlobalAccess_PointerBlock_RewindDeallocation" },
 		{ ImplementationID::Templated_GlobalAccess_PointerContainer_RewindDeallocation, "Templated_GlobalAccess_PointerContainer_RewindDeallocation" },
+
+		{ ImplementationID::Templated_GlobalAccess_PointerVector_ForwardDeallocation, "Templated_GlobalAccess_PointerVector_ForwardDeallocation" },
+		{ ImplementationID::Templated_GlobalAccess_PointerVector_ReverseDeallocation, "Templated_GlobalAccess_PointerVector_ReverseDeallocation" },
 		{ ImplementationID::Templated_GlobalAccess_PointerVector_RewindDeallocation, "Templated_GlobalAccess_PointerVector_RewindDeallocation" },
 
 		{ ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation, "ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation" },

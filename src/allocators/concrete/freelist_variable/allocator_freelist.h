@@ -36,4 +36,32 @@ namespace nostalgia::freelist {
 		static FreeAllocator& get_instance();
 	};
 
-}
+	// === Template Allocator ===
+	template <typename T>
+	class FreeAllocatorTemplate {
+	public:
+		using value_type = T;
+		FreeAllocatorTemplate() = default;
+		template <typename U>
+		FreeAllocatorTemplate(const FreeAllocatorTemplate<U>&) {}
+		
+		T* allocate(std::size_t n) {
+			return static_cast<T*>(g_free_allocator.allocate(n * sizeof(T)));
+		}
+		template<typename... Args>
+		T* create(Args&&... args) {
+			void* mem = allocate(1); // one T-sized block
+			return new (mem) T(std::forward<Args>(args)...);
+		}
+		void destroy(T* p) {
+			if (p) p->~T(); 
+		}
+		void deallocate(T* p, std::size_t n) noexcept {
+			(void)n; // No-op: handled by allocator reset
+			g_free_allocator.deallocate(reinterpret_cast<std::byte*>(p));
+		}
+		void rewind() {
+			g_free_allocator.rewind();
+		}
+	};
+}	

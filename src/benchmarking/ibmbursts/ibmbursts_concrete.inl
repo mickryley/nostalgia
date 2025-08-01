@@ -96,7 +96,77 @@ void run_templated_globalAccess_pointerVector_rewindDealloc(nostalgia::Allocator
 	PRINT_ALL_TIMERS();
 	EXPORT_BENCHMARK_RESULTS();
 }
+template <typename object_type>
+void run_templated_globalAccess_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id) {
 
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
+	CHECK_ALLOCATOR_COMPATABILITY();
+	BEGIN_ALL_TIMERS();
+
+	ALLOCATOR_TEMPLATE_GLOBAL_ACCESS<object_type> allocator_template;
+
+	for (size_t i = 0; i < passes; i++)
+	{
+		START_ALLOC_TIMERS();
+
+		std::vector<object_type*> vec;
+		vec.reserve(iterations);
+
+		for (size_t j = 0; j < iterations; j++) {
+			vec.emplace_back(allocator_template.create(CONSTRUCTOR_PARAMETERS));
+		}
+
+		PAUSE_ALLOC_TIMERS();
+		START_DEALLOC_TIMERS();
+
+		for (size_t k = 0; k < iterations; k++) {
+			allocator_template.deallocate(vec[k], 1);
+		}
+		
+		vec.clear();
+		PAUSE_DEALLOC_TIMERS();
+	}
+
+	STOP_ALL_TIMERS();
+	PRINT_ALL_TIMERS();
+	EXPORT_BENCHMARK_RESULTS();
+}
+template <typename object_type>
+void run_templated_globalAccess_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id) {
+
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
+	CHECK_ALLOCATOR_COMPATABILITY();
+	BEGIN_ALL_TIMERS();
+
+	ALLOCATOR_TEMPLATE_GLOBAL_ACCESS<object_type> allocator_template;
+
+	for (size_t i = 0; i < passes; i++)
+	{
+		START_ALLOC_TIMERS();
+
+		std::vector<object_type*> vec;
+		vec.reserve(iterations);
+
+		for (size_t j = 0; j < iterations; j++) {
+			vec.emplace_back(allocator_template.create(CONSTRUCTOR_PARAMETERS));
+		}
+
+		PAUSE_ALLOC_TIMERS();
+		START_DEALLOC_TIMERS();
+
+		for (size_t k = iterations; k-- > 0;) {
+			allocator_template.deallocate(vec[k], 1);
+		}
+		vec.clear();
+		PAUSE_DEALLOC_TIMERS();
+	}
+
+	STOP_ALL_TIMERS();
+	PRINT_ALL_TIMERS();
+	EXPORT_BENCHMARK_RESULTS();
+}
 // === Object Override (Compatible with Global Static and Singleton) ===
 template <typename object_type>
 void run_objectOverride_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,

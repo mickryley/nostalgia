@@ -35,4 +35,33 @@ namespace nostalgia::stack {
     struct SingletonStackAllocator {
         static StackAllocator& get_instance();
     };
+
+    // === Template Allocator ===
+    template <typename T>
+    class StackAllocatorTemplate {
+    public:
+        using value_type = T;       
+        StackAllocatorTemplate() = default;
+        template <typename U>
+        StackAllocatorTemplate(const StackAllocatorTemplate<U>&) {}
+        T* allocate(std::size_t n) {
+            return static_cast<T*>(g_stack_allocator.allocate(n * sizeof(T)));
+        }
+        template<typename... Args>
+        T* create(Args&&... args) {
+            void* mem = allocate(1); // one T-sized block
+            return new (mem) T(std::forward<Args>(args)...);
+
+        }
+        void destroy(T* p) {
+            if (p) p->~T(); // Explicitly call the destructor
+        }
+        void deallocate(T* p, std::size_t n) noexcept {
+            (void)n; // No-op: handled by allocator reset
+            g_stack_allocator.free(reinterpret_cast<std::byte*>(p));
+        }
+        void rewind() {
+            g_stack_allocator.rewind();
+        }
+    };
 }

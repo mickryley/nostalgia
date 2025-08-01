@@ -49,6 +49,10 @@ namespace nostalgia::linear {
             return new (mem) T(std::forward<Args>(args)...);
         }
 
+        void destroy(T* p) {
+        if (p) p->~T(); // Explicitly call the destructor
+        }
+
         void deallocate(T* p, std::size_t n) noexcept {
             (void)p; (void)n; // No-op: handled by allocator reset
         }

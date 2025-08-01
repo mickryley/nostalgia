@@ -7,6 +7,13 @@ run_templated_globalAccess_pointerContainer_rewindDealloc<PARAMETERISED_OBJECT_B
 run_templated_globalAccess_pointerBlock_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::Templated_GlobalAccess_PointerBlock_RewindDeallocation);
+
+run_templated_globalAccess_pointerVector_forwardDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_GlobalAccess_PointerVector_ForwardDeallocation);
+run_templated_globalAccess_pointerVector_reverseDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_GlobalAccess_PointerVector_ReverseDeallocation);
 run_templated_globalAccess_pointerVector_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::Templated_GlobalAccess_PointerVector_RewindDeallocation);
