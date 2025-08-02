@@ -17,8 +17,8 @@ I assure you the reality is a lot easier to wrangle, and a spoonful of Nostalgia
 
 - Precompiled Windows (MSVC) and MacOS (Clang) Releases are available.
   >
-[![Windows](https://img.shields.io/badge/Windows-v0.0.1-0078D6?logo=windows&logoColor=white&style=for-the-badge)](https://github.com/mickryley/nostalgia/releases/download/v0.0.1/nostalgia-win-v0.0.1.zip)
-[![macOS](https://img.shields.io/badge/macOS-v0.0.1-000000?logo=apple&logoColor=white&style=for-the-badge)](https://github.com/mickryley/nostalgia/releases/download/v0.0.1/nostalgia-mac-v0.0.1.zip)
+[![Windows](https://img.shields.io/badge/Windows-v0.0.2-0078D6?logo=windows&logoColor=white&style=for-the-badge)](https://github.com/mickryley/nostalgia/releases/download/v0.0.2/nostalgia-win-v0.0.2.zip)
+[![macOS](https://img.shields.io/badge/macOS-v0.0.2-000000?logo=apple&logoColor=white&style=for-the-badge)](https://github.com/mickryley/nostalgia/releases/download/v0.0.2/nostalgia-mac-v0.0.2.zip)
 
 
 <details><summary>Compiling Instructions</summary>
