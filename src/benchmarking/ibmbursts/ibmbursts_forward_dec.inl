@@ -45,24 +45,51 @@ void run_templated_singletonAccess_pointerBlock_rewindDealloc(nostalgia::Allocat
 template <typename object_type>
 void run_templated_singletonAccess_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
 	nostalgia::ImplementationID i_id);
-
 template <typename object_type>
 void run_templated_singletonAccess_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
 	nostalgia::ImplementationID i_id);
-
 template <typename object_type>
 void run_templated_singletonAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id);
 
 // ~~~ Pointer Vector ~~~
 template <typename object_type>
 void run_templated_singletonAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id);
-
 template <typename object_type>
 void run_templated_singletonAccess_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
 	nostalgia::ImplementationID i_id);
-
 	template <typename object_type>
 void run_templated_singletonAccess_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id);
+
+	// === Templated Cached Singleton Access ===
+// ~~~ Pointer Block ~~~
+template <typename object_type>
+void run_templated_cachedSingletonAccess_pointerBlock_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id);
+template <typename object_type>
+void run_templated_cachedSingletonAccess_pointerBlock_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id);
+template <typename object_type>
+void run_templated_cachedSingletonAccess_pointerBlock_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id);
+
+// ~~~ Pointer Container ~~~
+template <typename object_type>
+void run_templated_cachedSingletonAccess_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id);
+template <typename object_type>
+void run_templated_cachedSingletonAccess_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id);
+template <typename object_type>
+void run_templated_cachedSingletonAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id);
+
+// ~~~ Pointer Vector ~~~
+template <typename object_type>
+void run_templated_cachedSingletonAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id);
+template <typename object_type>
+void run_templated_cachedSingletonAccess_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
+	nostalgia::ImplementationID i_id);
+	template <typename object_type>
+void run_templated_cachedSingletonAccess_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
 	nostalgia::ImplementationID i_id);
 
 

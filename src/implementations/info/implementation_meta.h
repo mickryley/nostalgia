@@ -38,6 +38,18 @@ namespace nostalgia {
 		Templated_SingletonAccess_PointerVector_ForwardDeallocation,
 		Templated_SingletonAccess_PointerVector_ReverseDeallocation,
 		Templated_SingletonAccess_PointerVector_RewindDeallocation,
+		// === Templated Cached Singleton Access ===
+		Templated_CachedSingletonAccess_PointerBlock_ForwardDeallocation,
+		Templated_CachedSingletonAccess_PointerBlock_ReverseDeallocation,
+		Templated_CachedSingletonAccess_PointerBlock_RewindDeallocation,
+
+		Templated_CachedSingletonAccess_PointerContainer_ForwardDeallocation,
+		Templated_CachedSingletonAccess_PointerContainer_ReverseDeallocation,
+		Templated_CachedSingletonAccess_PointerContainer_RewindDeallocation,
+
+		Templated_CachedSingletonAccess_PointerVector_ForwardDeallocation,
+		Templated_CachedSingletonAccess_PointerVector_ReverseDeallocation,
+		Templated_CachedSingletonAccess_PointerVector_RewindDeallocation,
 
 		ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation,
 		ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation,

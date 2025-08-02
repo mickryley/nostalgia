@@ -61,7 +61,7 @@ namespace nostalgia::linear {
             g_linear_allocator.rewind();
 		}
     };
-// === Template Allocator - Singleton Access ===
+    // === Template Allocator - Singleton Access ===
     template <typename T>
     class LinearAllocatorTemplateSingletonAccess {
     public:
@@ -92,6 +92,45 @@ namespace nostalgia::linear {
             SingletonLinearAllocator::get_instance().rewind();
 		}
     };
+    // === Template Allocator - Cached Singleton Access ===
+    template <typename T>
+    class LinearAllocatorTemplateCachedSingletonAccess {
+        private:
+            LinearAllocator* cached_allocator = nullptr;
+    public:
+        using value_type = T;
+        LinearAllocatorTemplateCachedSingletonAccess()
+        : cached_allocator(&SingletonLinearAllocator::get_instance()) {}
+
+        template <typename U>
+        LinearAllocatorTemplateCachedSingletonAccess(const LinearAllocatorTemplateCachedSingletonAccess<U>&)
+                : cached_allocator(&SingletonLinearAllocator::get_instance()) {}
+
+        T* allocate(std::size_t n) {
+            return static_cast<T*>(cached_allocator->allocate(n * sizeof(T), alignof(T)));
+        }
+
+        template<typename... Args>
+        T* create(Args&&... args) {
+            void* mem = allocate(1); // one T-sized block
+            return new (mem) T(std::forward<Args>(args)...);
+        }
+
+        void destroy(T* p) {
+        if (p) p->~T(); // Explicitly call the destructor
+        }
+
+        void deallocate(T* p, std::size_t n) noexcept {
+            (void)p; (void)n; // No-op: handled by allocator reset
+        }
+
+        void rewind() {
+            cached_allocator->rewind();
+		}
+    };
+
+
+
     template <typename T>
     class LinearAllocatorStlTemplate {
     public:

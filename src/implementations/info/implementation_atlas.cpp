@@ -115,7 +115,63 @@ namespace nostalgia::implementation {
 				AllocatorFlags::DEALLOC_REWIND
 				}
 			},
-			
+
+			// === Templated Implementations - Cached Singleton Access ===
+			{ nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerBlock_ForwardDeallocation, nostalgia::ImplementationType{
+				"Templated Cached Singleton Access Pointer Block Forward Deallocation",
+				"Templated (Cached Singleton Referencing to Allocator) [Contiguous Block of Pointers] [Forward Deallocation]",
+				AllocatorFlags::DEALLOC_FORWARD | AllocatorFlags::BULK_ALLOCATE | AllocatorFlags::SUB_DEALLOCATE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerBlock_ReverseDeallocation, nostalgia::ImplementationType{
+				"Templated Cached Singleton Access Pointer Block Reverse Deallocation",
+				"Templated (Singleton Referencing to Allocator) [Contiguous Block of Pointers] [Reverse Deallocation]",
+				AllocatorFlags::DEALLOC_REVERSE | AllocatorFlags::BULK_ALLOCATE | AllocatorFlags::SUB_DEALLOCATE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerBlock_RewindDeallocation, nostalgia::ImplementationType{
+				"Templated Cached Singleton Access Pointer Block Rewind Deallocation",
+				"Templated (Cached Singleton Referencing to Allocator) [Contiguous Block of Pointers] [Rewind Deallocation]",
+				AllocatorFlags::DEALLOC_REWIND | AllocatorFlags::BULK_ALLOCATE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerContainer_ForwardDeallocation, nostalgia::ImplementationType{
+				"Templated Cached Singleton Access Pointer Container Forward Deallocation",
+				"Templated (Cached Singleton Referencing to Allocator) [Containers of Pointers] [Forward Deallocation]",
+				AllocatorFlags::DEALLOC_FORWARD
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerContainer_ReverseDeallocation, nostalgia::ImplementationType{
+				"Templated Cached Singleton Access Pointer Container Reverse Deallocation",
+				"Templated (Cached Singleton Referencing to Allocator) [Containers of Pointers] [Reverse Deallocation]",
+				AllocatorFlags::DEALLOC_REVERSE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerContainer_RewindDeallocation, nostalgia::ImplementationType{
+				"Templated Cached Singleton Access Pointer Container Rewind Deallocation",
+				"Templated (Cached Singleton Referencing to Allocator) [Containers of Pointers] [Rewind Deallocation]",
+				AllocatorFlags::DEALLOC_REWIND
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerVector_ForwardDeallocation, nostalgia::ImplementationType{
+				"Templated Cached Singleton Access Pointer Vector Forward Deallocation",
+				"Templated (Cached Singleton Referencing to Allocator) [std Vector of Pointers] [Forward Deallocation]",
+				AllocatorFlags::DEALLOC_FORWARD
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerVector_ReverseDeallocation, nostalgia::ImplementationType{
+				"Templated Cached Singleton Access Pointer Vector Reverse Deallocation",
+				"Templated (Cached Singleton Referencing to Allocator) [std Vector of Pointers] [Reverse Deallocation]",
+				AllocatorFlags::DEALLOC_REVERSE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerVector_RewindDeallocation, nostalgia::ImplementationType{
+				"Templated Cached Singleton Access Pointer Vector Rewind Deallocation",
+				"Templated (Cached Singleton Referencing to Allocator) [std Vector of Pointers] [Rewind Deallocation]",
+				AllocatorFlags::DEALLOC_REWIND
+				}
+			},
+
 			// === Global Access Implementations ===
 			{ nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation, nostalgia::ImplementationType{
 				"Object Overload Global Access Pointer Container Forward Deallocation",

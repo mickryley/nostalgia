@@ -8,6 +8,7 @@
 
 #define ALLOCATOR_TEMPLATE_GLOBAL_ACCESS					nostalgia::linear::LinearAllocatorTemplate
 #define ALLOCATOR_TEMPLATE_SINGLETON_ACCESS					nostalgia::linear::LinearAllocatorTemplateSingletonAccess
+#define ALLOCATOR_TEMPLATE_CACHED_SINGLETON_ACCESS	        nostalgia::linear::LinearAllocatorTemplateCachedSingletonAccess  
 
 #define ALLOCATOR_SINGLETON_ACCESS							nostalgia::linear::SingletonLinearAllocator::get_instance()
 #define ALLOCATOR_GLOBAL_ACCESS								nostalgia::linear::g_linear_allocator

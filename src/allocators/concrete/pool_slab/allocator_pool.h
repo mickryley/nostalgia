@@ -57,7 +57,7 @@ namespace nostalgia::pool {
 		}
 	};
 
-		// === Template Allocator ===
+	// === Template Allocator - Singleton Access ===
 	template <typename T>
 	class PoolAllocatorTemplateSingletonAccess {
 	public:
@@ -83,5 +83,34 @@ namespace nostalgia::pool {
 		}
 	};
 
-	
+	// === Template Allocator - Cached Singleton Access ===
+	template <typename T>
+	class PoolAllocatorTemplateCachedSingletonAccess {
+		private:
+		PoolAllocator* cached_allocator = nullptr; // Cached singleton allocator instance
+	public:
+		using value_type = T;
+		PoolAllocatorTemplateCachedSingletonAccess() 
+		: cached_allocator(&SingletonPoolAllocator::get_instance()) {}
+		template <typename U>
+		PoolAllocatorTemplateCachedSingletonAccess(const PoolAllocatorTemplateCachedSingletonAccess<U>&) 
+		: cached_allocator(&SingletonPoolAllocator::get_instance()) {}
+		
+		T* allocate(std::size_t n) {
+			return static_cast<T*>(cached_allocator->allocate(n * sizeof(T)));
+		}
+		template<typename... Args>
+		T* create(Args&&... args) {
+			void* mem = allocate(1); // one T-sized block
+			return new (mem) T(std::forward<Args>(args)...);
+		}
+		void destroy(T* p) {
+			if (p) p->~T(); 
+		}
+		inline void		rewind() noexcept {} // no-op for pool allocator
+		void deallocate(T* ptr, std::size_t n) {
+			(void) n;
+			cached_allocator->deallocate(reinterpret_cast<std::byte*>(ptr));
+		}
+	};
 }

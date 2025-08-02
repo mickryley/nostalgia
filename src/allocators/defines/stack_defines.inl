@@ -8,6 +8,7 @@
 
 #define ALLOCATOR_TEMPLATE_GLOBAL_ACCESS					nostalgia::stack::StackAllocatorTemplate
 #define ALLOCATOR_TEMPLATE_SINGLETON_ACCESS					nostalgia::stack::StackAllocatorTemplateSingletonAccess
+#define ALLOCATOR_TEMPLATE_CACHED_SINGLETON_ACCESS			nostalgia::stack::StackAllocatorTemplateCachedSingletonAccess
 
 #define ALLOCATOR_SINGLETON_ACCESS							nostalgia::stack::SingletonStackAllocator::get_instance()
 #define ALLOCATOR_GLOBAL_ACCESS								nostalgia::stack::g_stack_allocator

@@ -31,7 +31,7 @@ run_templated_globalAccess_pointerVector_rewindDealloc<PARAMETERISED_OBJECT_BASI
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::Templated_GlobalAccess_PointerVector_RewindDeallocation);
 
-    // === Templated Singleton Access ===
+// === Templated Singleton Access ===
 // ~~~ Pointer Block ~~~
 run_templated_singletonAccess_pointerBlock_forwardDealloc<PARAMETERISED_OBJECT_BASIC>(
     allocator, iterations, passes, object_id_index,
@@ -62,6 +62,38 @@ run_templated_singletonAccess_pointerVector_reverseDealloc<PARAMETERISED_OBJECT_
 run_templated_singletonAccess_pointerVector_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::Templated_SingletonAccess_PointerVector_RewindDeallocation);
+
+// === Templated Cached Singleton Access ===
+// ~~~ Pointer Block ~~~
+run_templated_cachedSingletonAccess_pointerBlock_forwardDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerBlock_ForwardDeallocation);
+run_templated_cachedSingletonAccess_pointerBlock_reverseDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerBlock_ReverseDeallocation);
+run_templated_cachedSingletonAccess_pointerBlock_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerBlock_RewindDeallocation);
+// ~~~ Pointer Container ~~~
+run_templated_cachedSingletonAccess_pointerContainer_forwardDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerContainer_ForwardDeallocation);
+run_templated_cachedSingletonAccess_pointerContainer_reverseDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerContainer_ReverseDeallocation);
+run_templated_cachedSingletonAccess_pointerContainer_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerContainer_RewindDeallocation);
+// ~~~ Pointer Vector ~~~
+run_templated_cachedSingletonAccess_pointerVector_forwardDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerVector_ForwardDeallocation);
+run_templated_cachedSingletonAccess_pointerVector_reverseDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerVector_ReverseDeallocation);
+run_templated_cachedSingletonAccess_pointerVector_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerVector_RewindDeallocation);
 
 
 // Global access

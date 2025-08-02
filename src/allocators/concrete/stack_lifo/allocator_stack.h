@@ -65,7 +65,7 @@ namespace nostalgia::stack {
         }
     };
 
-    // === Template Allocator ===
+    // === Template Allocator - Singleton Access ===
     template <typename T>
     class StackAllocatorTemplateSingletonAccess {
     public:
@@ -91,6 +91,41 @@ namespace nostalgia::stack {
         }
         void rewind() {
             SingletonStackAllocator::get_instance().rewind();
+        }
+    };
+
+    // === Template Allocator - Cached Singleton Access ===
+    template <typename T>
+    class StackAllocatorTemplateCachedSingletonAccess {
+    private:
+        StackAllocator* cached_allocator = nullptr;
+    public:
+        using value_type = T;       
+        StackAllocatorTemplateCachedSingletonAccess()
+        : cached_allocator(&SingletonStackAllocator::get_instance()) {}
+
+        template <typename U>
+        StackAllocatorTemplateCachedSingletonAccess(const StackAllocatorTemplateCachedSingletonAccess<U>&)
+                : cached_allocator(&SingletonStackAllocator::get_instance()) {}
+
+        T* allocate(std::size_t n) {
+            return static_cast<T*>(cached_allocator->allocate(n * sizeof(T)));
+        }
+        template<typename... Args>
+        T* create(Args&&... args) {
+            void* mem = allocate(1); // one T-sized block
+            return new (mem) T(std::forward<Args>(args)...);
+
+        }
+        void destroy(T* p) {
+            if (p) p->~T(); // Explicitly call the destructor
+        }
+        void deallocate(T* p, std::size_t n) noexcept {
+            (void)n; 
+            cached_allocator->free(reinterpret_cast<std::byte*>(p));
+        }
+        void rewind() {
+            cached_allocator->rewind();
         }
     };
 }

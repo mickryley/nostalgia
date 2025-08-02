@@ -93,4 +93,39 @@ namespace nostalgia::freelist {
 			SingletonFreeAllocator::get_instance().rewind();
 		}
 	};
+
+	// === Template Allocator - Cached Singleton Access ===
+	template <typename T>
+	class FreeAllocatorTemplateCachedSingletonAccess {
+	private:
+		FreeAllocator* cached_allocator = nullptr;
+	public:
+		using value_type = T;
+		FreeAllocatorTemplateCachedSingletonAccess()
+		: cached_allocator(&SingletonFreeAllocator::get_instance()) {}
+
+		template <typename U>
+		FreeAllocatorTemplateCachedSingletonAccess(const FreeAllocatorTemplateCachedSingletonAccess<U>&)
+				: cached_allocator(&SingletonFreeAllocator::get_instance()) {}
+
+		T* allocate(std::size_t n) {
+			return static_cast<T*>(cached_allocator->allocate(n * sizeof(T)));
+		}
+		template<typename... Args>
+		T* create(Args&&... args) {
+			void* mem = allocate(1); // one T-sized block
+			return new (mem) T(std::forward<Args>(args)...);
+		}
+		void destroy(T* p) {
+			if (p) p->~T();
+		}
+		void deallocate(T* p, std::size_t n) noexcept {
+			(void)n;
+			cached_allocator->deallocate(reinterpret_cast<std::byte*>(p));
+		}
+		void rewind() {
+			cached_allocator->rewind();
+		}
+	};
+
 }	
