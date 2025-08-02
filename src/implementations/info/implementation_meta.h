@@ -13,7 +13,7 @@ namespace nostalgia {
 
 	enum class ImplementationID {
 		NONE,
-
+		// === Templated Global Access ===
 		Templated_GlobalAccess_PointerBlock_ForwardDeallocation,
 		Templated_GlobalAccess_PointerBlock_ReverseDeallocation,
 		Templated_GlobalAccess_PointerBlock_RewindDeallocation,
@@ -25,6 +25,19 @@ namespace nostalgia {
 		Templated_GlobalAccess_PointerVector_ForwardDeallocation,
 		Templated_GlobalAccess_PointerVector_ReverseDeallocation,
 		Templated_GlobalAccess_PointerVector_RewindDeallocation,
+
+		// === Templated Singleton Access ===
+		Templated_SingletonAccess_PointerBlock_ForwardDeallocation,
+		Templated_SingletonAccess_PointerBlock_ReverseDeallocation,
+		Templated_SingletonAccess_PointerBlock_RewindDeallocation,
+
+		Templated_SingletonAccess_PointerContainer_ForwardDeallocation,
+		Templated_SingletonAccess_PointerContainer_ReverseDeallocation,
+		Templated_SingletonAccess_PointerContainer_RewindDeallocation,
+
+		Templated_SingletonAccess_PointerVector_ForwardDeallocation,
+		Templated_SingletonAccess_PointerVector_ReverseDeallocation,
+		Templated_SingletonAccess_PointerVector_RewindDeallocation,
 
 		ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation,
 		ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation,
@@ -54,17 +67,38 @@ namespace nostalgia {
 
 	NLOHMANN_JSON_SERIALIZE_ENUM(ImplementationID, {
 		{ ImplementationID::NONE, "NONE" },
+
+		// === Templated Global Access ===
+		// ~~~ Pointer Block ~~~
 		{ ImplementationID::Templated_GlobalAccess_PointerBlock_ForwardDeallocation, "Templated_GlobalAccess_PointerBlock_ForwardDeallocation" },
 		{ ImplementationID::Templated_GlobalAccess_PointerBlock_ReverseDeallocation, "Templated_GlobalAccess_PointerBlock_ReverseDeallocation" },
 		{ ImplementationID::Templated_GlobalAccess_PointerBlock_RewindDeallocation, "Templated_GlobalAccess_PointerBlock_RewindDeallocation" },
 
+		// ~~~ Pointer Container ~~~
 		{ ImplementationID::Templated_GlobalAccess_PointerContainer_ForwardDeallocation, "Templated_GlobalAccess_PointerContainer_ForwardDeallocation" },
 		{ ImplementationID::Templated_GlobalAccess_PointerContainer_ReverseDeallocation, "Templated_GlobalAccess_PointerContainer_ReverseDeallocation" },
 		{ ImplementationID::Templated_GlobalAccess_PointerContainer_RewindDeallocation, "Templated_GlobalAccess_PointerContainer_RewindDeallocation" },
 
+		// ~~~ Pointer Vector ~~~
 		{ ImplementationID::Templated_GlobalAccess_PointerVector_ForwardDeallocation, "Templated_GlobalAccess_PointerVector_ForwardDeallocation" },
 		{ ImplementationID::Templated_GlobalAccess_PointerVector_ReverseDeallocation, "Templated_GlobalAccess_PointerVector_ReverseDeallocation" },
 		{ ImplementationID::Templated_GlobalAccess_PointerVector_RewindDeallocation, "Templated_GlobalAccess_PointerVector_RewindDeallocation" },
+		
+		// === Templated Singleton Access ===
+		// ~~~ Pointer Block ~~~
+		{ ImplementationID::Templated_SingletonAccess_PointerBlock_ForwardDeallocation, "Templated_SingletonAccess_PointerBlock_ForwardDeallocation" },
+		{ ImplementationID::Templated_SingletonAccess_PointerBlock_ReverseDeallocation, "Templated_SingletonAccess_PointerBlock_ReverseDeallocation" },
+		{ ImplementationID::Templated_SingletonAccess_PointerBlock_RewindDeallocation, "Templated_SingletonAccess_PointerBlock_RewindDeallocation" },
+
+		// ~~~ Pointer Container ~~~
+		{ ImplementationID::Templated_SingletonAccess_PointerContainer_ForwardDeallocation, "Templated_SingletonAccess_PointerContainer_ForwardDeallocation" },
+		{ ImplementationID::Templated_SingletonAccess_PointerContainer_ReverseDeallocation, "Templated_SingletonAccess_PointerContainer_ReverseDeallocation" },
+		{ ImplementationID::Templated_SingletonAccess_PointerContainer_RewindDeallocation, "Templated_SingletonAccess_PointerContainer_RewindDeallocation" },
+
+		// ~~~ Pointer Vector ~~~
+		{ ImplementationID::Templated_SingletonAccess_PointerVector_ForwardDeallocation, "Templated_SingletonAccess_PointerVector_ForwardDeallocation" },
+		{ ImplementationID::Templated_SingletonAccess_PointerVector_ReverseDeallocation, "Templated_SingletonAccess_PointerVector_ReverseDeallocation" },
+		{ ImplementationID::Templated_SingletonAccess_PointerVector_RewindDeallocation, "Templated_SingletonAccess_PointerVector_RewindDeallocation" },
 
 		{ ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation, "ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation" },
 		{ ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation, "ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation" },

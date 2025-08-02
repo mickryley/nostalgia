@@ -17,9 +17,9 @@ namespace nostalgia::allocator {
             .id = nostalgia::AllocatorID::Linear,
             .label = "Linear",
             .description = "Basic Minimal Linear Allocator (Rewind Only)",
-            .compatible_flags = AllocatorFlags::DEALLOC_REWIND,
-            .required_flags =   AllocatorFlags::NONE |
+            .compatible_flags = AllocatorFlags::DEALLOC_REWIND |
                                 AllocatorFlags::BULK_ALLOCATE,
+            .required_flags =   AllocatorFlags::NONE,
             .data_color_hue_shift = 40
         }},
         { nostalgia::AllocatorID::Stack, nostalgia::AllocatorType{

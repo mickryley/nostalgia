@@ -56,4 +56,32 @@ namespace nostalgia::pool {
 			g_pool_allocator.deallocate(reinterpret_cast<std::byte*>(ptr));
 		}
 	};
+
+		// === Template Allocator ===
+	template <typename T>
+	class PoolAllocatorTemplateSingletonAccess {
+	public:
+		using value_type = T;
+		PoolAllocatorTemplateSingletonAccess() = default;
+		template <typename U>
+		PoolAllocatorTemplateSingletonAccess(const PoolAllocatorTemplateSingletonAccess<U>&) {}
+		T* allocate(std::size_t n) {
+			return static_cast<T*>(SingletonPoolAllocator::get_instance().allocate(n * sizeof(T)));
+		}
+		template<typename... Args>
+		T* create(Args&&... args) {
+			void* mem = allocate(1); // one T-sized block
+			return new (mem) T(std::forward<Args>(args)...);
+		}
+		void destroy(T* p) {
+			if (p) p->~T(); 
+		}
+		inline void		rewind() noexcept {} // no-op for pool allocator
+		void deallocate(T* ptr, std::size_t n) {
+			(void) n;
+			SingletonPoolAllocator::get_instance().deallocate(reinterpret_cast<std::byte*>(ptr));
+		}
+	};
+
+	
 }

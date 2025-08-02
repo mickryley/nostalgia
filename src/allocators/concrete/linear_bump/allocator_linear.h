@@ -61,7 +61,37 @@ namespace nostalgia::linear {
             g_linear_allocator.rewind();
 		}
     };
+// === Template Allocator - Singleton Access ===
+    template <typename T>
+    class LinearAllocatorTemplateSingletonAccess {
+    public:
+        using value_type = T;
+        LinearAllocatorTemplateSingletonAccess() = default;
+        template <typename U>
+        LinearAllocatorTemplateSingletonAccess(const LinearAllocatorTemplateSingletonAccess<U>&) {}
 
+        T* allocate(std::size_t n) {
+            return static_cast<T*>(SingletonLinearAllocator::get_instance().allocate(n * sizeof(T), alignof(T)));
+        }
+
+        template<typename... Args>
+        T* create(Args&&... args) {
+            void* mem = allocate(1); // one T-sized block
+            return new (mem) T(std::forward<Args>(args)...);
+        }
+
+        void destroy(T* p) {
+        if (p) p->~T(); // Explicitly call the destructor
+        }
+
+        void deallocate(T* p, std::size_t n) noexcept {
+            (void)p; (void)n; // No-op: handled by allocator reset
+        }
+
+        void rewind() {
+            SingletonLinearAllocator::get_instance().rewind();
+		}
+    };
     template <typename T>
     class LinearAllocatorStlTemplate {
     public:

@@ -3,7 +3,7 @@
 namespace nostalgia::implementation {
 	std::unordered_map<nostalgia::ImplementationID, nostalgia::ImplementationType> atlas{
 		{ 
-			// === Templated Implementations ===
+			// === Templated Implementations - Global Access ===
 			{ nostalgia::ImplementationID::Templated_GlobalAccess_PointerBlock_ForwardDeallocation, nostalgia::ImplementationType{
 				"Templated Global Access Pointer Block Forward Deallocation",
 				"Templated (Global Referencing to Allocator) [Contiguous Block of Pointers] [Forward Deallocation]",
@@ -59,7 +59,62 @@ namespace nostalgia::implementation {
 				AllocatorFlags::DEALLOC_REWIND
 				}
 			},
-			
+
+			// === Templated Implementations - Singleton Access ===
+			{ nostalgia::ImplementationID::Templated_SingletonAccess_PointerBlock_ForwardDeallocation, nostalgia::ImplementationType{
+				"Templated Singleton Access Pointer Block Forward Deallocation",
+				"Templated (Singleton Referencing to Allocator) [Contiguous Block of Pointers] [Forward Deallocation]",
+				AllocatorFlags::DEALLOC_FORWARD | AllocatorFlags::BULK_ALLOCATE | AllocatorFlags::SUB_DEALLOCATE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_SingletonAccess_PointerBlock_ReverseDeallocation, nostalgia::ImplementationType{
+				"Templated Singleton Access Pointer Block Reverse Deallocation",
+				"Templated (Singleton Referencing to Allocator) [Contiguous Block of Pointers] [Reverse Deallocation]",
+				AllocatorFlags::DEALLOC_REVERSE | AllocatorFlags::BULK_ALLOCATE | AllocatorFlags::SUB_DEALLOCATE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_SingletonAccess_PointerBlock_RewindDeallocation, nostalgia::ImplementationType{
+				"Templated Singleton Access Pointer Block Rewind Deallocation",
+				"Templated (Singleton Referencing to Allocator) [Contiguous Block of Pointers] [Rewind Deallocation]",
+				AllocatorFlags::DEALLOC_REWIND | AllocatorFlags::BULK_ALLOCATE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_SingletonAccess_PointerContainer_ForwardDeallocation, nostalgia::ImplementationType{
+				"Templated Singleton Access Pointer Container Forward Deallocation",
+				"Templated (Singleton Referencing to Allocator) [Containers of Pointers] [Forward Deallocation]",
+				AllocatorFlags::DEALLOC_FORWARD
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_SingletonAccess_PointerContainer_ReverseDeallocation, nostalgia::ImplementationType{
+				"Templated Singleton Access Pointer Container Reverse Deallocation",
+				"Templated (Singleton Referencing to Allocator) [Containers of Pointers] [Reverse Deallocation]",
+				AllocatorFlags::DEALLOC_REVERSE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_SingletonAccess_PointerContainer_RewindDeallocation, nostalgia::ImplementationType{
+				"Templated Singleton Access Pointer Container Rewind Deallocation",
+				"Templated (Singleton Referencing to Allocator) [Containers of Pointers] [Rewind Deallocation]",
+				AllocatorFlags::DEALLOC_REWIND
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_SingletonAccess_PointerVector_ForwardDeallocation, nostalgia::ImplementationType{
+				"Templated Singleton Access Pointer Vector Forward Deallocation",
+				"Templated (Singleton Referencing to Allocator) [std Vector of Pointers] [Forward Deallocation]",
+				AllocatorFlags::DEALLOC_FORWARD
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_SingletonAccess_PointerVector_ReverseDeallocation, nostalgia::ImplementationType{
+				"Templated Singleton Access Pointer Vector Reverse Deallocation",
+				"Templated (Singleton Referencing to Allocator) [std Vector of Pointers] [Reverse Deallocation]",
+				AllocatorFlags::DEALLOC_REVERSE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_SingletonAccess_PointerVector_RewindDeallocation, nostalgia::ImplementationType{
+				"Templated Singleton Access Pointer Vector Rewind Deallocation",
+				"Templated (Singleton Referencing to Allocator) [std Vector of Pointers] [Rewind Deallocation]",
+				AllocatorFlags::DEALLOC_REWIND
+				}
+			},
 			
 			// === Global Access Implementations ===
 			{ nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation, nostalgia::ImplementationType{

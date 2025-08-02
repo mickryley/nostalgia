@@ -57,11 +57,40 @@ namespace nostalgia::stack {
             if (p) p->~T(); // Explicitly call the destructor
         }
         void deallocate(T* p, std::size_t n) noexcept {
-            (void)n; // No-op: handled by allocator reset
+            (void)n; 
             g_stack_allocator.free(reinterpret_cast<std::byte*>(p));
         }
         void rewind() {
             g_stack_allocator.rewind();
+        }
+    };
+
+    // === Template Allocator ===
+    template <typename T>
+    class StackAllocatorTemplateSingletonAccess {
+    public:
+        using value_type = T;       
+        StackAllocatorTemplateSingletonAccess() = default;
+        template <typename U>
+        StackAllocatorTemplateSingletonAccess(const StackAllocatorTemplateSingletonAccess<U>&) {}
+        T* allocate(std::size_t n) {
+            return static_cast<T*>(SingletonStackAllocator::get_instance().allocate(n * sizeof(T)));
+        }
+        template<typename... Args>
+        T* create(Args&&... args) {
+            void* mem = allocate(1); // one T-sized block
+            return new (mem) T(std::forward<Args>(args)...);
+
+        }
+        void destroy(T* p) {
+            if (p) p->~T(); // Explicitly call the destructor
+        }
+        void deallocate(T* p, std::size_t n) noexcept {
+            (void)n; 
+            SingletonStackAllocator::get_instance().free(reinterpret_cast<std::byte*>(p));
+        }
+        void rewind() {
+            SingletonStackAllocator::get_instance().rewind();
         }
     };
 }
