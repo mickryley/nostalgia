@@ -52,6 +52,10 @@ namespace nostalgia {
 		Templated_CachedSingletonAccess_PointerVector_ReverseDeallocation,
 		Templated_CachedSingletonAccess_PointerVector_RewindDeallocation,
 
+		// === STL Templated - Global Access ===
+		// ~~~ Object Vector ~~~
+		Templated_GlobalAccess_ObjectVector_RewindDeallocation,
+
 		// === Object Override Global Access ===
 		ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation,
 		ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation,

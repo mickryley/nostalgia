@@ -128,4 +128,52 @@ namespace nostalgia::freelist {
 		}
 	};
 
+	// === STL Conformed Allocator - Global Access ===
+    template <typename T>
+    class FreeAllocatorSTLTemplate {
+    public:
+        using value_type = T;
+        using pointer = T*;
+        using const_pointer = const T*;         // Old standard, now optional 
+        using reference = T&;                   // Old standard, now optional 
+        using const_reference = const T&;
+        using size_type = std::size_t;
+        using difference_type = std::ptrdiff_t;
+
+        template <typename U>
+        struct rebind {
+            using other = FreeAllocatorSTLTemplate<U>;
+        };
+
+        FreeAllocatorSTLTemplate() noexcept = default;
+        template <typename U>
+        FreeAllocatorSTLTemplate(const FreeAllocatorSTLTemplate<U>&) noexcept {}
+
+        template<typename... Args>
+        T* create(Args&&... args) {
+            void* mem = allocate(1);
+            return new (mem) T(std::forward<Args>(args)...);
+        }
+
+        bool operator==(const FreeAllocatorSTLTemplate&) const noexcept { return true; }
+        bool operator!=(const FreeAllocatorSTLTemplate&) const noexcept { return false; }
+
+        void rewind() {
+            g_free_allocator.rewind();
+        }
+
+
+		T* allocate(std::size_t n) {
+			return static_cast<T*>(g_free_allocator.allocate(n * sizeof(T)));
+		}
+
+		void destroy(T* p) {
+			if (p) p->~T(); 
+		}
+		void deallocate(T* p, std::size_t n) noexcept {
+			(void)n; // No-op: handled by allocator reset
+			g_free_allocator.deallocate(reinterpret_cast<std::byte*>(p));
+		}
+    };
+
 }	

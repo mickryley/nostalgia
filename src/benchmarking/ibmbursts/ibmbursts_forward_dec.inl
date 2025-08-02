@@ -92,6 +92,11 @@ void run_templated_cachedSingletonAccess_pointerVector_forwardDealloc(nostalgia:
 void run_templated_cachedSingletonAccess_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
 	nostalgia::ImplementationID i_id);
 
+// === STL Templated - Global Access ===
+// ~~~ Object Vector ~~~
+template <typename object_type>
+void run_stltemplated_globalAccess_objectVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id);
+
 
 // === Object Override (Compatible with Global Static and Singleton) ===
 template <typename object_type>

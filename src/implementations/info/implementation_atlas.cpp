@@ -172,6 +172,14 @@ namespace nostalgia::implementation {
 				}
 			},
 
+			// === STL Templated - Global Access ===
+			{ nostalgia::ImplementationID::Templated_GlobalAccess_ObjectVector_RewindDeallocation, nostalgia::ImplementationType{
+				"Templated Global Access Object Vector Rewind Deallocation",
+				"Templated (Global Referencing to Allocator) [std Vector of Objects] [Rewind Deallocation]",
+				AllocatorFlags::DEALLOC_REWIND // | AllocatorFlags::BULK_ALLOCATE
+				}
+			},
+
 			// === Object Override - Global Access Implementations ===
 			{ nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation, nostalgia::ImplementationType{
 				"Object Overload Global Access Pointer Container Forward Deallocation",

@@ -894,6 +894,43 @@ void run_templated_cachedSingletonAccess_pointerVector_rewindDealloc(nostalgia::
 	EXPORT_BENCHMARK_RESULTS();
 }
 
+// === STL Templated - global access ===
+// ~~~ Pointer Block ~~~
+// ~~~ Pointer Container ~~~
+// ~~~ Pointer Vector ~~~
+// ~~~ Object Vector ~~~
+template <typename object_type>
+void run_stltemplated_globalAccess_objectVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
+
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
+	CHECK_ALLOCATOR_COMPATABILITY();
+	BEGIN_ALL_TIMERS();
+
+	for (size_t i = 0; i < passes; i++)
+	{
+		{
+			START_ALLOC_TIMERS();
+
+			std::vector<object_type, ALLOCATOR_STL_TEMPLATE_GLOBAL_ACCESS<object_type>> vec;
+			vec.reserve(iterations);
+
+			for (size_t j = 0; j < iterations; j++) {
+				vec.emplace_back(CONSTRUCTOR_PARAMETERS);
+			}
+
+			PAUSE_ALLOC_TIMERS();
+			START_DEALLOC_TIMERS();
+
+		}	// Scope to ensure the vector is destroyed before rewind
+		ALLOCATOR_GLOBAL_ACCESS.rewind();
+		PAUSE_DEALLOC_TIMERS();
+	}
+
+	STOP_ALL_TIMERS();
+	PRINT_ALL_TIMERS();
+	EXPORT_BENCHMARK_RESULTS();
+}
+
 
 // === Object Override (Compatible with Global Static and Singleton) ===
 // ~~~ Pointer Block implementation would bypass object override ~~~

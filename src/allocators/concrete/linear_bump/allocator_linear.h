@@ -130,9 +130,8 @@ namespace nostalgia::linear {
     };
 
 
-
     template <typename T>
-    class LinearAllocatorStlTemplate {
+    class LinearAllocatorSTLTemplate {
     public:
         using value_type = T;
         using pointer = T*;
@@ -144,12 +143,12 @@ namespace nostalgia::linear {
 
         template <typename U>
         struct rebind {
-            using other = LinearAllocatorStlTemplate<U>;
+            using other = LinearAllocatorSTLTemplate<U>;
         };
 
-        LinearAllocatorStlTemplate() noexcept = default;
+        LinearAllocatorSTLTemplate() noexcept = default;
         template <typename U>
-        LinearAllocatorStlTemplate(const LinearAllocatorStlTemplate<U>&) noexcept {}
+        LinearAllocatorSTLTemplate(const LinearAllocatorSTLTemplate<U>&) noexcept {}
 
         // STL Requried Allocate
         T* allocate(std::size_t n) {
@@ -167,8 +166,8 @@ namespace nostalgia::linear {
             // No-op: handled by allocator reset
         }
 
-        bool operator==(const LinearAllocatorStlTemplate&) const noexcept { return true; }
-        bool operator!=(const LinearAllocatorStlTemplate&) const noexcept { return false; }
+        bool operator==(const LinearAllocatorSTLTemplate&) const noexcept { return true; }
+        bool operator!=(const LinearAllocatorSTLTemplate&) const noexcept { return false; }
 
         void rewind() {
             g_linear_allocator.rewind();
@@ -218,9 +217,9 @@ namespace nostalgia::linear {
     };
 
     template<typename T>
-    class LinearVector_StlTemplateAllocator {
+    class LinearVector_STLTemplateAllocator {
     public:
-        LinearVector_StlTemplateAllocator(size_t capacity, linear::LinearAllocatorStlTemplate<T>& allocator)
+        LinearVector_STLTemplateAllocator(size_t capacity, linear::LinearAllocatorSTLTemplate<T>& allocator)
             : m_capacity(capacity), m_allocator(allocator)
         {
             m_data = m_allocator.allocate(capacity);
@@ -228,8 +227,8 @@ namespace nostalgia::linear {
         }
 
         // Not copyable
-        LinearVector_StlTemplateAllocator(const LinearVector_StlTemplateAllocator&) = delete;
-        LinearVector_StlTemplateAllocator& operator=(const LinearVector_StlTemplateAllocator&) = delete;
+        LinearVector_STLTemplateAllocator(const LinearVector_STLTemplateAllocator&) = delete;
+        LinearVector_STLTemplateAllocator& operator=(const LinearVector_STLTemplateAllocator&) = delete;
 
         // Push an object in-place
         template<typename... Args>
@@ -254,7 +253,7 @@ namespace nostalgia::linear {
         T* m_data = nullptr;
         size_t m_size = 0;
         size_t m_capacity = 0;
-        linear::LinearAllocatorStlTemplate<T>& m_allocator;
+        linear::LinearAllocatorSTLTemplate<T>& m_allocator;
     };
 
     template<typename T>

@@ -10,5 +10,7 @@
 #define ALLOCATOR_TEMPLATE_SINGLETON_ACCESS					nostalgia::linear::LinearAllocatorTemplateSingletonAccess
 #define ALLOCATOR_TEMPLATE_CACHED_SINGLETON_ACCESS	        nostalgia::linear::LinearAllocatorTemplateCachedSingletonAccess
 
+#define ALLOCATOR_STL_TEMPLATE_GLOBAL_ACCESS		        nostalgia::linear::LinearAllocatorSTLTemplate
+
 #define ALLOCATOR_SINGLETON_ACCESS							nostalgia::default_malloc::g_default_allocator
 #define ALLOCATOR_GLOBAL_ACCESS								nostalgia::default_malloc::g_default_allocator

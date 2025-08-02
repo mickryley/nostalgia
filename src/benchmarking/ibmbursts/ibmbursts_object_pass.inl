@@ -95,8 +95,13 @@ run_templated_cachedSingletonAccess_pointerVector_rewindDealloc<PARAMETERISED_OB
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerVector_RewindDeallocation);
 
+// === STL Templated - Global Access ===
+// ~~~ Object Vector ~~~
+run_stltemplated_globalAccess_objectVector_rewindDealloc<PARAMETERISED_OBJECT_BASIC>(
+    allocator, iterations, passes, object_id_index,
+    nostalgia::ImplementationID::Templated_GlobalAccess_ObjectVector_RewindDeallocation);
 
-    // === Object Override ===
+    // === Object Override - Global Access ===
     // ~~~ Pointer Block N/A for override ~~~
     // ~~~ Pointer Container ~~~
 run_objectOverride_pointerContainer_forwardDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
@@ -120,17 +125,17 @@ run_objectOverride_globalAccess_pointerVector_rewindDealloc<PARAMETERISED_OBJECT
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerVector_RewindDeallocation);
 
-// Singleton access
-    // ~ Forward Deallocation
+    // === Object Override - Singleton Access ===
+    // ~~~ Pointer Block N/A for override ~~~
+    // ~~~ Pointer Container ~~~
 run_objectOverride_pointerContainer_forwardDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerContainer_ForwardDeallocation);
-    // ~ Reverse Deallocation
 run_objectOverride_pointerContainer_reverseDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerContainer_ReverseDeallocation);
 
-    // ~ Forward Deallocation
+    // ~~~ Pointer Vector ~~~
 run_objectOverride_pointerVector_forwardDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerVector_ForwardDeallocation);
@@ -139,7 +144,9 @@ run_objectOverride_pointerVector_reverseDealloc<PARAMETERISED_OBJECT_LOCAL_OVERR
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerVector_ReverseDeallocation);
 
-
+// === Object Override - Cached Singleton Access ===
+// ~~~ Pointer Container ~~~
+// Cached Singleton Access is not compatible with Pointer Container Forward Deallocation
     // ~~ Rewind
 run_objectOverride_singletonAccess_pointerContainer_rewindDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_SINGLETON_ACCESS>(
     allocator, iterations, passes, object_id_index,
