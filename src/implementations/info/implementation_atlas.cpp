@@ -172,7 +172,7 @@ namespace nostalgia::implementation {
 				}
 			},
 
-			// === Global Access Implementations ===
+			// === Object Override - Global Access Implementations ===
 			{ nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation, nostalgia::ImplementationType{
 				"Object Overload Global Access Pointer Container Forward Deallocation",
 				"Object Overload (Global Referencing to Allocator) [Containers of Pointers] [Forward Deallocation]",
@@ -210,7 +210,7 @@ namespace nostalgia::implementation {
 				}
 			},
 
-			// === Singleton Access Implementation ===
+			// === Object Override - Singleton Access Implementations ===
 			{ nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerContainer_ForwardDeallocation, nostalgia::ImplementationType{
 				"Object Overload Singleton Pointer Container Forward Deallocation",
 				"Object Overload (Singleton Referencing) [Containers of Pointers] [Forward Deallocation]",
@@ -230,12 +230,6 @@ namespace nostalgia::implementation {
 				}
 			},
 
-			{ nostalgia::ImplementationID::ObjectOverride_CachedSingletonAccess_PointerContainer_RewindDeallocation, nostalgia::ImplementationType{
-				"Object Overload Cached Singleton Pointer Container Rewind Deallocation",
-				"Object Overload (Cached Singleton Referencing) [Containers of Pointers] [Rewind Deallocation]",
-				AllocatorFlags::DEALLOC_REWIND
-				}
-			},
 			{ nostalgia::ImplementationID::ObjectOverride_SingletonAccess_PointerVector_ForwardDeallocation, nostalgia::ImplementationType{
 				"Object Overload Singleton Pointer Vector Forward Deallocation",
 				"Object Overload (Singleton Referencing) [std Vector of Pointers] [Forward Deallocation]",
@@ -255,6 +249,15 @@ namespace nostalgia::implementation {
 				}
 			},
 
+			// === Object Override - Cached Singleton Access Implementations ===
+			// Cached  Singleton Access only benefits rewinds in Object Override implementations
+			// ~~~ Rewind Deallocations ~~~
+			{ nostalgia::ImplementationID::ObjectOverride_CachedSingletonAccess_PointerContainer_RewindDeallocation, nostalgia::ImplementationType{
+				"Object Overload Cached Singleton Pointer Container Rewind Deallocation",
+				"Object Overload (Cached Singleton Referencing) [Containers of Pointers] [Rewind Deallocation]",
+				AllocatorFlags::DEALLOC_REWIND
+				}
+			},
 			{ nostalgia::ImplementationID::ObjectOverride_CachedSingletonAccess_PointerVector_RewindDeallocation, nostalgia::ImplementationType{
 				"Object Overload Cached Singleton Pointer Vector Rewind Deallocation",
 				"Object Overload (Cached Singleton Referencing) [std Vector of Pointers] [Rewind Deallocation]",

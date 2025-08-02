@@ -96,29 +96,26 @@ run_templated_cachedSingletonAccess_pointerVector_rewindDealloc<PARAMETERISED_OB
     nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerVector_RewindDeallocation);
 
 
-// Global access
-    // ~ Forward Deallocation
+    // === Object Override ===
+    // ~~~ Pointer Block N/A for override ~~~
+    // ~~~ Pointer Container ~~~
 run_objectOverride_pointerContainer_forwardDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ForwardDeallocation);
-    // ~ Reverse Deallocation
 run_objectOverride_pointerContainer_reverseDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_ReverseDeallocation);
-    // ~~ Rewind
 run_objectOverride_globalAccess_pointerContainer_rewindDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerContainer_RewindDeallocation);
 
-    // ~ Forward Deallocation
+    // ~~~ Pointer Vector ~~~
 run_objectOverride_pointerVector_forwardDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerVector_ForwardDeallocation);
-    // ~ Reverse Deallocation
 run_objectOverride_pointerVector_reverseDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerVector_ReverseDeallocation);
-    // ~~ Rewind
 run_objectOverride_globalAccess_pointerVector_rewindDealloc<PARAMETERISED_OBJECT_LOCAL_OVERRIDE_GLOBAL_ACCESS>(
     allocator, iterations, passes, object_id_index,
     nostalgia::ImplementationID::ObjectOverride_GlobalAccess_PointerVector_RewindDeallocation);

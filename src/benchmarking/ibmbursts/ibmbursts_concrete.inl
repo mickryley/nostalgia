@@ -3,8 +3,7 @@ nostalgia::BenchmarkID benchmark_id = nostalgia::BenchmarkID::IBM_Bursts;
 // === Templated Global Access ===
 // ~~~ Pointer Block ~~~
 template <typename object_type>
-void run_templated_globalAccess_pointerBlock_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_globalAccess_pointerBlock_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -36,8 +35,7 @@ void run_templated_globalAccess_pointerBlock_forwardDealloc(nostalgia::Allocator
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_globalAccess_pointerBlock_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_globalAccess_pointerBlock_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -69,8 +67,7 @@ void run_templated_globalAccess_pointerBlock_reverseDealloc(nostalgia::Allocator
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_globalAccess_pointerBlock_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_globalAccess_pointerBlock_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -98,11 +95,9 @@ void run_templated_globalAccess_pointerBlock_rewindDealloc(nostalgia::AllocatorT
 	PRINT_ALL_TIMERS();
 	EXPORT_BENCHMARK_RESULTS();
 }
-
 // ~~~ Pointer Container ~~~
 template <typename object_type>
-void run_templated_globalAccess_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_globalAccess_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -135,8 +130,7 @@ void run_templated_globalAccess_pointerContainer_forwardDealloc(nostalgia::Alloc
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_globalAccess_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_globalAccess_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -170,8 +164,7 @@ void run_templated_globalAccess_pointerContainer_reverseDealloc(nostalgia::Alloc
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_globalAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_globalAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -203,8 +196,7 @@ void run_templated_globalAccess_pointerContainer_rewindDealloc(nostalgia::Alloca
 }
 // ~~~ Pointer Vector ~~~
 template <typename object_type>
-void run_templated_globalAccess_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_globalAccess_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -239,8 +231,7 @@ void run_templated_globalAccess_pointerVector_forwardDealloc(nostalgia::Allocato
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_globalAccess_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_globalAccess_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -274,8 +265,7 @@ void run_templated_globalAccess_pointerVector_reverseDealloc(nostalgia::Allocato
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_globalAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_globalAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -310,8 +300,7 @@ void run_templated_globalAccess_pointerVector_rewindDealloc(nostalgia::Allocator
 // === Templated Singleton Access ===
 // ~~~ Pointer Block ~~~
 template <typename object_type>
-void run_templated_singletonAccess_pointerBlock_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_singletonAccess_pointerBlock_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -343,8 +332,7 @@ void run_templated_singletonAccess_pointerBlock_forwardDealloc(nostalgia::Alloca
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_singletonAccess_pointerBlock_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_singletonAccess_pointerBlock_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -376,8 +364,7 @@ void run_templated_singletonAccess_pointerBlock_reverseDealloc(nostalgia::Alloca
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_singletonAccess_pointerBlock_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_singletonAccess_pointerBlock_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -408,8 +395,7 @@ void run_templated_singletonAccess_pointerBlock_rewindDealloc(nostalgia::Allocat
 
 // ~~~ Pointer Container ~~~
 template <typename object_type>
-void run_templated_singletonAccess_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_singletonAccess_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -442,8 +428,7 @@ void run_templated_singletonAccess_pointerContainer_forwardDealloc(nostalgia::Al
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_singletonAccess_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_singletonAccess_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -477,8 +462,7 @@ void run_templated_singletonAccess_pointerContainer_reverseDealloc(nostalgia::Al
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_singletonAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_singletonAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -510,8 +494,7 @@ void run_templated_singletonAccess_pointerContainer_rewindDealloc(nostalgia::All
 }
 // ~~~ Pointer Vector ~~~
 template <typename object_type>
-void run_templated_singletonAccess_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_singletonAccess_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -546,8 +529,7 @@ void run_templated_singletonAccess_pointerVector_forwardDealloc(nostalgia::Alloc
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_singletonAccess_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_singletonAccess_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -581,8 +563,7 @@ void run_templated_singletonAccess_pointerVector_reverseDealloc(nostalgia::Alloc
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_singletonAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_singletonAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -618,8 +599,7 @@ void run_templated_singletonAccess_pointerVector_rewindDealloc(nostalgia::Alloca
 // === Templated Cached Singleton Access ===
 // ~~~ Pointer Block ~~~
 template <typename object_type>
-void run_templated_cachedSingletonAccess_pointerBlock_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_cachedSingletonAccess_pointerBlock_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -651,8 +631,7 @@ void run_templated_cachedSingletonAccess_pointerBlock_forwardDealloc(nostalgia::
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_cachedSingletonAccess_pointerBlock_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_cachedSingletonAccess_pointerBlock_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -684,8 +663,7 @@ void run_templated_cachedSingletonAccess_pointerBlock_reverseDealloc(nostalgia::
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_cachedSingletonAccess_pointerBlock_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_cachedSingletonAccess_pointerBlock_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -716,8 +694,7 @@ void run_templated_cachedSingletonAccess_pointerBlock_rewindDealloc(nostalgia::A
 
 // ~~~ Pointer Container ~~~
 template <typename object_type>
-void run_templated_cachedSingletonAccess_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_cachedSingletonAccess_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -750,8 +727,7 @@ void run_templated_cachedSingletonAccess_pointerContainer_forwardDealloc(nostalg
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_cachedSingletonAccess_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_cachedSingletonAccess_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -785,8 +761,7 @@ void run_templated_cachedSingletonAccess_pointerContainer_reverseDealloc(nostalg
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_cachedSingletonAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_cachedSingletonAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -818,8 +793,7 @@ void run_templated_cachedSingletonAccess_pointerContainer_rewindDealloc(nostalgi
 }
 // ~~~ Pointer Vector ~~~
 template <typename object_type>
-void run_templated_cachedSingletonAccess_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_cachedSingletonAccess_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -854,8 +828,7 @@ void run_templated_cachedSingletonAccess_pointerVector_forwardDealloc(nostalgia:
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_cachedSingletonAccess_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_cachedSingletonAccess_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -889,8 +862,7 @@ void run_templated_cachedSingletonAccess_pointerVector_reverseDealloc(nostalgia:
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_templated_cachedSingletonAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_templated_cachedSingletonAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -924,9 +896,10 @@ void run_templated_cachedSingletonAccess_pointerVector_rewindDealloc(nostalgia::
 
 
 // === Object Override (Compatible with Global Static and Singleton) ===
+// ~~~ Pointer Block implementation would bypass object override ~~~
+// ~~~ Pointer Container ~~~
 template <typename object_type>
-void run_objectOverride_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_objectOverride_pointerContainer_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -959,8 +932,7 @@ void run_objectOverride_pointerContainer_forwardDealloc(nostalgia::AllocatorType
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_objectOverride_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_objectOverride_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -992,10 +964,9 @@ void run_objectOverride_pointerContainer_reverseDealloc(nostalgia::AllocatorType
 	PRINT_ALL_TIMERS();
 	EXPORT_BENCHMARK_RESULTS();
 }
-
+// ~~~ Pointer Vector ~~~
 template <typename object_type>
-void run_objectOverride_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_objectOverride_pointerVector_forwardDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -1030,8 +1001,7 @@ void run_objectOverride_pointerVector_forwardDealloc(nostalgia::AllocatorType al
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_objectOverride_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_objectOverride_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -1065,7 +1035,7 @@ void run_objectOverride_pointerVector_reverseDealloc(nostalgia::AllocatorType al
 	EXPORT_BENCHMARK_RESULTS();
 }
 
-// === Object Override (Global Access Only) ===
+// === Object Override (Global Access Only [For Rewind Access]) ===
 template <typename object_type>
 void run_objectOverride_globalAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
 	nostalgia::ImplementationID i_id) {
@@ -1129,10 +1099,10 @@ void run_objectOverride_globalAccess_pointerVector_rewindDealloc(nostalgia::Allo
 	EXPORT_BENCHMARK_RESULTS();
 }
 
-// === Object Override (Singleton Only) ===
+// === Object Override (Singleton Only [For Rewind Access]) ===
+// ~~~ Pointer Container ~~~
 template <typename object_type>
-void run_objectOverride_singletonAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_objectOverride_singletonAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -1164,8 +1134,39 @@ void run_objectOverride_singletonAccess_pointerContainer_rewindDealloc(nostalgia
 	EXPORT_BENCHMARK_RESULTS();
 }
 template <typename object_type>
-void run_objectOverride_cachedSingletonAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_objectOverride_singletonAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
+
+	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
+	CHECK_ALLOCATOR_COMPATABILITY();
+	BEGIN_ALL_TIMERS();
+
+	for (size_t i = 0; i < passes; i++)
+	{
+		START_ALLOC_TIMERS();
+
+		std::vector<object_type*> vec;
+		vec.reserve(iterations);
+
+		for (size_t j = 0; j < iterations; j++) {
+			vec.emplace_back(new object_type(CONSTRUCTOR_PARAMETERS)); // [ALLOC SPECIFIC]
+		}
+
+		PAUSE_ALLOC_TIMERS();
+		START_DEALLOC_TIMERS();
+
+		ALLOCATOR_SINGLETON_ACCESS.rewind();
+		vec.clear();
+		PAUSE_DEALLOC_TIMERS();
+	}
+
+	STOP_ALL_TIMERS();
+	PRINT_ALL_TIMERS();
+	EXPORT_BENCHMARK_RESULTS();
+}
+
+// === Object Override (Cached Singleton Only [For Rewind Access]) ===
+template <typename object_type>
+void run_objectOverride_cachedSingletonAccess_pointerContainer_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -1198,41 +1199,8 @@ void run_objectOverride_cachedSingletonAccess_pointerContainer_rewindDealloc(nos
 	PRINT_ALL_TIMERS();
 	EXPORT_BENCHMARK_RESULTS();
 }
-
 template <typename object_type>
-void run_objectOverride_singletonAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
-
-	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
-	CHECK_ALLOCATOR_COMPATABILITY();
-	BEGIN_ALL_TIMERS();
-
-	for (size_t i = 0; i < passes; i++)
-	{
-		START_ALLOC_TIMERS();
-
-		std::vector<object_type*> vec;
-		vec.reserve(iterations);
-
-		for (size_t j = 0; j < iterations; j++) {
-			vec.emplace_back(new object_type(CONSTRUCTOR_PARAMETERS)); // [ALLOC SPECIFIC]
-		}
-
-		PAUSE_ALLOC_TIMERS();
-		START_DEALLOC_TIMERS();
-
-		ALLOCATOR_SINGLETON_ACCESS.rewind();
-		vec.clear();
-		PAUSE_DEALLOC_TIMERS();
-	}
-
-	STOP_ALL_TIMERS();
-	PRINT_ALL_TIMERS();
-	EXPORT_BENCHMARK_RESULTS();
-}
-template <typename object_type>
-void run_objectOverride_cachedSingletonAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index,
-	nostalgia::ImplementationID i_id) {
+void run_objectOverride_cachedSingletonAccess_pointerVector_rewindDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index, nostalgia::ImplementationID i_id) {
 
 	IMPLEMENTATION_DETAILS(IBM_BURSTS_IMPLEMENTATION_DETAILS);
 	CHECK_ALLOCATOR_COMPATABILITY();
@@ -1342,6 +1310,7 @@ void run_malloc_pointerContainer_reverseDealloc(nostalgia::AllocatorType allocat
 	PRINT_ALL_TIMERS();
 	EXPORT_BENCHMARK_RESULTS();
 }
+
 template <typename object_type>
 void run_malloc_pointerVector_reverseDealloc(nostalgia::AllocatorType allocator, size_t iterations, size_t passes, size_t object_id_index) {
 
