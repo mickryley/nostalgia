@@ -18,14 +18,16 @@ namespace nostalgia::allocator {
             .label = "Linear",
             .description = "Basic Minimal Linear Allocator (Rewind Only)",
             .compatible_flags = AllocatorFlags::DEALLOC_REWIND,
-            .required_flags = AllocatorFlags::NONE,
+            .required_flags =   AllocatorFlags::NONE |
+                                AllocatorFlags::BULK_ALLOCATE,
             .data_color_hue_shift = 40
         }},
         { nostalgia::AllocatorID::Stack, nostalgia::AllocatorType{
             .id = nostalgia::AllocatorID::Stack,
             .label = "Stack",
             .description = "Basic Minimal LIFO Stack Allocator",
-            .compatible_flags = AllocatorFlags::DEALLOC_REVERSE,
+            .compatible_flags = AllocatorFlags::DEALLOC_REVERSE |
+                                AllocatorFlags::SUB_DEALLOCATE,
             .required_flags = AllocatorFlags::NONE,
             .data_color_hue_shift = 80
         }},
@@ -33,7 +35,9 @@ namespace nostalgia::allocator {
             .id = nostalgia::AllocatorID::Pool,
             .label = "Pool",
             .description = "Fixed Size Pre-Formatted Pool Allocator",
-            .compatible_flags = AllocatorFlags::DEALLOC_REVERSE | AllocatorFlags::DEALLOC_FORWARD,
+            .compatible_flags = AllocatorFlags::DEALLOC_REVERSE |
+                                AllocatorFlags::DEALLOC_FORWARD |
+                                AllocatorFlags::SUB_DEALLOCATE,
             .required_flags = AllocatorFlags::NONE,
             .data_color_hue_shift = 120
         }},

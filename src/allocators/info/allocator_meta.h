@@ -31,7 +31,9 @@ namespace nostalgia {
 		DEALLOC_REVERSE         = 1 << 4,
 		DEALLOC_FORWARD         = 1 << 5,
 		DEALLOC_RANDOM          = 1 << 6,
-        DEFAULT_MALLOC          = 1 << 7, 
+        DEFAULT_MALLOC          = 1 << 7,
+        BULK_ALLOCATE           = 1 << 8, 
+        SUB_DEALLOCATE          = 1 << 9, 
 
     };
     ENABLE_BITMASK_OPERATORS(AllocatorFlags);

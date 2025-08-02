@@ -4,10 +4,22 @@ namespace nostalgia::implementation {
 	std::unordered_map<nostalgia::ImplementationID, nostalgia::ImplementationType> atlas{
 		{ 
 			// === Templated Implementations ===
+			{ nostalgia::ImplementationID::Templated_GlobalAccess_PointerBlock_ForwardDeallocation, nostalgia::ImplementationType{
+				"Templated Global Access Pointer Block Forward Deallocation",
+				"Templated (Global Referencing to Allocator) [Contiguous Block of Pointers] [Forward Deallocation]",
+				AllocatorFlags::DEALLOC_FORWARD | AllocatorFlags::BULK_ALLOCATE | AllocatorFlags::SUB_DEALLOCATE
+				}
+			},
+			{ nostalgia::ImplementationID::Templated_GlobalAccess_PointerBlock_ReverseDeallocation, nostalgia::ImplementationType{
+				"Templated Global Access Pointer Block Reverse Deallocation",
+				"Templated (Global Referencing to Allocator) [Contiguous Block of Pointers] [Reverse Deallocation]",
+				AllocatorFlags::DEALLOC_REVERSE | AllocatorFlags::BULK_ALLOCATE | AllocatorFlags::SUB_DEALLOCATE
+				}
+			},
 			{ nostalgia::ImplementationID::Templated_GlobalAccess_PointerBlock_RewindDeallocation, nostalgia::ImplementationType{
 				"Templated Global Access Pointer Block Rewind Deallocation",
 				"Templated (Global Referencing to Allocator) [Contiguous Block of Pointers] [Rewind Deallocation]",
-				AllocatorFlags::DEALLOC_REWIND
+				AllocatorFlags::DEALLOC_REWIND | AllocatorFlags::BULK_ALLOCATE
 				}
 			},
 			{ nostalgia::ImplementationID::Templated_GlobalAccess_PointerContainer_ForwardDeallocation, nostalgia::ImplementationType{

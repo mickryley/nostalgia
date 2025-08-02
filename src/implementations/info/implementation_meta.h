@@ -14,6 +14,8 @@ namespace nostalgia {
 	enum class ImplementationID {
 		NONE,
 
+		Templated_GlobalAccess_PointerBlock_ForwardDeallocation,
+		Templated_GlobalAccess_PointerBlock_ReverseDeallocation,
 		Templated_GlobalAccess_PointerBlock_RewindDeallocation,
 
 		Templated_GlobalAccess_PointerContainer_ForwardDeallocation,
@@ -52,6 +54,8 @@ namespace nostalgia {
 
 	NLOHMANN_JSON_SERIALIZE_ENUM(ImplementationID, {
 		{ ImplementationID::NONE, "NONE" },
+		{ ImplementationID::Templated_GlobalAccess_PointerBlock_ForwardDeallocation, "Templated_GlobalAccess_PointerBlock_ForwardDeallocation" },
+		{ ImplementationID::Templated_GlobalAccess_PointerBlock_ReverseDeallocation, "Templated_GlobalAccess_PointerBlock_ReverseDeallocation" },
 		{ ImplementationID::Templated_GlobalAccess_PointerBlock_RewindDeallocation, "Templated_GlobalAccess_PointerBlock_RewindDeallocation" },
 
 		{ ImplementationID::Templated_GlobalAccess_PointerContainer_ForwardDeallocation, "Templated_GlobalAccess_PointerContainer_ForwardDeallocation" },
