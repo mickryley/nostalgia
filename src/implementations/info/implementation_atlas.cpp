@@ -125,7 +125,7 @@ namespace nostalgia::implementation {
 			},
 			{ nostalgia::ImplementationID::Templated_CachedSingletonAccess_PointerBlock_ReverseDeallocation, nostalgia::ImplementationType{
 				"Templated Cached Singleton Access Pointer Block Reverse Deallocation",
-				"Templated (Singleton Referencing to Allocator) [Contiguous Block of Pointers] [Reverse Deallocation]",
+				"Templated (Cached Singleton Referencing to Allocator) [Contiguous Block of Pointers] [Reverse Deallocation]",
 				AllocatorFlags::DEALLOC_REVERSE | AllocatorFlags::BULK_ALLOCATE | AllocatorFlags::SUB_DEALLOCATE
 				}
 			},
@@ -176,7 +176,7 @@ namespace nostalgia::implementation {
 			{ nostalgia::ImplementationID::Templated_GlobalAccess_ObjectVector_RewindDeallocation, nostalgia::ImplementationType{
 				"Templated Global Access Object Vector Rewind Deallocation",
 				"Templated (Global Referencing to Allocator) [std Vector of Objects] [Rewind Deallocation]",
-				AllocatorFlags::DEALLOC_REWIND // | AllocatorFlags::BULK_ALLOCATE
+				AllocatorFlags::DEALLOC_REWIND | AllocatorFlags::BULK_ALLOCATE
 				}
 			},
 

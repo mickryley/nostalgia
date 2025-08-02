@@ -86,7 +86,18 @@ namespace nostalgia::visualiser {
             TotalTime
 		};
 	}
-
+    std::string makeLabel(size_t index) {
+        std::string label;
+        if (index < 26) {
+            label += static_cast<char>('A' + index);
+        } else {
+            size_t first = (index - 26) / 26;
+            size_t second = (index - 26) % 26;
+            label += static_cast<char>('A' + first);
+            label += static_cast<char>('A' + second);
+        }
+        return label;
+    }
     void prepare_result_tab(size_t index){
         // Run Analysis
         refresh_all_analysis(displayed_benchmark_results[index]);
@@ -503,7 +514,7 @@ namespace nostalgia::visualiser {
             std::vector<double> allocs, deallocs, totals;
             std::vector<AllocatorID> a_id;
 
-            int letterIndex = 0;
+            size_t letterIndex = 0;
             int hoveredRealIndex = 0;
             // std::string lastAllocator; // Only works if allocators are ordered
 
@@ -533,8 +544,8 @@ namespace nostalgia::visualiser {
 
 
                 // Label with Letters only
-                std::string shortLabel(1, 'A' + (char)letterIndex++);
-                labelStorage.push_back(std::move(shortLabel));           
+                std::string shortLabel = makeLabel(letterIndex++);
+                labelStorage.push_back(std::move(shortLabel));
 
 				hoveredRealIndices.push_back(hoveredRealIndex++); // Store real index for hover
 				hoverStorage.push_back(d.allocator_label + ": " + d.implementation_label); // full name for tooltip
