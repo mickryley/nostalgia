@@ -5,6 +5,7 @@ on:
     tags:
       - 'v*'
       - 'release-latest'
+  workflow_dispatch:
 
 jobs:
   build-release:
@@ -56,6 +57,36 @@ jobs:
         run: |
           cd build/${{ matrix.config_preset }}\Release
           Compress-Archive -Path * -DestinationPath ../../${{ matrix.zipname }}-${{ github.ref_name }}.zip
+
+      - name: Patch rpath and bundle Vulkan (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -e
+
+          # Locate the binary output directory
+          BIN_DIR=build/${{ matrix.config_preset }}/Release
+          BIN="$BIN_DIR/Nostalgia"
+
+          # Try to find Vulkan dylib from installed SDK or Homebrew
+          VULKAN_DYLIB=$(find /Users/runner /opt/homebrew /usr/local -name "libvulkan.1.dylib" 2>/dev/null | head -n1)
+
+          if [ ! -f "$VULKAN_DYLIB" ]; then
+            echo "❌ Vulkan dylib not found!"
+            exit 1
+          fi
+
+          echo "✅ Vulkan dylib found at $VULKAN_DYLIB"
+          cp "$VULKAN_DYLIB" "$BIN_DIR/"
+
+          # Inject @rpath so the binary looks in its own directory
+          install_name_tool -add_rpath "@executable_path" "$BIN"
+
+          # Optional: confirm Vulkan is correctly linked
+          otool -L "$BIN" | grep vulkan || {
+            echo "❌ Vulkan linkage missing after rpath patch"
+            exit 1
+          }
 
       - name: Zip build output (macOS/Linux)
         if: runner.os != 'Windows'
